@@ -1,0 +1,14 @@
+@import url("styles/variables.less");
+
+.container-common {
+    padding: @banner-no-include-logo-height 0 0;
+    background-color: #12172a;
+}
+.pages-container-no-child-layout {
+    height: 100vh; 
+    .container-common();
+}
+.pages-container-has-child-layout {
+    height: @layout-height;
+    .container-common();
+}
