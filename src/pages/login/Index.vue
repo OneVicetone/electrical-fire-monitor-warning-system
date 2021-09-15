@@ -40,7 +40,7 @@ export default {
 			formData.append("username", username)
 			formData.append("password", md5(password))
 			formData.append("source", source)
-			// login(formData)
+			login(formData)
 			getMenuList()
 			setRoutes(this.routes)
 			this.routes.forEach(route => $router.addRoute('Layout', route))

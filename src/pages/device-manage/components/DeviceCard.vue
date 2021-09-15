@@ -3,9 +3,9 @@
 		<header>
 			<div class="device-name">
 				<img src="assets/icons/device-icon.png" alt="设备图标" />
-				<span class="device-name">{{ deviceName }}</span>
+				<span class="device-name">{{ deviceInfoObj.deviceName }}</span>
 			</div>
-			<a-popover trigger="click">
+			<a-popover trigger="click" placement="bottomRight">
 				<a-list slot="content" size="small" :data-source="dropdownOptions">
 					<a-list-item slot="renderItem" slot-scope="item">
 						{{ item.name }}
@@ -18,14 +18,14 @@
 			<div class="device-info">
 				<div class="img" alt="设备图片" />
 				<div class="info">
-					<p>设备ID：{{ deviceId }}</p>
-					<p>设备类型：{{ deviceType }}</p>
-					<p>信号时间：{{ signalTime }}</p>
-					<p>设备状态：{{ deviceStatus }}</p>
-					<p>到期时间：{{ maturityTime }}</p>
+					<p>设备ID：{{ deviceInfoObj.deviceId }}</p>
+					<p>设备类型：{{ deviceInfoObj.deviceType }}</p>
+					<p>信号时间：{{ deviceInfoObj.signalTime }}</p>
+					<p>设备状态：{{ deviceInfoObj.deviceStatus }}</p>
+					<p>到期时间：{{ deviceInfoObj.maturityTime }}</p>
 				</div>
 			</div>
-			<a-table :columns="columns" size="small" rowClassName="row"></a-table>
+			<a-table :columns="columns" />
 		</section>
 	</div>
 </template>
@@ -33,10 +33,24 @@
 <script>
 export default {
 	name: "DeviceCard",
+	props: {
+		deviceInfoObj: {
+			type: Object,
+			default: () => ({
+				deviceName: "",
+				deviceId: "",
+				deviceType: "",
+				signalTime: "",
+				deviceStatus: "",
+				maturityTime: "",
+			}),
+		},
+	},
 	data() {
 		return {
+			dropdownOptions: [{ name: "详情" }, { name: "编辑" }, { name: "转移" }, { name: "删除" }, { name: "更换" }],
 			columns: [
-				{ title: "名称", dataIndex: "", key: "" },
+				{ title: "名称", dataIndex: "", key: "", align: "center" },
 				{ title: "1/A", dataIndex: "", key: "" },
 				{ title: "2/B", dataIndex: "", key: "" },
 				{ title: "3/C", dataIndex: "", key: "" },
@@ -47,7 +61,7 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .device-card {
 	width: 30rem;
 	height: 28.33rem;
@@ -60,6 +74,7 @@ export default {
 		display: flex;
 		justify-content: space-between;
 		.device-name {
+			color: #fff;
 			> img {
 				width: 2rem;
 				height: 2rem;
@@ -69,6 +84,10 @@ export default {
 				font-size: 1.17rem;
 				color: #0096ff;
 			}
+		}
+		> i[aria-label] {
+			color: #fff;
+			cursor: pointer;
 		}
 	}
 	> section {
@@ -91,9 +110,15 @@ export default {
 				font-size: 0.8rem;
 				line-height: 6px;
 			}
-		}
-		.row {
-			height: 2rem;
+			.ant-table-wrapper .ant-table {
+				max-height: 14rem;
+				overflow: hidden;
+				border: 1px solid;
+				border-radius: 4px;
+				.ant-table-thead tr th {
+					padding: 0;
+				}
+			}
 		}
 	}
 }

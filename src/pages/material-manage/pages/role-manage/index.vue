@@ -19,6 +19,8 @@
 				<a>删除</a>
 			</div>
 		</a-table>
+		
+		<Pagination :paginationData="paginationData" :changePageHandle="changePageHandle" :changePageSizeHandle="changePageSizeHandle" />
 
 		<Dialog v-model="isShowDialog" :title="`${isEdit ? '编辑' : '新增'}角色`">
 			<div class="form-container">
@@ -38,9 +40,7 @@
 								{{ option.text }}
 							</a-radio-button>
 						</a-radio-group>
-						<a-tree checkable :tree-data="menuTreeData">
-
-						</a-tree>
+						<a-tree checkable :tree-data="menuTreeData"> </a-tree>
 					</a-form-model-item>
 				</a-form-model>
 			</div>
@@ -49,34 +49,34 @@
 				<a-button ghost>取消</a-button>
 			</div>
 		</Dialog>
-		
 	</div>
 </template>
 
 <script>
-import Dialog from 'components/Dialog.vue'
+import Dialog from "components/Dialog.vue"
+import Pagination from "components/Pagination.vue"
 
 export default {
 	name: "RoleManage",
-	components: { Dialog },
+	components: { Dialog, Pagination },
 	data() {
 		return {
 			isShowDialog: false,
 			isEdit: false,
 			formLabelCol: { span: 3 },
-			formWrapperCol: { span:12 },
+			formWrapperCol: { span: 12 },
 			searchForm: {
 				roleName: "",
 			},
 			addAndEditForm: {
 				roleName: "",
 				roleDescribe: "",
-				roleClass: ""
+				roleClass: "",
 			},
 			purviewType: "web",
 			purviewOptions: [
-				{ value: "web",  text: 'WEB端'},
-				{ value: "app",  text: 'APP端'},
+				{ value: "web", text: "WEB端" },
+				{ value: "app", text: "APP端" },
 			],
 			roleClassOptions: [],
 			columns: [
@@ -89,32 +89,41 @@ export default {
 				{ title: "修改时间", dataIndex: "", key: "", scopedSlots: { customRender: "operate" } },
 			],
 			tabelData: [],
-			menuTreeData: [
-
-			]
+			paginationData: {
+				count: 0,
+				current: 1,
+				pageSize: 10,
+			},
+			menuTreeData: [],
 		}
 	},
 	methods: {
-		getTableData() {},
+		getTableData(current = 1, size = 10) {},
 		add() {
 			this.isShowDialog = true
 		},
 		delete(id) {},
-		edit(id) {}
-	}
+		edit(id) {},
+		changePageHandle(page, pageSize) {
+			this.getTableData(page, pageSize)
+		},
+		changePageSizeHandle(current, size) {
+			this.getTableData(current, size)
+		},
+	},
 }
 </script>
 
 <style lang="less" scoped>
-	.footer-btn-group {
-		width: 100%;
-		display: flex;
-		justify-content: center;
-		> button {
-			margin: 0 0.625rem;
-		}
+.footer-btn-group {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	> button {
+		margin: 0 0.625rem;
 	}
-	.form-container {
-		padding: 2.75rem 6.58rem;
-	}
+}
+.form-container {
+	padding: 2.75rem 6.58rem;
+}
 </style>

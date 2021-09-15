@@ -1,6 +1,16 @@
 <template>
 	<div class="alarm-center-container">
-		<div class="alarm-count"></div>
+		<div class="alarm-count">
+			<img src="assets/icons/alarm-count.png" alt="alarm-coun">
+			<NumCount
+				v-for="item of alarmCountData"
+				:key="item.title"
+				:title="item.title"
+				:num="item.num"
+				:icon="item.icon"
+				:afterHasDivider="item.afterHasDivider"
+			/>
+		</div>
 		<a-form-model class="table-search-form" layout="inline" :model="searchForm">
 			<a-form-model-item>
 				<a-select v-model="searchForm.unit" :options="unitOptions" placeholder="请选择单位" size="small" />
@@ -52,6 +62,12 @@
 			</div>
 		</a-table>
 
+		<Pagination
+			:paginationData="paginationData"
+			:changePageHandle="changePageHandle"
+			:changePageSizeHandle="changePageSizeHandle"
+		/>
+
 		<Dialog v-model="isShowHandle" title="报警处理">
 			<div class="alarm-handle-container"></div>
 		</Dialog>
@@ -60,48 +76,41 @@
 
 <script>
 import Dialog from "components/Dialog.vue"
+import Pagination from "components/Pagination.vue"
+import NumCount from "components/NumCount.vue"
+import optionsData from "utils/optionsData"
+
+const { alarmTypeOptions, alarmLevelOptions, deviceIdOptions, handleStatusOptions } = optionsData
 
 export default {
 	name: "AlarmCenter",
-	components: { Dialog },
+	components: { Dialog, Pagination, NumCount },
 	data() {
 		return {
+			alarmCountData: [
+				{ title: "全部预警", num: "1013" },
+				{ title: "高危", num: "96", icon: "/src/assets/icons/danger-icon.png" },
+				{ title: "预警", num: "84", icon: "/src/assets/icons/warn-icon.png" },
+				{ title: "设备故障", num: "365" },
+				{ title: "未处理", num: "515" },
+				{ title: "今日新增", num: "5" },
+				{ title: "累计处理", num: "148", afterHasDivider: false },
+			],
 			isShowHandle: false,
 			searchForm: {
-				unit: '',
-                deviceName: '',
-                alarmType: '',
-                alarmLevel: '',
-                deviceId: '',
-                handleStatus: '',
-                alarmTime: ''
+				unit: "",
+				deviceName: "",
+				alarmType: "0",
+				alarmLevel: "0",
+				deviceId: "0",
+				handleStatus: "0",
+				alarmTime: "",
 			},
 			unitOptions: [],
-			alarmTypeOptions: [
-				{ label: "漏电报警", value: "1" },
-				{ label: "过流报警", value: "2" },
-				{ label: "过压报警", value: "3" },
-				{ label: "欠压报警", value: "4" },
-				{ label: "断电报警", value: "4" },
-				{ label: "过温报警", value: "5" },
-				{ label: "离线报警", value: "6" },
-				{ label: "缺相报警", value: "7" },
-			],
-			alarmLevelOptions: [
-				{ label: "高危", value: "1" },
-				{ label: "预警", value: "2" },
-				{ label: "正常", value: "3" },
-			],
-			deviceIdOptions: [
-				{ label: "BY-001", value: "1" },
-				{ label: "BY-002", value: "2" },
-				{ label: "BY-003", value: "3" },
-			],
-			handleStatusOptions: [
-				{ label: "待处理", value: "1" },
-				{ label: "已处理", value: "2" },
-				{ label: "已恢复", value: "3" },
-			],
+			alarmTypeOptions,
+			alarmLevelOptions,
+			deviceIdOptions,
+			handleStatusOptions,
 			columns: [
 				{ title: "序号", dataIndex: "", key: "" },
 				{ title: "设备ID", dataIndex: "", key: "" },
@@ -120,7 +129,21 @@ export default {
 				{ title: "操作", dataIndex: "", key: "", scopedSlots: { customRender: "operate" } },
 			],
 			tableData: [],
+			paginationData: {
+				count: 0,
+				current: 1,
+				pageSize: 10,
+			},
 		}
+	},
+	methods: {
+		getTableData(current = 1, size = 10) {},
+		changePageHandle(page, pageSize) {
+			this.getTableData(page, pageSize)
+		},
+		changePageSizeHandle(current, size) {
+			this.getTableData(current, size)
+		},
 	},
 }
 </script>
@@ -129,8 +152,20 @@ export default {
 @import url("styles/common.less");
 
 .alarm-center-container {
-    .pages-container-no-child-layout();
-    padding-right: 1.83rem;
-    padding-left: 1.83rem;
+	.pages-container-no-child-layout();
+	padding-right: 1.83rem;
+	padding-left: 1.83rem;
+	.alarm-count {
+		display: flex;
+		align-items: center;
+		border: 1px solid #3f4a77;
+		border-radius: 4px;
+		padding: 1rem 1.83rem;
+		margin: 3.67rem 0 0;
+		> img {
+			width: 3.67rem;
+			height: 3.67rem;
+		}
+	}
 }
 </style>

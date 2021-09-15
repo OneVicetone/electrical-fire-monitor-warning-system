@@ -49,6 +49,11 @@
 				<DeviceCard />
 				<DeviceCard />
 			</div>
+			<Pagination
+				:paginationData="paginationData"
+				:changePageHandle="changePageHandle"
+				:changePageSizeHandle="changePageSizeHandle"
+			/>
 		</div>
 	</div>
 </template>
@@ -56,28 +61,31 @@
 <script>
 import OrganizationList from "components/OrganizationList.vue"
 import DeviceCard from "./components/DeviceCard.vue"
+import Pagination from "components/Pagination.vue"
+
+import optionsData from "utils/optionsData"
+
+const { deviceTypeOptions, deviceIdOptions } = optionsData
 
 export default {
 	name: "DeviceManage",
-	components: { OrganizationList, DeviceCard },
+	components: { OrganizationList, DeviceCard, Pagination },
 	data() {
 		return {
 			deviceStatusRadio: "1",
 			searchForm: {
 				deviceName: "",
-				deviceType: "",
-				deviceId: "",
+				deviceType: "0",
+				deviceId: "0",
 				iccid: "",
 			},
-			deviceTypeOptions: [
-				{ label: "电气火灾探测器", value: "1" },
-				{ label: "智能空气开关", value: "2" },
-			],
-			deviceIdOptions: [
-				{ label: "BY-001", value: "1" },
-				{ label: "BY-002", value: "2" },
-				{ label: "BY-003", value: "3" },
-			],
+			deviceTypeOptions,
+			deviceIdOptions,
+			paginationData: {
+				count: 0,
+				current: 1,
+				pageSize: 10,
+			},
 		}
 	},
 	computed: {
@@ -91,6 +99,15 @@ export default {
 			]
 		},
 	},
+	methods: {
+		getDeviceListData(current = 1, size = 10) {},
+		changePageHandle(page, pageSize) {
+			this.getDeviceListData(page, pageSize)
+		},
+		changePageSizeHandle(current, size) {
+			this.getDeviceListData(current, size)
+		},
+	},
 }
 </script>
 
@@ -99,7 +116,7 @@ export default {
 .device-manage-container {
 	.pages-container-no-child-layout();
 	display: flex;
-  max-height: 100vh;
+	max-height: 100vh;
 	.organization {
 		width: 21.67rem;
 		height: 100%;
@@ -112,12 +129,12 @@ export default {
 			margin: 1.25rem 0 0;
 		}
 		.device-list {
-      display: flex;
-      flex-wrap: wrap;
-      overflow-x: auto;
-      .device-card {
-        margin: 1.5rem;
-      }
+			display: flex;
+			flex-wrap: wrap;
+			overflow-x: auto;
+			.device-card {
+				margin: 1.5rem;
+			}
 		}
 	}
 }

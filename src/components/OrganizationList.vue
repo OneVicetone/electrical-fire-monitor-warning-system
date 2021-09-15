@@ -12,7 +12,7 @@ export default {
 	props: {
 		treeData: {
 			type: Array,
-			default: [{ key: 1, title: "黑龙江农业银行", children: [{ key: 11, title: "黑龙江农业银行光明支行" }] }],
+			default: () => [{ key: 1, title: "黑龙江农业银行", children: [{ key: 11, title: "黑龙江农业银行光明支行" }] }],
 		},
         handleSelectFunc: {
             type: Function,

@@ -11,6 +11,7 @@ const SystemSetting = () => import('pages/system-setting/index.vue')
 const DownloadCenter = () => import('pages/download-center/index.vue')
 
 const RoleManage = () => import('pages/material-manage/pages/role-manage/index.vue')
+const NetworkUnitManage = () => import('pages/material-manage/pages/network-unit-manage/index.vue')
 
 const baseRoutes = [
     {
@@ -22,6 +23,7 @@ const baseRoutes = [
         path: '/',
         name: 'Layout',
         component: Layout,
+        redirect: '/login',
         children: []
     }
 ]
@@ -102,7 +104,7 @@ const pagesRoutes = [
             {
                 path: 'network-unit-manage',
                 name: 'NetworkUnitManage',
-                component: null,
+                component: NetworkUnitManage,
                 meta: { title: '联网单位管理' }
             },
             {
