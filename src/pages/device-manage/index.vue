@@ -125,13 +125,14 @@ export default {
 	}
 	.device-manage {
 		padding: 4.08rem 1.75rem 1rem;
+		overflow-x: auto;
+
 		.table-search-form {
 			margin: 1.25rem 0 0;
 		}
 		.device-list {
 			display: flex;
 			flex-wrap: wrap;
-			overflow-x: auto;
 			.device-card {
 				margin: 1.5rem;
 			}
