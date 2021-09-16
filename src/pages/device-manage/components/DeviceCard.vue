@@ -25,14 +25,17 @@
 					<p>到期时间：{{ deviceInfoObj.maturityTime }}</p>
 				</div>
 			</div>
-			<a-table :columns="columns" />
+			<SimpleTable :columns="columns" />
 		</section>
 	</div>
 </template>
 
 <script>
+import SimpleTable from "components/SimpleTable.vue"
+
 export default {
 	name: "DeviceCard",
+	components: { SimpleTable },
 	props: {
 		deviceInfoObj: {
 			type: Object,

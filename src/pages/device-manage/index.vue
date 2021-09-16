@@ -82,7 +82,7 @@ export default {
 			deviceTypeOptions,
 			deviceIdOptions,
 			paginationData: {
-				count: 0,
+				count: 100,
 				current: 1,
 				pageSize: 10,
 			},

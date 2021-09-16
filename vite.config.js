@@ -34,7 +34,7 @@ const alias = {
 export default defineConfig({
   plugins: [
     createVuePlugin({
-      jsx: false,
+      jsx: true,
     }),
   ],
   resolve: {
