@@ -5,7 +5,7 @@
 			<div>
 				<a-input class="username-input" v-model="username" palceholder="请输入用户账号" />
 				<a-input class="password-input" type="password" v-model="password" palceholder="请输入用户密码" />
-				<a-button type="primary" class="login-btn" block @click="toLogin">登录</a-button>
+				<a-button type="primary" class="login-btn" block :loading="isLogining" @click="toLogin">登录</a-button>
 				<a-checkbox v-model="saveLocalUserName">记住用户名</a-checkbox>
 			</div>
 		</div>
@@ -29,12 +29,13 @@ export default {
 		return {
 			username: "ww",
 			password: "BYkj8080",
-			
+
 			source: 1,
 			// username: localStorage.getItem(USERNAME) || "",
 			// password: "",
 			// source: 1,
-			saveLocalUserName: false
+			saveLocalUserName: false,
+			isLogining: false,
 		}
 	},
 	computed: mapGetters({
@@ -48,17 +49,22 @@ export default {
 			login: LOGIN,
 			getMenuList: GET_MENU_LIST,
 		}),
-		toLogin() {
-			const { username, password, source, $router, setRoutes, login, getMenuList } = this
-			const formData = new FormData()
-			formData.append("username", username)
-			formData.append("password", md5(password))
-			formData.append("source", source)
-			login(formData)
-			getMenuList()
-			setRoutes(this.routes)
-			this.routes.forEach(route => $router.addRoute("Layout", route))
-			this.$router.push("/device-manage")
+		async toLogin() {
+			this.isLogining = true
+			try {
+				const { username, password, source, $router, setRoutes, login, getMenuList } = this
+				const formData = new FormData()
+				formData.append("username", username)
+				formData.append("password", md5(password))
+				formData.append("source", source)
+				await login(formData)
+				setRoutes(this.routes)
+				this.routes.forEach(route => $router.addRoute("Layout", route))
+				this.$router.push("/device-manage")
+			} catch (err) {
+				this.isLogining = false
+				console.error(err)
+			}
 		},
 		saveLocalUserName() {
 			this.username && localStorage.setItem(USERNAME, this.username)

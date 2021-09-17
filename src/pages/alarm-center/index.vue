@@ -35,11 +35,16 @@
 				/>
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-select v-model="searchForm.deviceId" :options="deviceIdOptions" placeholder="请选择设备编号" size="small" />
+				<a-select
+					v-model="searchForm.deviceTypeId"
+					:options="deviceIdOptions"
+					placeholder="请选择设备编号"
+					size="small"
+				/>
 			</a-form-model-item>
 			<a-form-model-item>
 				<a-select
-					v-model="searchForm.handleStatus"
+					v-model="searchForm.status"
 					:options="handleStatusOptions"
 					placeholder="请选择报警处理状态"
 					size="small"
@@ -57,8 +62,26 @@
 		</a-form-model>
 
 		<a-table :columns="columns" :data-source="tableData">
+			<div slot="idx" slot-scope="text, record, index">
+				<span>{{index + 1}}</span>
+			</div>
+
+			<div slot="alarmTypeName" slot-scope="text, record"></div>
+			<div slot="alarmTime" slot-scope="text, record">
+				{{ record.alarmTime | filterTimeToYYYYMMDD }}
+			</div>
+			<div slot="recoverTime" slot-scope="text, record">
+				{{ record.recoverTime | filterTimeToYYYYMMDD }}
+			</div>
+			<div slot="alarmLevel" slot-scope="text, record">
+				{{ record.alarmLevel | filterAlarmLevel }}
+			</div>
+			<div slot="status" slot-scope="text, record">
+				{{ record.status | filterAlarmStatus }}
+			</div>
+
 			<div slot="operate" slot-scope="text, record">
-				<a v-if="record.status === 1" @click="toProcess(record)">处理</a>
+				<a v-if="record.status === 1" @click="toProcess(text)">处理</a>
 				<a v-else @click="toExamine(record)">查看</a>
 			</div>
 		</a-table>
@@ -84,12 +107,14 @@ import NumCount from "components/NumCount.vue"
 import optionsData from "utils/optionsData"
 
 import apis from "apis"
+import { commonMinix } from "minixs"
 
 const { getAlarmCount, getAlarmList, getAlarmCenterSelectOptions, getAlarmDetail, processAlarm } = apis
 const { alarmTypeOptions, alarmLevelOptions, deviceIdOptions, handleStatusOptions } = optionsData
 
 export default {
 	name: "AlarmCenter",
+	mixins: [commonMinix],
 	components: { Dialog, Pagination, NumCount },
 	data() {
 		return {
@@ -118,14 +143,14 @@ export default {
 			deviceIdOptions,
 			handleStatusOptions,
 			columns: [
-				{ title: "序号", dataIndex: "" },
+				{ title: "序号", scopedSlots: { customRender: "idx" } },
 				{ title: "设备ID", dataIndex: "deviceSn" },
 				{ title: "所属单位", dataIndex: "groupName" },
 				{ title: "设备名称", dataIndex: "deviceAlias" },
 				{ title: "设备类型", dataIndex: "deviceTypeName" },
 				{ title: "设备型号", dataIndex: "deviceTypeModel" },
-				{ title: "报警级别", dataIndex: "alarmLevel" },
-				{ title: "报警类型", dataIndex: "alarmTypeName" },
+				{ title: "报警级别", dataIndex: "alarmLevel", scopedSlots: { customRender: "alarmLevel" } },
+				{ title: "报警类型", dataIndex: "alarmTypeName", scopedSlots: { customRender: "alarmTypeName" } },
 				{ title: "报警详情", dataIndex: "alarmValue" },
 				{ title: "报警时间", dataIndex: "alarmTime", scopedSlots: { customRender: "alarmTime" } },
 				{ title: "报警恢复时间", dataIndex: "recoverTime", scopedSlots: { customRender: "recoverTime" } },
@@ -143,10 +168,17 @@ export default {
 		}
 	},
 	mounted() {
-		Promise.allSettled([getAlarmCount().then(res => {
-			const { data } = res.data
-			this.alarmCountData.forEach(i => i.num = data[i.key] )
-		}), this.getTableData()])
+		const optionsTypes = ['alarmType', 'deviceType', 'alarmType']
+		Promise.allSettled([
+			getAlarmCount().then(res => {
+				const { data } = res.data
+				this.alarmCountData.forEach(i => (i.num = data[i.key]))
+			}),
+			this.getTableData(),
+			// ...optionsTypes.map(i => getAlarmCenterSelectOptions(i).then(ren => {
+			// 	const 
+			// }))
+		])
 	},
 	methods: {
 		getTableData(current = 1, size = 10) {
@@ -181,7 +213,7 @@ export default {
 			handler(val) {
 				console.log(val)
 			},
-			deep: true
+			deep: true,
 		},
 	},
 }

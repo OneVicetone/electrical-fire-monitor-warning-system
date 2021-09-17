@@ -1,10 +1,10 @@
 const optionsPlaceholder = {
-	allOptionsData: "",
-	alarmLevelOptions: "",
-	deviceIdOptions: "",
-	handleStatusOptions: "",
-	deviceTypeOptions: "",
-	deviceIdOptions: ""
+	alarmTypeOptions: "请选择报警类型",
+	alarmLevelOptions: "请选择报警级别",
+	deviceIdOptions: "请选择设备编号",
+	handleStatusOptions: "请选择报警处理状态",
+	deviceTypeOptions: "请选择设备类型",
+	deviceIdOptions: "请选择设备编号"
 }
 const allOptionsData = {
 	alarmTypeOptions: [
@@ -46,8 +46,8 @@ const allOptionsData = {
 
 for (let key in allOptionsData) {
     const defaultSelectItem = {
-        label: "请选择",
-        value: "0"
+        label: optionsPlaceholder[key],
+        value: 0
     }
     allOptionsData[key].unshift(defaultSelectItem)
 }
