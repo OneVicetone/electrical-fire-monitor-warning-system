@@ -93,24 +93,28 @@
 		/>
 
 		<Dialog v-model="isShowHandle" title="报警处理">
-			<!-- <div class="alarm-handle-container"></div> -->
-			<!-- <nav-title title="报警设备信息">
-				<section>
+			<nav-title title="报警设备信息">
+				<div>
+					<!-- <img src="" alt=""> -->
 					<div>
-						<img src="" alt="">
-						<div>
-							<span>过温报警</span>
-							<span>2020-08-10 10:20</span>
-						</div>
+						<span>过温报警</span>
+						<span>2020-08-10 10:20</span>
 					</div>
-					<div>
-						<span v-for="(value, key, index) in equipment" :key="index">
-							{{ mapValue(key)+ '：' +value }}
-							{{value}}{{key}}
-						</span>
-					</div>
-				</section>
-			</nav-title> -->
+				</div>
+				<div class="equipment-info">
+					<span v-for="(value, key, index) in equipment" :key="index">
+						{{ mapValue(key)+ '：' +value }}
+					</span>
+				</div>
+			</nav-title>
+			<nav-title title="报警处理意见">
+				水水水水水水水水水水水水水水水水水水水
+			</nav-title>
+			<nav-title title="报警处理">
+				警情确定：<a-radio-group v-model="warnSure" :options="warnOpt" @change="e => onChanges(e, 'sure')" />
+				<br />
+				处理方式：<a-radio-group v-model="dealWith" :options="method" @change="e => onChanges(e, 'deal')" />
+			</nav-title>
 		</Dialog>
 	</div>
 </template>
@@ -189,7 +193,19 @@ export default {
 				unit: '深圳市',
 				address: '广东省深圳',
 				place: '办公室'
-			}
+			},
+			warnSure: '',
+			dealWith: '',
+			warnOpt: [
+				{ label: '真实报警', value: '1' },
+				{ label: '误报', value: '2' },
+				{ label: '测试', value: '3' },
+			],
+			method: [
+				{ label: '已核查', value: '1' },
+				{ label: '已通知用户', value: '2' },
+				{ label: '下发整改通知', value: '3' },
+			]
 		}
 	},
 	mounted() {
@@ -243,6 +259,9 @@ export default {
 		toExamine(record) {
 			console.log(record)
 		},
+		onChanges(e, type) {
+			console.log(e, type)
+		}
 	},
 	watch: {
 		searchForm: {
@@ -273,6 +292,13 @@ export default {
 			width: 3.67rem;
 			height: 3.67rem;
 		}
+	}
+}
+.equipment-info {
+	display: flex;
+	flex-direction: column;
+	span {
+		display: block;
 	}
 }
 </style>
