@@ -80,9 +80,9 @@
 				{{ text.status | filterAlarmStatus }}
 			</div>
 
-			<div slot="operate" slot-scope="text">
-				<a v-if="text.status === 1" @click="toProcess(text)">处理</a>
-				<a v-else @click="toExamine(text)">查看</a>
+			<div slot="operate" slot-scope="text, record">
+				<a v-if="record.status === 1" @click="isShowHandle = true;toProcess(record)">处理</a>
+				<a v-else @click="isShowHandle = true;toExamine(record)">查看</a>
 			</div>
 		</a-table>
 
@@ -93,7 +93,24 @@
 		/>
 
 		<Dialog v-model="isShowHandle" title="报警处理">
-			<div class="alarm-handle-container"></div>
+			<!-- <div class="alarm-handle-container"></div> -->
+			<!-- <nav-title title="报警设备信息">
+				<section>
+					<div>
+						<img src="" alt="">
+						<div>
+							<span>过温报警</span>
+							<span>2020-08-10 10:20</span>
+						</div>
+					</div>
+					<div>
+						<span v-for="(value, key, index) in equipment" :key="index">
+							{{ mapValue(key)+ '：' +value }}
+							{{value}}{{key}}
+						</span>
+					</div>
+				</section>
+			</nav-title> -->
 		</Dialog>
 	</div>
 </template>
@@ -104,6 +121,7 @@ import moment from "moment"
 import Dialog from "components/Dialog.vue"
 import Pagination from "components/Pagination.vue"
 import NumCount from "components/NumCount.vue"
+import navTitle from "components/navTitle.vue"
 import optionsData from "utils/optionsData"
 
 import apis from "apis"
@@ -114,8 +132,7 @@ const { alarmTypeOptions, alarmLevelOptions, deviceIdOptions, handleStatusOption
 
 export default {
 	name: "AlarmCenter",
-	mixins: [commonMinix],
-	components: { Dialog, Pagination, NumCount },
+	components: { Dialog, Pagination, NumCount, navTitle },
 	data() {
 		return {
 			alarmCountData: [
@@ -165,6 +182,14 @@ export default {
 				current: 1,
 				size: 10,
 			},
+			equipment: {
+				detail: '65℃',
+				reset: '',
+				equips: '电气火灾探测器 DQ865651221',
+				unit: '深圳市',
+				address: '广东省深圳',
+				place: '办公室'
+			}
 		}
 	},
 	mounted() {
@@ -181,6 +206,17 @@ export default {
 		])
 	},
 	methods: {
+		mapValue(item) {
+			const key = {
+				detail: '报警详情',
+				reset: '报警恢复',
+				equips: '报警设备',
+				unit: '报警单位',
+				address: '报警地址',
+				place: '安装位置'
+			}
+			return key[item];
+		},
 		getTableData(current = 1, size = 10) {
 			const params = {
 				current,
