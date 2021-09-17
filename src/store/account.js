@@ -98,7 +98,6 @@ const accountModule = {
 		},
 		async [GET_MENU_LIST]({ commit }) {
 			const res = await getUserMenuList()
-			console.log("res menu list --- ", res)
 			commit(SET_MENU_LIST, res.data.data)
 			// commit(SET_MENU_LIST, menuListMockData)
 		},

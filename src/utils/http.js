@@ -39,10 +39,9 @@ const responseInterceptFunc = res => {
 	if (data.code !== successCode) {
 		message.error(data.message)
 	}
-	if (data.code === -100) {
-		// TODO: token 失效跳转
-		sessionStorage.clear()
-		window.location.reload()
+	if (data.code === 20001) {
+		localStorage.clear()
+		window.location = '/'
 		throw new ReferenceError("token error")
 	}
 	return data

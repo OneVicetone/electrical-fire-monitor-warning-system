@@ -60,6 +60,7 @@ export default {
 				{ title: "修改时间", dataIndex: "" },
 				{ title: "修改时间", dataIndex: "", scopedSlots: { customRender: "operate" } },
 			],
+			
 			tableData: [],
 			paginationData: {
 				total: 0,

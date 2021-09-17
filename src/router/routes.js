@@ -26,7 +26,7 @@ const baseRoutes = [
 		path: "/",
 		name: "Layout",
 		component: Layout,
-		redirect: "/login",
+		redirect: "/monitor",
 		children: [
 			{
 				path: "/device-manage/device-info/:id",

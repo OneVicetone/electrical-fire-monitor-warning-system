@@ -18,7 +18,6 @@ export const commonMinix = {
 		},
 		addRoutes(routes) {
 			routes.forEach(route => this.$router.addRoute("Layout", route))
-			console.log(this.$router.getRoutes())
 		}
 	},
 	filters: {

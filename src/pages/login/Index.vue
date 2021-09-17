@@ -22,7 +22,7 @@ import { createNamespacedHelpers } from "vuex"
 
 import { LOGIN, GET_MENU_LIST, GET_ROUTES_BY_MENU_LIST, SET_ROUTES } from "store/account"
 import { USERNAME } from "utils/storageConstant"
-import commonMinix from 'minixs'
+import { commonMinix } from 'minixs'
 
 const { mapGetters, mapMutations, mapActions } = createNamespacedHelpers("account")
 export default {
