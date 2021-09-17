@@ -16,7 +16,7 @@
 				</a-form-model-item>
 			</a-form-model>
 
-			<a-table :columns="columns" :data-source="tabelData">
+			<a-table :columns="columns" :data-source="tableData">
 				<div slot="operate">
 					<a>编辑</a>
 					<a-divider type="vertical" />
@@ -52,7 +52,7 @@ export default {
 				{ title: "创建时间", dataIndex: "", key: "" },
 				{ title: "修改时间", dataIndex: "", key: "", scopedSlots: { customRender: "operate" } },
 			],
-			tabelData: [],
+			tableData: [],
 			paginationData: {
 				total: 0,
 				current: 1,

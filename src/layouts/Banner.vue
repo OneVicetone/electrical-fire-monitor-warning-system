@@ -68,7 +68,7 @@ export default {
       const routes = this.$store.state.account.routes
       const { path: localPath } = this.$route
       const childRoute = routes.find(i => i.path === path).children
-      const defaultToChildIdx = 1
+      const defaultToChildIdx = 0
       let firstChildPath
       if (Array.isArray(childRoute) && childRoute.length > 0) {
         firstChildPath = `${path}/${childRoute[defaultToChildIdx].path}`

@@ -27,7 +27,7 @@ export const commonMinix = {
 			}
 		},
 		filterTimeToYYYYMMDD(val) {
-			return moment(val).format("YYYY-MM-DD")
+			return val ? moment(val).format("YYYY-MM-DD") : "-"
 		},
 		filterAlarmStatus(val) {
 			switch (val) {

@@ -63,26 +63,26 @@
 
 		<a-table :columns="columns" :data-source="tableData">
 			<div slot="idx" slot-scope="text, record, index">
-				<span>{{index + 1}}</span>
+				{{index + 1}}
 			</div>
 
 			<div slot="alarmTypeName" slot-scope="text, record"></div>
-			<div slot="alarmTime" slot-scope="text, record">
-				{{ record.alarmTime | filterTimeToYYYYMMDD }}
+			<div slot="alarmTime" slot-scope="text">
+				{{ text.alarmTime | filterTimeToYYYYMMDD }}
 			</div>
-			<div slot="recoverTime" slot-scope="text, record">
-				{{ record.recoverTime | filterTimeToYYYYMMDD }}
+			<div slot="recoverTime" slot-scope="text">
+				{{ text.recoverTime | filterTimeToYYYYMMDD }}
 			</div>
-			<div slot="alarmLevel" slot-scope="text, record">
-				{{ record.alarmLevel | filterAlarmLevel }}
+			<div slot="alarmLevel" slot-scope="text">
+				{{ text.alarmLevel | filterAlarmLevel }}
 			</div>
-			<div slot="status" slot-scope="text, record">
-				{{ record.status | filterAlarmStatus }}
+			<div slot="status" slot-scope="text">
+				{{ text.status | filterAlarmStatus }}
 			</div>
 
-			<div slot="operate" slot-scope="text, record">
-				<a v-if="record.status === 1" @click="toProcess(text)">处理</a>
-				<a v-else @click="toExamine(record)">查看</a>
+			<div slot="operate" slot-scope="text">
+				<a v-if="text.status === 1" @click="toProcess(text)">处理</a>
+				<a v-else @click="toExamine(text)">查看</a>
 			</div>
 		</a-table>
 

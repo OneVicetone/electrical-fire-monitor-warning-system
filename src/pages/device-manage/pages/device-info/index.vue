@@ -77,7 +77,7 @@
 				</div>
 				<div class="history-alarm-log">
 					<ContentTitle title="历史报警记录" />
-					<a-table :columns="columns" :data-source="tabelData">
+					<a-table :columns="columns" :data-source="tableData">
 						<div slot="operate">
 							<a>编辑</a>
 							<a-divider type="vertical" />

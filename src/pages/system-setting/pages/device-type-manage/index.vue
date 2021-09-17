@@ -12,11 +12,25 @@
 			</a-form-model-item>
 		</a-form-model>
 
-		<a-table :columns="columns" :data-source="tabelData">
-			<div slot="operate">
-				<a>编辑</a>
+		<a-table :columns="columns" :data-source="tableData">
+			<div slot="idx" slot-scope="text, record, index">
+				{{ index + 1 }}
+			</div>
+			<div slot="productImgPath" slot-scope="text">
+				<img class="tabel-img" :src="text.productImgPath" />
+			</div>
+			<div slot="createTime" slot-scope="text">
+				{{ text.createTime | filterTimeToYYYYMMDD }}
+			</div>
+			<div slot="updateTime" slot-scope="text">
+				{{ text.updateTime | filterTimeToYYYYMMDD }}
+			</div>
+			<div slot="operate" slot-scope="text">
+				<a @click="edit(text)">编辑</a>
 				<a-divider type="vertical" />
-				<a>删除</a>
+				<a-popconfirm title="确定要删除吗？" ok-text="确定" cancel-text="取消" @confirm="deleteById(text)">
+					<a>删除</a>
+				</a-popconfirm>
 			</div>
 		</a-table>
 
@@ -26,22 +40,29 @@
 			:changePageSizeHandle="changePageSizeHandle"
 		/>
 
-		<Dialog v-model="isShowDialog" :title="`${isEdit ? '编辑' : '新增'}设备
-        `" />
+		<Dialog
+			v-model="isShowDialog"
+			:title="`${isEdit ? '编辑' : '新增'}设备
+        `"
+		/>
 	</div>
 </template>
 
 <script>
+import { message as msg } from 'ant-design-vue'
+
 import Dialog from "components/Dialog.vue"
 import Pagination from "components/Pagination.vue"
 
-import apis from 'apis'
+import apis from "apis"
+import { commonMinix } from "minixs"
 
 const { getDevicesTypeList, addDeviceType, updateDeviceTypeById, deleteDeviceType } = apis
 
 export default {
 	name: "DeviceTypeManage",
-    components: { Dialog, Pagination },
+	mixins: [commonMinix],
+	components: { Dialog, Pagination },
 	data() {
 		return {
 			isShowDialog: false,
@@ -50,17 +71,17 @@ export default {
 				model: "",
 			},
 			columns: [
-				{ title: "序号", dataIndex: "" },
-				{ title: "产品图片", dataIndex: "" },
-				{ title: "设备型号", dataIndex: "" },
-				{ title: "设备类型", dataIndex: "" },
-				{ title: "设备协议", dataIndex: "" },
-				{ title: "供应商", dataIndex: "" },
-				{ title: "创建时间", dataIndex: "" },
-				{ title: "修改时间", dataIndex: "" },
+				{ title: "序号", scopedSlots: { customRender: "idx" } },
+				{ title: "产品图片", scopedSlots: { customRender: "productImgPath" } },
+				{ title: "设备型号", dataIndex: "model" },
+				{ title: "设备类型", dataIndex: "deviceType" },
+				{ title: "设备协议", dataIndex: "protocolType" },
+				{ title: "供应商", dataIndex: "supplier" },
+				{ title: "创建时间", scopedSlots: { customRender: "createTime" } },
+				{ title: "修改时间", scopedSlots: { customRender: "updateTime" } },
 				{ title: "修改时间", dataIndex: "", scopedSlots: { customRender: "operate" } },
 			],
-			
+
 			tableData: [],
 			paginationData: {
 				total: 0,
@@ -77,17 +98,33 @@ export default {
 			const params = {
 				current,
 				size,
-				model: this.model
+				model: this.model,
 			}
 			getDevicesTypeList(params).then(res => {
-				const { data } = res.data
+				const {
+					data: { records, total, current, size },
+				} = res.data
+				this.tableData = records
+				this.paginationData = {
+					...this.paginationData,
+					total,
+					current,
+					size,
+				}
 			})
 		},
 		add() {
 			this.isShowDialog = true
 		},
-		delete(id) {},
-		edit(id) {},
+		deleteById({id}) {
+			// console.log(data)
+			deleteDeviceType(id).then(() => {
+				msg.success('删除成功')
+				const { current, size } = this.paginationData
+				this.getTableData(current, size)
+			})
+		},
+		edit(data) {},
 		changePageHandle(page, pageSize) {
 			this.getTableData(page, pageSize)
 		},
@@ -99,4 +136,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.tabel-img {
+	width: 5rem;
+	height: 5rem;
+}
 </style>
