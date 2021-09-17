@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { message as msg } from 'ant-design-vue'
+import { message as msg } from "ant-design-vue"
 
 import Dialog from "components/Dialog.vue"
 import Pagination from "components/Pagination.vue"
@@ -79,7 +79,7 @@ export default {
 				{ title: "供应商", dataIndex: "supplier" },
 				{ title: "创建时间", scopedSlots: { customRender: "createTime" } },
 				{ title: "修改时间", scopedSlots: { customRender: "updateTime" } },
-				{ title: "修改时间", dataIndex: "", scopedSlots: { customRender: "operate" } },
+				{ title: "操作", dataIndex: "", scopedSlots: { customRender: "operate" } },
 			],
 
 			tableData: [],
@@ -116,10 +116,10 @@ export default {
 		add() {
 			this.isShowDialog = true
 		},
-		deleteById({id}) {
+		deleteById({ id }) {
 			// console.log(data)
 			deleteDeviceType(id).then(() => {
-				msg.success('删除成功')
+				msg.success("删除成功")
 				const { current, size } = this.paginationData
 				this.getTableData(current, size)
 			})

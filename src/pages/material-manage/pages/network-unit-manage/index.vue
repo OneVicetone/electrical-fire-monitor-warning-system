@@ -6,21 +6,38 @@
 		<div class="network-unit-manage-content">
 			<a-form-model class="table-search-form" layout="inline" :model="searchForm">
 				<a-form-model-item>
-					<a-input v-model="searchForm.roleName" placeholder="请输入角色名称" size="small" />
+					<a-input v-model="searchForm.name" placeholder="请输入机构名称" size="small" />
+				</a-form-model-item>
+				<a-form-model-item>
+					<a-input v-model="searchForm.principalUserName" placeholder="请输入安全负责人名称" size="small" />
 				</a-form-model-item>
 				<a-form-model-item>
 					<a-button type="primary" size="small">搜索</a-button>
 				</a-form-model-item>
 				<a-form-model-item>
-					<a-button type="primary" size="small" @click="add"><a-icon type="plus" />新增角色</a-button>
+					<a-button type="primary" size="small" @click="add"><a-icon type="plus" />新增单位</a-button>
 				</a-form-model-item>
 			</a-form-model>
 
 			<a-table :columns="columns" :data-source="tableData">
-				<div slot="operate">
+				<div slot="idx" slot-scope="text, record, index">
+					{{ index + 1 }}
+				</div>
+				<div slot="enable" slot-scope="text">
+					{{ text.enable | filterAccountEnableStatus }}
+				</div>
+				<div slot="createTime" slot-scope="text">
+					{{ text.createTime | filterTimeToYYYYMMDD }}
+				</div>
+				<div slot="updateTime" slot-scope="text">
+					{{ text.updateTime | filterTimeToYYYYMMDD }}
+				</div>
+				<div slot="operate" slot-scope="text">
+					<a>重制密码</a>
+					<a-divider type="vertical" />
 					<a>编辑</a>
 					<a-divider type="vertical" />
-					<a>删除</a>
+					<a @click="changeAccountStatus(!text.enable, text.id)">{{text.enable ? "禁用" : "启用"}}</a>
 				</div>
 			</a-table>
 
@@ -34,22 +51,35 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 import OrganizationList from "components/OrganizationList.vue"
 import Pagination from "components/Pagination.vue"
 
+import { commonMinix } from 'minixs'
+import apis from "apis"
+
+const { getUnitList, createUnit, disableByUserId, enableByUserId, getUnitDetailById, getUnitTree } = apis
+
 export default {
 	name: "NetworkUnitManage",
+	mixins: [commonMinix],
 	components: { OrganizationList, Pagination },
 	data() {
 		return {
-			searchForm: {},
+			parentId: "",
+			searchForm: {
+				name: "",
+				principalUserName: "",
+			},
 			columns: [
-				{ title: "序号", dataIndex: "", key: "" },
-				{ title: "角色名称", dataIndex: "", key: "" },
-				{ title: "角色分类", dataIndex: "", key: "" },
-				{ title: "角色描述", dataIndex: "", key: "" },
-				{ title: "创建人", dataIndex: "", key: "" },
-				{ title: "创建时间", dataIndex: "", key: "" },
+				{ title: "序号", scopedSlots: { customRender: "idx" } },
+				{ title: "联网单位", dataIndex: "name" },
+				{ title: "安全负责人", dataIndex: "principalUserName" },
+				{ title: "安全负责人电话", dataIndex: "mobile" },
+				{ title: "账户状态", scopedSlots: { customRender: "enable" } },
+				{ title: "创建时间", scopedSlots: { customRender: "createTime" } },
+				{ title: "修改时间", scopedSlots: { customRender: "updateTime" } },
 				{ title: "修改时间", dataIndex: "", key: "", scopedSlots: { customRender: "operate" } },
 			],
 			tableData: [],
@@ -60,8 +90,30 @@ export default {
 			},
 		}
 	},
+	mounted() {
+		this.getTableData()
+	},
 	methods: {
-		getTableData(current = 1, size = 10) {},
+		getTableData(current = 1, size = 10) {
+			const params = {
+				current,
+				size,
+				...this.searchForm,
+				// TODO: 上级单位id
+			}
+			getUnitList(params).then(res => {
+				const {
+					data: { records, total, current, size },
+				} = res.data
+				this.tableData = records
+				this.paginationData = {
+					...this.paginationData,
+					total,
+					current,
+					size,
+				}
+			})
+		},
 		add() {
 			this.isShowDialog = true
 		},
@@ -73,6 +125,16 @@ export default {
 		changePageSizeHandle(current, size) {
 			this.getTableData(current, size)
 		},
+		changeAccountStatus(status, id) {
+			const func = res => {
+				this.getTableData(this.paginationData)
+			}
+			if (status) {
+				enableByUserId(id).then(func)
+			} else {
+				disableByUserId(id).then(func)
+			}
+		}
 	},
 }
 </script>

@@ -18,7 +18,7 @@ export const commonMinix = {
 		},
 		addRoutes(routes) {
 			routes.forEach(route => this.$router.addRoute("Layout", route))
-		}
+		},
 	},
 	filters: {
 		filterNull(val) {
@@ -50,6 +50,9 @@ export const commonMinix = {
 				default:
 					return "-"
 			}
+		},
+		filterAccountEnableStatus(val) {
+			return val ? "启用" : "禁用"
 		},
 	},
 }
