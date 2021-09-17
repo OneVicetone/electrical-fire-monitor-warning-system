@@ -27,7 +27,8 @@ export default {
 header {
 	height: 1.83rem;
 	margin: 0 0 0 1.68rem;
-	background: linear-gradient(90deg, #0096ff 0%, rgba(0, 150, 255, 0) 100%);
+	// background: linear-gradient(90deg, #0096ff 0%, rgba(0, 150, 255, 0) 100%);
+	background: url("assets/images/content-title-bg-png") no-repeat;
 	position: relative;
 	&::after {
 		.bevel-pseudo-element();

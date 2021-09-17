@@ -40,7 +40,9 @@
 								{{ option.text }}
 							</a-radio-button>
 						</a-radio-group>
-						<a-tree checkable :tree-data="menuTreeData"> </a-tree>
+						<div class="tree-checkout-container">
+							<a-tree checkable :tree-data="menuTreeData"> </a-tree>
+						</div>
 					</a-form-model-item>
 				</a-form-model>
 			</div>
@@ -125,5 +127,11 @@ export default {
 }
 .form-container {
 	padding: 2.75rem 6.58rem;
+	.tree-checkout-container {
+		height: 27.25rem;
+		margin: 1rem 0 0;
+		border: 1px solid #3F4A77;
+		overflow: auto;
+	}
 }
 </style>

@@ -18,7 +18,7 @@
     <div class="right-contant">
       <div
         v-for="item in rightContentData"
-        :class="`content-item ${nowPath === item.path ? 'active' : ''}`"
+        :class="`content-item ${nowPath.includes(item.path) ? 'active' : ''}`"
         :key="item.name"
         @click="toPath(item.path)"
       >

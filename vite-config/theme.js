@@ -52,4 +52,7 @@ module.exports = {
 	// Tree
 	"tree-node-hover-bg": "#3F4A77",
 	"tree-node-selected-bg": "#3F4A77",
+
+	// Form
+	"label-color": "#dcdcdc",
 }
