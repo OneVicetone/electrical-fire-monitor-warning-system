@@ -28,7 +28,7 @@ export default {
 		}),
 	},
 	created() {
-		this.addRoutes(this.routes)
+		this.routes && this.addRoutes(this.routes)
 	},
 }
 </script>

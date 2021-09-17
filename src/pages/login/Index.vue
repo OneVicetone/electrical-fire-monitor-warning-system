@@ -27,7 +27,7 @@ import { commonMinix } from 'minixs'
 const { mapGetters, mapMutations, mapActions } = createNamespacedHelpers("account")
 export default {
 	name: "Login",
-	minixs: [commonMinix],
+	mixins: [commonMinix],
 	data() {
 		return {
 			username: "ww",
@@ -55,7 +55,7 @@ export default {
 		async toLogin() {
 			this.isLogining = true
 			try {
-				const { username, password, source, $router, setRoutes, login, getMenuList } = this
+				const { username, password, source, $router, setRoutes, login, addRoutes, getMenuList,  } = this
 				const formData = new FormData()
 				formData.append("username", username)
 				formData.append("password", md5(password))
@@ -63,7 +63,7 @@ export default {
 				await login(formData)
 				setRoutes(this.routes)
 				addRoutes(this.routes)
-				this.$router.push("/device-manage")
+				$router.push("/device-manage")
 			} catch (err) {
 				this.isLogining = false
 				console.error(err)
