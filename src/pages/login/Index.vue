@@ -17,14 +17,17 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from "vuex"
 import md5 from "md5"
+import { createNamespacedHelpers } from "vuex"
+
 import { LOGIN, GET_MENU_LIST, GET_ROUTES_BY_MENU_LIST, SET_ROUTES } from "store/account"
 import { USERNAME } from "utils/storageConstant"
+import commonMinix from 'minixs'
 
 const { mapGetters, mapMutations, mapActions } = createNamespacedHelpers("account")
 export default {
 	name: "Login",
+	minixs: [commonMinix],
 	data() {
 		return {
 			username: "ww",
@@ -59,15 +62,12 @@ export default {
 				formData.append("source", source)
 				await login(formData)
 				setRoutes(this.routes)
-				this.routes.forEach(route => $router.addRoute("Layout", route))
+				addRoutes(this.routes)
 				this.$router.push("/device-manage")
 			} catch (err) {
 				this.isLogining = false
 				console.error(err)
 			}
-		},
-		saveLocalUserName() {
-			this.username && localStorage.setItem(USERNAME, this.username)
 		},
 	},
 	watch: {

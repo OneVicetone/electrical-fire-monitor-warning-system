@@ -51,7 +51,7 @@ const setupDeviceApis = http => ({
 			safetyDirector,
 			safetyDirectorMobile,
 		}),
-	getDevicesType: ({ current, size, model }) => http.get("/api-device/deviceType/pageList", { current, size, model }),
+	getDevicesTypeList: ({ current, size, model }) => http.get("/api-device/deviceType/pageList", { current, size, model }),
 	addDeviceType: ({ supplier, model, protocol, network, productImgPath, deviceTypeId }) =>
 		http.get("/api-device/deviceType/add", { supplier, model, protocol, network, productImgPath, deviceTypeId }),
 	updateDeviceTypeById: ({ id, supplier, model, protocol, network, productImgPath, deviceTypeId }) =>

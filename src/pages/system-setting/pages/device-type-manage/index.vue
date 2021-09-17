@@ -2,7 +2,7 @@
 	<div>
 		<a-form-model class="table-search-form" layout="inline" :model="searchForm">
 			<a-form-model-item>
-				<a-input v-model="searchForm.roleName" placeholder="请输入设备型号" size="small" />
+				<a-input v-model="searchForm.model" placeholder="请输入设备型号" size="small" />
 			</a-form-model-item>
 			<a-form-model-item>
 				<a-button type="primary" size="small">搜索</a-button>
@@ -35,6 +35,10 @@
 import Dialog from "components/Dialog.vue"
 import Pagination from "components/Pagination.vue"
 
+import apis from 'apis'
+
+const { getDevicesTypeList, addDeviceType, updateDeviceTypeById, deleteDeviceType } = apis
+
 export default {
 	name: "DeviceTypeManage",
     components: { Dialog, Pagination },
@@ -43,18 +47,18 @@ export default {
 			isShowDialog: false,
 			isEdit: false,
 			searchForm: {
-				roleName: "",
+				model: "",
 			},
 			columns: [
-				{ title: "序号", dataIndex: "", key: "" },
-				{ title: "产品图片", dataIndex: "", key: "" },
-				{ title: "设备型号", dataIndex: "", key: "" },
-				{ title: "设备类型", dataIndex: "", key: "" },
-				{ title: "设备协议", dataIndex: "", key: "" },
-				{ title: "供应商", dataIndex: "", key: "" },
-				{ title: "创建时间", dataIndex: "", key: "" },
-				{ title: "修改时间", dataIndex: "", key: "" },
-				{ title: "修改时间", dataIndex: "", key: "", scopedSlots: { customRender: "operate" } },
+				{ title: "序号", dataIndex: "" },
+				{ title: "产品图片", dataIndex: "" },
+				{ title: "设备型号", dataIndex: "" },
+				{ title: "设备类型", dataIndex: "" },
+				{ title: "设备协议", dataIndex: "" },
+				{ title: "供应商", dataIndex: "" },
+				{ title: "创建时间", dataIndex: "" },
+				{ title: "修改时间", dataIndex: "" },
+				{ title: "修改时间", dataIndex: "", scopedSlots: { customRender: "operate" } },
 			],
 			tableData: [],
 			paginationData: {
@@ -64,8 +68,20 @@ export default {
 			},
 		}
 	},
+	mounted() {
+		this.getTableData()
+	},
 	methods: {
-		getTableData(current = 1, size = 10) {},
+		getTableData(current = 1, size = 10) {
+			const params = {
+				current,
+				size,
+				model: this.model
+			}
+			getDevicesTypeList(params).then(res => {
+				const { data } = res.data
+			})
+		},
 		add() {
 			this.isShowDialog = true
 		},

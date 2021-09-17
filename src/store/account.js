@@ -31,7 +31,8 @@ const initialState = {
 		token: "",
 	},
 	menuList: [],
-	routes: []
+	routes: [],
+	...localStorage.getItem('vuex').account
 }
 
 const accountModule = {
