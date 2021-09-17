@@ -32,7 +32,7 @@ const initialState = {
 	},
 	menuList: [],
 	routes: [],
-	...localStorage.getItem('vuex').account
+	...(localStorage.getItem('vuex')?.account || {})
 }
 
 const accountModule = {
