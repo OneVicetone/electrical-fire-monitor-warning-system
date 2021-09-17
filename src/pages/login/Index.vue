@@ -3,8 +3,8 @@
 		<div class="login-form-container">
 			<img src="assets/images/logo-has-text.png" alt="logo" />
 			<div>
-				<a-input class="username-input" palceholder="请输入用户账号" />
-				<a-input class="password-input" palceholder="请输入用户密码" />
+				<a-input class="username-input" v-model="username" palceholder="请输入用户账号" />
+				<a-input class="password-input" type="password" v-model="password" palceholder="请输入用户密码" />
 				<a-button type="primary" class="login-btn" block @click="toLogin">登录</a-button>
 				<a-checkbox v-model="saveLocalUserName">记住用户名</a-checkbox>
 			</div>
@@ -27,12 +27,13 @@ export default {
 	name: "Login",
 	data() {
 		return {
-			// username: "ww",
-			// password: "BYkj8080",
-			// source: 1,
-			username: localStorage.getItem(USERNAME) || "",
-			password: "",
+			username: "ww",
+			password: "BYkj8080",
+			
 			source: 1,
+			// username: localStorage.getItem(USERNAME) || "",
+			// password: "",
+			// source: 1,
 			saveLocalUserName: false
 		}
 	},

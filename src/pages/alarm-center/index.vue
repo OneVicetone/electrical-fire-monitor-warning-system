@@ -1,7 +1,7 @@
 <template>
 	<div class="alarm-center-container">
 		<div class="alarm-count">
-			<img src="assets/icons/alarm-count.png" alt="alarm-coun">
+			<img src="assets/icons/alarm-count.png" alt="alarm-coun" />
 			<NumCount
 				v-for="item of alarmCountData"
 				:key="item.title"
@@ -46,19 +46,20 @@
 				/>
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-date-picker v-model="searchForm.alarmTime" placeholder="请选择报警时间" size="small" />
+				<!-- <a-range-picker v-model="searchForm.alarmTime" size="small" format="YYYY-MM-DD" /> -->
 			</a-form-model-item>
 			<a-form-model-item>
 				<a-button type="primary" size="small">搜索</a-button>
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-button type="primary" size="small" @click="add"><a-icon type="plus" />导出</a-button>
+				<a-button type="primary" size="small"><a-icon type="plus" />导出</a-button>
 			</a-form-model-item>
 		</a-form-model>
 
-		<a-table :columns="columns" :data-source="tabelData">
-			<div slot="operate">
-				<a>查看</a>
+		<a-table :columns="columns" :data-source="tableData">
+			<div slot="operate" slot-scope="text, record">
+				<a v-if="record.status === 1" @click="toProcess(record)">处理</a>
+				<a v-else @click="toExamine(record)">查看</a>
 			</div>
 		</a-table>
 
@@ -75,11 +76,16 @@
 </template>
 
 <script>
+import moment from "moment"
+
 import Dialog from "components/Dialog.vue"
 import Pagination from "components/Pagination.vue"
 import NumCount from "components/NumCount.vue"
 import optionsData from "utils/optionsData"
 
+import apis from "apis"
+
+const { getAlarmCount, getAlarmList, getAlarmCenterSelectOptions, getAlarmDetail, processAlarm } = apis
 const { alarmTypeOptions, alarmLevelOptions, deviceIdOptions, handleStatusOptions } = optionsData
 
 export default {
@@ -88,23 +94,23 @@ export default {
 	data() {
 		return {
 			alarmCountData: [
-				{ title: "全部预警", num: "1013" },
-				{ title: "高危", num: "96", icon: "/src/assets/icons/danger-icon.png" },
-				{ title: "预警", num: "84", icon: "/src/assets/icons/warn-icon.png" },
-				{ title: "设备故障", num: "365" },
-				{ title: "未处理", num: "515" },
-				{ title: "今日新增", num: "5" },
-				{ title: "累计处理", num: "148", afterHasDivider: false },
+				{ title: "全部预警", num: "-", key: "total" },
+				{ title: "高危", num: "-", icon: "/src/assets/icons/danger-icon.png", key: "highRiskNum" },
+				{ title: "预警", num: "-", icon: "/src/assets/icons/warn-icon.png", key: "warningNum" },
+				{ title: "设备故障", num: "-", key: "faultNum" },
+				{ title: "未处理", num: "-", key: "unTreatedNum" },
+				{ title: "今日新增", num: "-", key: "todayAddNum" },
+				{ title: "累计处理", num: "-", afterHasDivider: false, key: "addUpNum" },
 			],
 			isShowHandle: false,
 			searchForm: {
 				unit: "",
-				deviceName: "",
-				alarmType: "0",
-				alarmLevel: "0",
-				deviceId: "0",
-				handleStatus: "0",
-				alarmTime: "",
+				deviceSnName: "",
+				alarmType: 0,
+				alarmLevel: 0,
+				deviceTypeId: 0,
+				status: 0,
+				alarmTime: [moment(), moment()],
 			},
 			unitOptions: [],
 			alarmTypeOptions,
@@ -112,37 +118,70 @@ export default {
 			deviceIdOptions,
 			handleStatusOptions,
 			columns: [
-				{ title: "序号", dataIndex: "", key: "" },
-				{ title: "设备ID", dataIndex: "", key: "" },
-				{ title: "所属单位", dataIndex: "", key: "" },
-				{ title: "设备名称", dataIndex: "", key: "" },
-				{ title: "设备类型", dataIndex: "", key: "" },
-				{ title: "设备型号", dataIndex: "", key: "" },
-				{ title: "报警级别", dataIndex: "", key: "" },
-				{ title: "报警类型", dataIndex: "", key: "" },
-				{ title: "报警详情", dataIndex: "", key: "" },
-				{ title: "报警时间", dataIndex: "", key: "" },
-				{ title: "报警恢复时间", dataIndex: "", key: "" },
-				{ title: "报警位置", dataIndex: "", key: "" },
-				{ title: "处理状态", dataIndex: "", key: "" },
-				{ title: "处理人", dataIndex: "", key: "" },
-				{ title: "操作", dataIndex: "", key: "", scopedSlots: { customRender: "operate" } },
+				{ title: "序号", dataIndex: "" },
+				{ title: "设备ID", dataIndex: "deviceSn" },
+				{ title: "所属单位", dataIndex: "groupName" },
+				{ title: "设备名称", dataIndex: "deviceAlias" },
+				{ title: "设备类型", dataIndex: "deviceTypeName" },
+				{ title: "设备型号", dataIndex: "deviceTypeModel" },
+				{ title: "报警级别", dataIndex: "alarmLevel" },
+				{ title: "报警类型", dataIndex: "alarmTypeName" },
+				{ title: "报警详情", dataIndex: "alarmValue" },
+				{ title: "报警时间", dataIndex: "alarmTime", scopedSlots: { customRender: "alarmTime" } },
+				{ title: "报警恢复时间", dataIndex: "recoverTime", scopedSlots: { customRender: "recoverTime" } },
+				{ title: "报警位置", dataIndex: "address" },
+				{ title: "处理状态", dataIndex: "status", scopedSlots: { customRender: "status" } },
+				{ title: "处理人", dataIndex: "processUserName" },
+				{ title: "操作", dataIndex: "", scopedSlots: { customRender: "operate" } },
 			],
 			tableData: [],
 			paginationData: {
-				count: 0,
+				total: 0,
 				current: 1,
-				pageSize: 10,
+				size: 10,
 			},
 		}
 	},
+	mounted() {
+		Promise.allSettled([getAlarmCount().then(res => {
+			const { data } = res.data
+			this.alarmCountData.forEach(i => i.num = data[i.key] )
+		}), this.getTableData()])
+	},
 	methods: {
-		getTableData(current = 1, size = 10) {},
+		getTableData(current = 1, size = 10) {
+			const params = {
+				current,
+				size,
+				...this.searchForm,
+			}
+			return getAlarmList(params).then(res => {
+				const { data } = res.data
+				this.tableData = data.records
+				this.paginationData.size = data.size
+				this.paginationData.total = data.size
+				this.paginationData.current = data.current
+			})
+		},
 		changePageHandle(page, pageSize) {
 			this.getTableData(page, pageSize)
 		},
 		changePageSizeHandle(current, size) {
 			this.getTableData(current, size)
+		},
+		toProcess(record) {
+			console.log(record)
+		},
+		toExamine(record) {
+			console.log(record)
+		},
+	},
+	watch: {
+		searchForm: {
+			handler(val) {
+				console.log(val)
+			},
+			deep: true
 		},
 	},
 }

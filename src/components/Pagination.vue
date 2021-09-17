@@ -3,8 +3,8 @@
 		<a-pagination
 			show-size-changer
 			v-model="paginationData.current"
-			:pageSize="paginationData.pageSize"
-			:total="paginationData.count"
+			:pageSize="paginationData.size"
+			:total="paginationData.total"
 			@showSizeChange="changePageSizeHandle"
 			@change="changePageHandle"
 			showQuickJumper
@@ -20,7 +20,7 @@ export default {
 			type: Object,
 			required: true,
 			default: {
-				count: 100,
+				count: 0,
 				current: 1,
 				pageSize: 10,
 			},

@@ -54,9 +54,9 @@ export default {
 			],
 			tabelData: [],
 			paginationData: {
-				count: 0,
+				total: 0,
 				current: 1,
-				pageSize: 10,
+				size: 10,
 			},
 		}
 	},
