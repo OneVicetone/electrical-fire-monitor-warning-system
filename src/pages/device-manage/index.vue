@@ -65,6 +65,10 @@ import Pagination from "components/Pagination.vue"
 
 import optionsData from "utils/optionsData"
 
+import apis from 'apis'
+
+const { createDevice, changeDeviceInfo } = apis
+
 const { deviceTypeOptions, deviceIdOptions } = optionsData
 
 export default {
@@ -84,7 +88,7 @@ export default {
 			paginationData: {
 				total: 100,
 				current: 1,
-				sie: 10,
+				size: 10,
 			},
 		}
 	},

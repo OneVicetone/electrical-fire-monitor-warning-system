@@ -24,7 +24,6 @@ const setupAlarmApis = http => ({
 			startDate,
 			endDate,
 		}),
-	getAlarmCenterSelectOptions: type => http.get(`/api-common/common/parameter/${type}/list`),
 	getAlarmDetail: id => http.get(`/api-alarm/alarm/detail/${id}`),
 	processAlarm: ({ alarmId, confirmFlag, processType, remark }) =>
 		http.post("/api-alarm/alarm/process", { alarmId, confirmFlag, processType, remark }),

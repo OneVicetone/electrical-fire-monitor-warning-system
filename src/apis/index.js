@@ -5,10 +5,14 @@ import setupAccoutApis from "./account";
 import setupAlarmApis from './alarm';
 import setupDeviceApis from './device'
 import setupMonitorApis from './monitor'
+import setupCommonApis from './common'
+import setupUnitApis from './unit'
 
 export default {
     ...setupAccoutApis(http),
     ...setupAlarmApis(http),
     ...setupDeviceApis(http),
-    ...setupMonitorApis(http)
+    ...setupMonitorApis(http),
+    ...setupCommonApis(http),
+    ...setupUnitApis(http)
 }

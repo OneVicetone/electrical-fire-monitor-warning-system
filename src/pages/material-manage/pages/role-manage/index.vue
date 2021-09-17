@@ -58,6 +58,8 @@
 import Dialog from "components/Dialog.vue"
 import Pagination from "components/Pagination.vue"
 
+import apis from 'apis'
+
 export default {
 	name: "RoleManage",
 	components: { Dialog, Pagination },

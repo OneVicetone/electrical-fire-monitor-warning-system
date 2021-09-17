@@ -37,6 +37,10 @@
 import OrganizationList from "components/OrganizationList.vue"
 import Pagination from "components/Pagination.vue"
 
+import apis from 'apis'
+
+const { getUserMenuList } = apis
+
 export default {
 	name: "NetworkUnitManage",
 	components: { OrganizationList, Pagination },

@@ -109,7 +109,7 @@ import optionsData from "utils/optionsData"
 import apis from "apis"
 import { commonMinix } from "minixs"
 
-const { getAlarmCount, getAlarmList, getAlarmCenterSelectOptions, getAlarmDetail, processAlarm } = apis
+const { getAlarmCount, getAlarmList, getSelectOptions, getAlarmDetail, processAlarm } = apis
 const { alarmTypeOptions, alarmLevelOptions, deviceIdOptions, handleStatusOptions } = optionsData
 
 export default {
@@ -175,7 +175,7 @@ export default {
 				this.alarmCountData.forEach(i => (i.num = data[i.key]))
 			}),
 			this.getTableData(),
-			// ...optionsTypes.map(i => getAlarmCenterSelectOptions(i).then(ren => {
+			// ...optionsTypes.map(i => getSelectOptions(i).then(ren => {
 			// 	const 
 			// }))
 		])
