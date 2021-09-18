@@ -12,7 +12,7 @@
 			</a-form-model-item>
 		</a-form-model>
 
-		<a-table :columns="columns" :data-source="tableData">
+		<a-table :columns="columns" :data-source="tableData" :pagination="false">
 			<div slot="idx" slot-scope="text, record, index">
 				{{ index + 1 }}
 			</div>
@@ -103,7 +103,7 @@ export default {
 			getDevicesTypeList(params).then(res => {
 				const {
 					data: { records, total, current, size },
-				} = res.data
+				} = res
 				this.tableData = records
 				this.paginationData = {
 					...this.paginationData,

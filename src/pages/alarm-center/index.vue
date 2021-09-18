@@ -61,9 +61,9 @@
 			</a-form-model-item>
 		</a-form-model>
 
-		<a-table :columns="columns" :data-source="tableData">
+		<a-table :columns="columns" :data-source="tableData" :pagination="false">
 			<div slot="idx" slot-scope="text, record, index">
-				{{index + 1}}
+				{{ index + 1 }}
 			</div>
 
 			<div slot="alarmTypeName" slot-scope="text, record"></div>
@@ -81,8 +81,22 @@
 			</div>
 
 			<div slot="operate" slot-scope="text, record">
-				<a v-if="record.status === 1" @click="showAlert = true;toProcess(record)">处理</a>
-				<a v-else @click="showAlert = true;toExamine(record)">查看</a>
+				<a
+					v-if="record.status === 1"
+					@click="
+						showAlert = true
+						toProcess(record)
+					"
+					>处理</a
+				>
+				<a
+					v-else
+					@click="
+						showAlert = true
+						toExamine(record)
+					"
+					>查看</a
+				>
 			</div>
 		</a-table>
 
@@ -163,15 +177,15 @@ export default {
 		}
 	},
 	mounted() {
-		const optionsTypes = ['alarmType', 'deviceType', 'alarmType']
+		const optionsTypes = ["alarmType", "deviceType", "alarmType"]
 		Promise.allSettled([
 			getAlarmCount().then(res => {
-				const { data } = res.data
+				const { data } = res
 				this.alarmCountData.forEach(i => (i.num = data[i.key]))
 			}),
 			this.getTableData(),
 			// ...optionsTypes.map(i => getSelectOptions(i).then(ren => {
-			// 	const 
+			// 	const
 			// }))
 		])
 	},
@@ -183,11 +197,16 @@ export default {
 				...this.searchForm,
 			}
 			return getAlarmList(params).then(res => {
-				const { data } = res.data
-				this.tableData = data.records
-				this.paginationData.size = data.size
-				this.paginationData.total = data.size
-				this.paginationData.current = data.current
+				const {
+					data: { records, total, current, size },
+				} = res
+				this.tableData = records
+				this.paginationData = {
+					...this.paginationData,
+					total,
+					current,
+					size,
+				}
 			})
 		},
 		changePageHandle(page, pageSize) {

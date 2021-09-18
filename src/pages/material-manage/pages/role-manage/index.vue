@@ -12,7 +12,7 @@
 			</a-form-model-item>
 		</a-form-model>
 
-		<a-table :columns="columns" :data-source="tableData">
+		<a-table :columns="columns" :data-source="tableData" :pagination="false">
 			<div slot="operate">
 				<a>编辑</a>
 				<a-divider type="vertical" />
