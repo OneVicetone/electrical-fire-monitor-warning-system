@@ -62,10 +62,19 @@ axiosInstance.interceptors.request.use(requestInterceptFunc, requsetErrFunc)
 axiosInstance.interceptors.response.use(responseInterceptFunc, responseErrFunc)
 
 class Http {
-	static get(url, data) {
+	static get(url, params) {
 		return axiosInstance({
 			url,
 			method: "get",
+			params,
+			headers: getRequestHeader(),
+		})
+	}
+
+	static put(url, data) {
+		return axiosInstance({
+			url,
+			method: "put",
 			data,
 			headers: getRequestHeader(),
 		})
