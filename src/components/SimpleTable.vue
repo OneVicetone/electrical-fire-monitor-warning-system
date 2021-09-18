@@ -61,7 +61,7 @@ export default {
 			font-size: 1rem;
 			color: #aaddff;
 		}
-		.wider {
+		.wdier {
 			width: 6.75rem;
 		}
 	}

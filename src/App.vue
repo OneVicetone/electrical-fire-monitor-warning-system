@@ -37,3 +37,6 @@ export default {
 	},
 }
 </script>
+<style lang="less">
+	@import url("styles/public.less");
+</style>

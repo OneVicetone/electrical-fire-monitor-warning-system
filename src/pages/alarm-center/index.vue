@@ -54,7 +54,7 @@
 				<!-- <a-range-picker v-model="searchForm.alarmTime" size="small" format="YYYY-MM-DD" /> -->
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-button type="primary" size="small">搜索</a-button>
+				<a-button type="primary" size="small" @click="showAlert = true">搜索</a-button>
 			</a-form-model-item>
 			<a-form-model-item>
 				<a-button type="primary" size="small"><a-icon type="plus" />导出</a-button>
@@ -80,9 +80,9 @@
 				{{ text.status | filterAlarmStatus }}
 			</div>
 
-			<div slot="operate" slot-scope="text">
-				<a v-if="text.status === 1" @click="toProcess(text)">处理</a>
-				<a v-else @click="toExamine(text)">查看</a>
+			<div slot="operate" slot-scope="text, record">
+				<a v-if="record.status === 1" @click="showAlert = true;toProcess(record)">处理</a>
+				<a v-else @click="showAlert = true;toExamine(record)">查看</a>
 			</div>
 		</a-table>
 
@@ -91,19 +91,15 @@
 			:changePageHandle="changePageHandle"
 			:changePageSizeHandle="changePageSizeHandle"
 		/>
-
-		<Dialog v-model="isShowHandle" title="报警处理">
-			<div class="alarm-handle-container"></div>
-		</Dialog>
+		<Deal-with-dialog v-model="showAlert"></Deal-with-dialog>
 	</div>
 </template>
 
 <script>
 import moment from "moment"
-
-import Dialog from "components/Dialog.vue"
 import Pagination from "components/Pagination.vue"
 import NumCount from "components/NumCount.vue"
+import DealWithDialog from "./components/DealWithDialog.vue"
 import optionsData from "utils/optionsData"
 
 import apis from "apis"
@@ -114,8 +110,7 @@ const { alarmTypeOptions, alarmLevelOptions, deviceIdOptions, handleStatusOption
 
 export default {
 	name: "AlarmCenter",
-	mixins: [commonMinix],
-	components: { Dialog, Pagination, NumCount },
+	components: { Pagination, NumCount, DealWithDialog },
 	data() {
 		return {
 			alarmCountData: [
@@ -127,7 +122,7 @@ export default {
 				{ title: "今日新增", num: "-", key: "todayAddNum" },
 				{ title: "累计处理", num: "-", afterHasDivider: false, key: "addUpNum" },
 			],
-			isShowHandle: false,
+			showAlert: false,
 			searchForm: {
 				unit: "",
 				deviceSnName: "",
