@@ -29,7 +29,7 @@
                     <a-radio-group class="radio-wd" v-model="warnSure" :options="warnOpt" @change="e => onChanges(e, 'sure')" />
                     <br />
                     <span class="yahei-400">处理方式：</span>
-                    <a-radio-group class="radio-wd" v-model="dealWith" :options="method" @change="e => onChanges(e, 'deal')" />
+                    <a-radio-group class="radio-wd" v-model="dealWith" :options="methodOpt" @change="e => onChanges(e, 'deal')" />
                     <br />
                     <span class="yahei-400">指令下发：</span>
                     <a class="yahei-400 underline" href="javascript:void(0)">下发指令></a>
@@ -43,7 +43,7 @@
         </section>
         <section class="btns pb t-center">
             <a-button type="primary" class="mr125">确定</a-button>
-            <a-button class="bg-none" @click="$emit('update:dialogVisible', false)">取消</a-button>
+            <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
         </section>
     </Dialog>
 </template>
@@ -61,8 +61,11 @@ export default {
             type: Boolean,
             default: false
         },
-
     },
+    model: {
+		prop: "dialogVisible",
+        event: "input"
+	},
     data() {
         return {
             equipment: {
@@ -80,7 +83,7 @@ export default {
 				{ label: '误报', value: '2' },
 				{ label: '测试', value: '3' },
 			],
-			method: [
+			methodOpt: [
 				{ label: '已核查', value: '1' },
 				{ label: '已通知用户', value: '2' },
 				{ label: '下发整改通知', value: '3' },
@@ -88,8 +91,9 @@ export default {
         }
     },
     computed: {
-        isShowHandle() {
-            return this.dialogVisible;
+        isShowHandle: {
+            get: function() { return this.dialogVisible },
+			set(v){ this.$emit('input', v) }
         }
     },
     methods: {

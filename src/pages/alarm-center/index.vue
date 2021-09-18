@@ -91,7 +91,7 @@
 			:changePageHandle="changePageHandle"
 			:changePageSizeHandle="changePageSizeHandle"
 		/>
-		<Deal-with-dialog :dialogVisible.sync="showAlert"></Deal-with-dialog>
+		<Deal-with-dialog v-model="showAlert"></Deal-with-dialog>
 	</div>
 </template>
 
