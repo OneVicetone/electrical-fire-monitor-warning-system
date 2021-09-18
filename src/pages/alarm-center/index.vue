@@ -81,22 +81,8 @@
 			</div>
 
 			<div slot="operate" slot-scope="text, record">
-				<a
-					v-if="record.status === 1"
-					@click="
-						showAlert = true
-						toProcess(record)
-					"
-					>处理</a
-				>
-				<a
-					v-else
-					@click="
-						showAlert = true
-						toExamine(record)
-					"
-					>查看</a
-				>
+				<a v-if="record.status === 1" @click="toProcess(record)">处理</a>
+				<a v-else @click="toExamine(record)">查看</a>
 			</div>
 		</a-table>
 
@@ -105,7 +91,7 @@
 			:changePageHandle="changePageHandle"
 			:changePageSizeHandle="changePageSizeHandle"
 		/>
-		<Deal-with-dialog v-model="showAlert"></Deal-with-dialog>
+		<DealWithDialog v-model="showAlert"></DealWithDialog>
 	</div>
 </template>
 
@@ -124,6 +110,7 @@ const { alarmTypeOptions, alarmLevelOptions, deviceIdOptions, handleStatusOption
 
 export default {
 	name: "AlarmCenter",
+	mixins: [commonMinix],
 	components: { Pagination, NumCount, DealWithDialog },
 	data() {
 		return {
@@ -158,13 +145,13 @@ export default {
 				{ title: "设备名称", dataIndex: "deviceAlias" },
 				{ title: "设备类型", dataIndex: "deviceTypeName" },
 				{ title: "设备型号", dataIndex: "deviceTypeModel" },
-				{ title: "报警级别", dataIndex: "alarmLevel", scopedSlots: { customRender: "alarmLevel" } },
-				{ title: "报警类型", dataIndex: "alarmTypeName", scopedSlots: { customRender: "alarmTypeName" } },
+				{ title: "报警级别", scopedSlots: { customRender: "alarmLevel" } },
+				{ title: "报警类型", scopedSlots: { customRender: "alarmTypeName" } },
 				{ title: "报警详情", dataIndex: "alarmValue" },
-				{ title: "报警时间", dataIndex: "alarmTime", scopedSlots: { customRender: "alarmTime" } },
-				{ title: "报警恢复时间", dataIndex: "recoverTime", scopedSlots: { customRender: "recoverTime" } },
+				{ title: "报警时间", scopedSlots: { customRender: "alarmTime" } },
+				{ title: "报警恢复时间", scopedSlots: { customRender: "recoverTime" } },
 				{ title: "报警位置", dataIndex: "address" },
-				{ title: "处理状态", dataIndex: "status", scopedSlots: { customRender: "status" } },
+				{ title: "处理状态", scopedSlots: { customRender: "status" } },
 				{ title: "处理人", dataIndex: "processUserName" },
 				{ title: "操作", dataIndex: "", scopedSlots: { customRender: "operate" } },
 			],
@@ -177,29 +164,28 @@ export default {
 		}
 	},
 	mounted() {
-		const optionsTypes = ["alarmType", "deviceType", "alarmType"]
+		const optionsTypes = ["alarmType"]
 		Promise.allSettled([
-			getAlarmCount().then(res => {
-				const { data } = res
+			getAlarmCount().then(({ data }) => {
 				this.alarmCountData.forEach(i => (i.num = data[i.key]))
 			}),
 			this.getTableData(),
-			// ...optionsTypes.map(i => getSelectOptions(i).then(ren => {
-			// 	const
-			// }))
+			...optionsTypes.map(i =>
+				getSelectOptions(i).then(({ data }) => {
+					this[`${i}Options`] = data
+				})
+			),
 		])
 	},
 	methods: {
 		getTableData(current = 1, size = 10) {
+			console.log("#1")
 			const params = {
 				current,
 				size,
 				...this.searchForm,
 			}
-			return getAlarmList(params).then(res => {
-				const {
-					data: { records, total, current, size },
-				} = res
+			return getAlarmList(params).then(({ data: { records, total, current, size } }) => {
 				this.tableData = records
 				this.paginationData = {
 					...this.paginationData,
@@ -216,9 +202,11 @@ export default {
 			this.getTableData(current, size)
 		},
 		toProcess(record) {
+			this.showAlert = true
 			console.log(record)
 		},
 		toExamine(record) {
+			this.showAlert = true
 			console.log(record)
 		},
 	},

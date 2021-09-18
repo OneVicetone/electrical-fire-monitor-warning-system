@@ -100,10 +100,7 @@ export default {
 				size,
 				model: this.model,
 			}
-			getDevicesTypeList(params).then(res => {
-				const {
-					data: { records, total, current, size },
-				} = res
+			getDevicesTypeList(params).then(({ data: { records, total, current, size } }) => {
 				this.tableData = records
 				this.paginationData = {
 					...this.paginationData,

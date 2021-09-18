@@ -79,14 +79,14 @@ export default {
 			deviceStatusRadio: "1",
 			searchForm: {
 				deviceName: "",
-				deviceType: "0",
-				deviceId: "0",
+				deviceType: 0,
+				deviceId: 0,
 				iccid: "",
 			},
 			deviceTypeOptions,
 			deviceIdOptions,
 			paginationData: {
-				total: 100,
+				total: 0,
 				current: 1,
 				size: 10,
 			},
@@ -124,6 +124,7 @@ export default {
 	.organization {
 		width: 21.67rem;
 		height: 100%;
+		flex: 0 0 auto;
 		padding: 0 1.5rem;
 		border-right: 1px solid #3f4a77;
 	}

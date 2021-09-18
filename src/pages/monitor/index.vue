@@ -3,16 +3,27 @@
 </template>
 
 <script>
+import apis from "apis"
+
+const { getMapKey } = apis
+
 export default {
 	name: "Monitor",
 	data() {
 		return {}
 	},
 	mounted() {
-		const map = new AMap.Map("map_container", {
-			zoom: 11,
-			mapStyle: "amap://styles/blue",
-		})
+		this.setMap()
+	},
+	methods: {
+		setMap() {
+			getMapKey().then(({ data }) => {
+				const map = new AMap.Map("map_container", {
+					zoom: 11,
+					mapStyle: "amap://styles/blue",
+				})
+			})
+		},
 	},
 }
 </script>

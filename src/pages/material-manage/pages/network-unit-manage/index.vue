@@ -12,7 +12,7 @@
 					<a-input v-model="searchForm.principalUserName" placeholder="请输入安全负责人名称" size="small" />
 				</a-form-model-item>
 				<a-form-model-item>
-					<a-button type="primary" size="small">搜索</a-button>
+					<a-button type="primary" size="small" @click="search">搜索</a-button>
 				</a-form-model-item>
 				<a-form-model-item>
 					<a-button type="primary" size="small" @click="add"><a-icon type="plus" />新增单位</a-button>
@@ -33,11 +33,11 @@
 					{{ text.updateTime | filterTimeToYYYYMMDD }}
 				</div>
 				<div slot="operate" slot-scope="text">
-					<a>重制密码</a>
+					<a @click="resetPassword(text.id, text.name)">重制密码</a>
 					<a-divider type="vertical" />
 					<a>编辑</a>
 					<a-divider type="vertical" />
-					<a @click="changeAccountStatus(!text.enable, text.id)">{{text.enable ? "禁用" : "启用"}}</a>
+					<a @click="changeAccountStatus(text.enable, text.id)">{{ text.enable ? "禁用" : "启用" }}</a>
 				</div>
 			</a-table>
 
@@ -52,16 +52,17 @@
 </template>
 
 <script>
-import moment from 'moment'
+import md5 from "md5"
 
 import newAddUnit from "./AddUnit.vue"
 import OrganizationList from "components/OrganizationList.vue"
 import Pagination from "components/Pagination.vue"
 
-import { commonMinix } from 'minixs'
+import { commonMinix } from "minixs"
 import apis from "apis"
 
-const { getUnitList, createUnit, disableByUserId, enableByUserId, getUnitDetailById, getUnitTree } = apis
+const { getUnitList, createUnit, disableByUserId, enableByUserId, getUnitDetailById, getUnitTree, changePassword } =
+	apis
 
 export default {
 	name: "NetworkUnitManage",
@@ -90,7 +91,7 @@ export default {
 				current: 1,
 				size: 10,
 			},
-			isShowDialog: false
+			isShowDialog: false,
 		}
 	},
 	mounted() {
@@ -104,10 +105,7 @@ export default {
 				...this.searchForm,
 				// TODO: 上级单位id
 			}
-			getUnitList(params).then(res => {
-				const {
-					data: { records, total, current, size },
-				} = res
+			getUnitList(params).then(({data: { records, total, current, size }}) => {
 				this.tableData = records
 				this.paginationData = {
 					...this.paginationData,
@@ -122,22 +120,51 @@ export default {
 		},
 		delete(id) {},
 		edit(id) {},
+		search() {
+			const {
+				paginationData: { current, size },
+			} = this
+			this.getTableData(current, size)
+		},
 		changePageHandle(page, pageSize) {
 			this.getTableData(page, pageSize)
 		},
 		changePageSizeHandle(current, size) {
 			this.getTableData(current, size)
 		},
+		resetPassword(userId, name) {
+			const initialPassword = "Bykj8080"
+			this.$confirm({
+				content: `确定要重置用户账号:[${name}]密码吗？
+							重制后初始密码为: ${initialPassword}`,
+				onOk() {
+					const params = {
+						userId,
+						password: "",
+						newPassword: md5(initialPassword),
+					}
+					return new Promise(resolve => resolve(changePassword(params)))
+				},
+			})
+		},
 		changeAccountStatus(status, id) {
-			const func = res => {
-				this.getTableData(this.paginationData)
+			const {
+				paginationData: { current, size },
+			} = this
+			const func = () => {
+				new Promise(resolve => resolve(this.getTableData(current, size)))
 			}
-			if (status) {
-				enableByUserId(id).then(func)
-			} else {
-				disableByUserId(id).then(func)
-			}
-		}
+			this.$confirm({
+				content: `确认${status ? "禁用" : "启用"}此用户?`,
+				onOk() {
+					if (status) {
+						return disableByUserId(id).then(func)
+					} else {
+						return enableByUserId(id).then(func)
+					}
+				},
+			})
+		},
 	},
 }
 </script>
@@ -147,14 +174,23 @@ export default {
 
 .network-unit-manage-container {
 	.pages-container-has-child-layout();
+	display: flex;
+	padding: 0;
+	margin: -30px 0 0;
 	// overflow: hidden;
 	.organization {
 		width: 21.67rem;
-		height: 100vh;
 		padding: 0 1.5rem;
+		flex: 0 0 auto;
 		border-right: 1px solid #3f4a77;
-		position: relative;
-		top: calc(0px - 4rem - 43px);
+		overflow: hidden;
+		text-overflow: ellipsis;
+		// position: relative;
+		// top: calc(20px);
+	}
+	.network-unit-manage-content {
+		width: 100%;
+		padding: 2rem 1.58rem 0;
 	}
 }
 </style>
