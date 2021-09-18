@@ -47,12 +47,14 @@
 				:changePageSizeHandle="changePageSizeHandle"
 			/>
 		</div>
+		<new-add-unit v-model="isShowDialog"></new-add-unit>
 	</div>
 </template>
 
 <script>
 import moment from 'moment'
 
+import newAddUnit from "./AddUnit.vue"
 import OrganizationList from "components/OrganizationList.vue"
 import Pagination from "components/Pagination.vue"
 
@@ -64,7 +66,7 @@ const { getUnitList, createUnit, disableByUserId, enableByUserId, getUnitDetailB
 export default {
 	name: "NetworkUnitManage",
 	mixins: [commonMinix],
-	components: { OrganizationList, Pagination },
+	components: { newAddUnit, OrganizationList, Pagination },
 	data() {
 		return {
 			parentId: "",
@@ -88,6 +90,7 @@ export default {
 				current: 1,
 				size: 10,
 			},
+			isShowDialog: false
 		}
 	},
 	mounted() {
