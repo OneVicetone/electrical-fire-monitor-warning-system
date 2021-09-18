@@ -7,7 +7,7 @@
 
 <script>
 export default {
-    name:"navTitle",
+    name:"NavTitle",
     props: {
         title: {
             type: [String, Number],
@@ -23,6 +23,8 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: bold;
         color: #8FD6FF;
+        margin-bottom: 1.33rem;
+        margin-top: 2.92rem;
         &::before {
             content: '';
             display: inline-block;

@@ -54,7 +54,7 @@
 				<!-- <a-range-picker v-model="searchForm.alarmTime" size="small" format="YYYY-MM-DD" /> -->
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-button type="primary" size="small">搜索</a-button>
+				<a-button type="primary" size="small" @click="isShowHandle = true">搜索</a-button>
 			</a-form-model-item>
 			<a-form-model-item>
 				<a-button type="primary" size="small"><a-icon type="plus" />导出</a-button>
@@ -93,28 +93,51 @@
 		/>
 
 		<Dialog v-model="isShowHandle" title="报警处理">
-			<nav-title title="报警设备信息">
-				<div>
-					<!-- <img src="" alt=""> -->
-					<div>
-						<span>过温报警</span>
-						<span>2020-08-10 10:20</span>
-					</div>
-				</div>
-				<div class="equipment-info">
-					<span v-for="(value, key, index) in equipment" :key="index">
-						{{ mapValue(key)+ '：' +value }}
-					</span>
-				</div>
-			</nav-title>
-			<nav-title title="报警处理意见">
-				水水水水水水水水水水水水水水水水水水水
-			</nav-title>
-			<nav-title title="报警处理">
-				警情确定：<a-radio-group v-model="warnSure" :options="warnOpt" @change="e => onChanges(e, 'sure')" />
-				<br />
-				处理方式：<a-radio-group v-model="dealWith" :options="method" @change="e => onChanges(e, 'deal')" />
-			</nav-title>
+			<section class="dialog-area-content flex">
+				<section class="left">
+					<Nav-titles title="报警设备信息" class="equipment">
+						<div class="mb175 flex-y-center">
+							<div class="display-ib t-center">
+								<a-icon type="apple" />
+								<div class="yahei-400 default-size">高危</div>
+							</div>
+							<div class="ml225 display-ib">
+								<div class="yahei-bold size133 mb58">过温报警</div>
+								<div class="yahei-400 default-size">2020-08-10 10:20</div>
+							</div>
+						</div>
+						<div class="equipment-info flex-d-col yahei-400 default-size">
+							<span v-for="(value, key, index) in equipment" :key="index">
+								{{ mapValue(key)+ '：' +value }}
+							</span>
+						</div>
+					</Nav-titles>
+					<Nav-titles title="报警处理意见">
+						<div class="yahei-400 default-size">
+							电线头接触不良或电路过载可能会引起电路温度过高。建议查看电线接头处是否接触不良。若同时发生过载报警，则可能是电路超负载引起的电路高温报警。
+						</div>
+					</Nav-titles>
+					<Nav-titles title="报警处理" class="deal">
+						<span class="yahei-400 default-size">警情确定：</span>
+						<a-radio-group class="radio-wd" v-model="warnSure" :options="warnOpt" @change="e => onChanges(e, 'sure')" />
+						<br />
+						<span class="yahei-400 default-size">处理方式：</span>
+						<a-radio-group class="radio-wd" v-model="dealWith" :options="method" @change="e => onChanges(e, 'deal')" />
+						<br />
+						<span class="yahei-400 default-size">指令下发：</span>
+						<a class="default-size yahei-400 underline" href="javascript:void(0)">下发指令></a>
+					</Nav-titles>
+				</section>
+				<section class="right">
+					<Nav-titles title="报警处理">
+						<Simple-table></Simple-table>
+					</Nav-titles>
+				</section>
+			</section>
+			<section class="pb t-center">
+				<a-button type="primary" class="mr125">确定</a-button>
+				<a-button>取消</a-button>
+			</section>
 		</Dialog>
 	</div>
 </template>
@@ -125,7 +148,8 @@ import moment from "moment"
 import Dialog from "components/Dialog.vue"
 import Pagination from "components/Pagination.vue"
 import NumCount from "components/NumCount.vue"
-import navTitle from "components/navTitle.vue"
+import NavTitles from "components/NavTitles.vue"
+import SimpleTable from "components/SimpleTable.vue"
 import optionsData from "utils/optionsData"
 
 import apis from "apis"
@@ -136,7 +160,7 @@ const { alarmTypeOptions, alarmLevelOptions, deviceIdOptions, handleStatusOption
 
 export default {
 	name: "AlarmCenter",
-	components: { Dialog, Pagination, NumCount, navTitle },
+	components: { Dialog, Pagination, NumCount, NavTitles, SimpleTable },
 	data() {
 		return {
 			alarmCountData: [
@@ -294,11 +318,31 @@ export default {
 		}
 	}
 }
-.equipment-info {
-	display: flex;
-	flex-direction: column;
-	span {
-		display: block;
+.dialog-area-content {
+	.left {
+		.equipment {
+			&-info {
+				span {
+					display: block;
+				}
+			}
+		}
 	}
+	.deal {
+		.radio-wd {
+			margin-bottom: 2rem;
+			/deep/ .ant-radio-wrapper {
+				width: 10rem;
+				font-size: 1rem;
+				font-family: Microsoft YaHei;
+				font-weight: 400;
+				color: #DCDCDC;
+			}
+		}
+	}
+}
+.pb {
+	padding-bottom: 7.25rem;
+	padding-top: 8.42rem;
 }
 </style>
