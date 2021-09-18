@@ -17,12 +17,10 @@ const getRequestHeader = (type = "json") => {
 const successCode = 1
 
 const axiosInstance = axios.create({
-	time: 3000,
+	timeout: 3000,
 	headers: getRequestHeader(),
 })
-const requestInterceptFunc = req => {
-	return req
-}
+const requestInterceptFunc = req => req
 
 const requsetErrFunc = err => {
 	message.error(err.toString())
@@ -30,19 +28,27 @@ const requsetErrFunc = err => {
 }
 
 const responseInterceptFunc = res => {
-	console.log("res in responseInterceptFunc --- ", res)
-	const { data, status, statusText } = res
+	const {
+		data,
+		status,
+		statusText,
+		config: { url },
+		headers: { authorization },
+	} = res
 	if (status > 200) {
-	  message.error(statusText);
-	  throw new Error(data.message);
+		message.error(statusText)
+		throw new Error(data.message)
 	}
 	if (data.code !== successCode) {
 		message.error(data.message)
 	}
 	if (data.code === 20001) {
 		localStorage.clear()
-		window.location = '/'
+		window.location = "/"
 		throw new ReferenceError("token error")
+	}
+	if (url.includes("/login")) {
+		localStorage.setItem(TOKEN, authorization)
 	}
 	return data
 }

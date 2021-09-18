@@ -10,7 +10,7 @@
     "@vitejs/plugin-vue": "^1.6.0",
     "@vue/compiler-sfc": "^3.2.6",
     "ant-design-vue": "^1.7.8",
-    "axios": "^0.21.2",
+    "axios": "^0.20.0",
     "echarts": "^5.2.0",
     "es6-promise": "^4.2.8",
     "husky": "^7.0.2",

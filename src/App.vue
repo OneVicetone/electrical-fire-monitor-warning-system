@@ -28,7 +28,12 @@ export default {
 		}),
 	},
 	created() {
-		this.routes && this.addRoutes(this.routes)
+		const { routes, $router, addRoutes } = this
+		if (routes && Array.isArray(routes) && routes.length > 0) {
+			addRoutes(this.routes)
+		} else {
+			$router.replace('/login')
+		}
 	},
 }
 </script>

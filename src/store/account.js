@@ -1,6 +1,8 @@
 // import jwt from 'jsonwebtoken'
-import apis from "apis"
 import { cloneDeep } from "lodash"
+// import jwt from 'jsonwebtoken'
+
+import apis from "apis"
 import { TOKEN } from "utils/storageConstant"
 import { pagesRoutes } from "@/router/routes"
 import { menuListMockData } from "@/mock"
@@ -43,6 +45,7 @@ const accountModule = {
 	getters: {
 		[GET_ROUTES_BY_MENU_LIST](state) {
 			const getMenuInLocalRoutes = (menus, routes) => {
+				if (!Array.isArray(menus)) return false
 				const routeArr = []
 				const allMenuList = cloneDeep(menus)
 				const allLocalRoutes = cloneDeep(routes)
@@ -50,7 +53,6 @@ const accountModule = {
 					menuList.forEach(menu => {
 						const { name, childList, parentId } = menu
 						let inLocalRoutes
-
 						if (parentId === 0) {
 							inLocalRoutes = allLocalRoutes.find(i => i.meta.title === name)
 							routeArr.push({ ...inLocalRoutes, children: [] })
@@ -60,7 +62,6 @@ const accountModule = {
 							inLocalRoutes = allLocalRoutes[parentAtRouteIdx].children.find(i => i.meta.title === name)
 							routeArr[parentAtRouteIdx].children.push({ ...inLocalRoutes, children: [] })
 						}
-
 						if (inLocalRoutes && Array.isArray(childList) && childList.length > 0) {
 							return func(childList)
 						} else {
@@ -75,13 +76,11 @@ const accountModule = {
 		},
 	},
 	mutations: {
-		[SET_USERINFO](state, payload) {
-			const {
-				headers: { authorization },
-			} = payload
+		[SET_USERINFO](state) {
+			const token = localStorage.getItem(TOKEN)
 			// TODO: authorization 需要jwt揭解密
-			state.userInfo.token = authorization
-			localStorage.setItem(TOKEN, authorization)
+			// console.log(jwt)
+			state.userInfo.token = token
 		},
 		[SET_MENU_LIST](state, payload) {
 			state.menuList = payload
@@ -92,13 +91,13 @@ const accountModule = {
 	},
 	actions: {
 		async [LOGIN]({ commit, dispatch }, payload) {
-			const res = await login(payload)
-			commit(SET_USERINFO, res)
-			dispatch(GET_MENU_LIST)
+			await login(payload)
+			commit(SET_USERINFO)
+			await dispatch(GET_MENU_LIST)
 		},
 		async [GET_MENU_LIST]({ commit }) {
 			const res = await getUserMenuList()
-			commit(SET_MENU_LIST, res.data.data)
+			commit(SET_MENU_LIST, res.data)
 			// commit(SET_MENU_LIST, menuListMockData)
 		},
 	},
