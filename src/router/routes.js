@@ -15,9 +15,6 @@ const NetworkUnitManage = () => import("pages/material-manage/pages/network-unit
 const DeviceTypeManage = () => import("pages/system-setting/pages/device-type-manage/index.vue")
 
 const DeviceInfo = () => import("pages/device-manage/pages/device-info/index.vue")
-// const BatchImport = () => import("pages/device-manage/pages/batch-import/index.vue")
-// const BatchShip = () => import("pages/device-manage/pages/batch-ship/index.vue")
-// const BatchTransfer = () => import("pages/device-manage/pages/batch-transfer/index.vue")
 const BatchOperation = () => import("pages/device-manage/pages/batch-operation/index.vue")
 
 const baseRoutes = [
@@ -41,30 +38,6 @@ const baseRoutes = [
 					title: "设备详情",
 				},
 			},
-			// {
-			// 	path: "/device-manage/batch-import",
-			// 	name: "DeviceInfo",
-			// 	component: BatchImport,
-			// 	meta: {
-			// 		title: "批量导入",
-			// 	},
-			// },
-			// {
-			// 	path: "/device-manage/batch-ship",
-			// 	name: "DeviceInfo",
-			// 	component: BatchShip,
-			// 	meta: {
-			// 		title: "批量发货",
-			// 	},
-			// },
-			// {
-			// 	path: "/device-manage/batch-transfer",
-			// 	name: "DeviceInfo",
-			// 	component: BatchTransfer,
-			// 	meta: {
-			// 		title: "批量转移",
-			// 	},
-			// },
 			{
 				path: "/device-manage/batch-operation/:operation_type",
 				name: "BatchOperation",
