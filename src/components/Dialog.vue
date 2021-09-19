@@ -15,11 +15,11 @@
 </template>
 
 <script>
-import { commonMinix } from "minixs"
+import { commonMixin } from "mixins"
 
 export default {
 	name: "Dialog",
-	mixins: [commonMinix],
+	mixins: [commonMixin],
 	model: {
 		prop: "show",
 		event: "changeShow",

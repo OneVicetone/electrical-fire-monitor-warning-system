@@ -13,7 +13,7 @@
 		</div>
 		<a-form-model class="table-search-form" layout="inline" :model="searchForm">
 			<a-form-model-item>
-				<a-select v-model="searchForm.unit" :options="unitOptions" placeholder="请选择单位" size="small" />
+				<a-select v-model="searchForm.unit" :options="groupTypeOptions" placeholder="请选择单位" size="small" />
 			</a-form-model-item>
 			<a-form-model-item>
 				<a-input v-model="searchForm.deviceName" placeholder="请输入设备编码/名称" size="small" />
@@ -100,17 +100,17 @@ import moment from "moment"
 import Pagination from "components/Pagination.vue"
 import NumCount from "components/NumCount.vue"
 import DealWithDialog from "./components/DealWithDialog.vue"
-import optionsData from "utils/optionsData"
+import optionsData, { optionsPlaceholder } from "utils/optionsData"
 
 import apis from "apis"
-import { commonMinix } from "minixs"
+import { commonMixin } from "mixins"
 
 const { getAlarmCount, getAlarmList, getSelectOptions, getAlarmDetail, processAlarm } = apis
-const { alarmTypeOptions, alarmLevelOptions, deviceIdOptions, handleStatusOptions } = optionsData
+const { alarmLevelOptions, deviceIdOptions, handleStatusOptions } = optionsData
 
 export default {
 	name: "AlarmCenter",
-	mixins: [commonMinix],
+	mixins: [commonMixin],
 	components: { Pagination, NumCount, DealWithDialog },
 	data() {
 		return {
@@ -125,7 +125,7 @@ export default {
 			],
 			showAlert: false,
 			searchForm: {
-				unit: "",
+				unit: 0,
 				deviceSnName: "",
 				alarmType: 0,
 				alarmLevel: 0,
@@ -133,8 +133,8 @@ export default {
 				status: 0,
 				alarmTime: [moment(), moment()],
 			},
-			unitOptions: [],
-			alarmTypeOptions,
+			groupTypeOptions: [],
+			alarmTypeOptions: [],
 			alarmLevelOptions,
 			deviceIdOptions,
 			handleStatusOptions,
@@ -164,7 +164,7 @@ export default {
 		}
 	},
 	mounted() {
-		const optionsTypes = ["alarmType"]
+		const optionsTypes = ["alarmType", "groupType"]
 		Promise.allSettled([
 			getAlarmCount().then(({ data }) => {
 				this.alarmCountData.forEach(i => (i.num = data[i.key]))
@@ -172,14 +172,20 @@ export default {
 			this.getTableData(),
 			...optionsTypes.map(i =>
 				getSelectOptions(i).then(({ data }) => {
-					this[`${i}Options`] = data
+					const optionsKey = `${i}Options`
+					this[optionsKey] = [
+						{ label: optionsPlaceholder[optionsKey], value: 0 },
+						...data.map(({ id, parameterName }) => ({
+							label: parameterName,
+							value: id,
+						})),
+					]
 				})
 			),
 		])
 	},
 	methods: {
 		getTableData(current = 1, size = 10) {
-			console.log("#1")
 			const params = {
 				current,
 				size,

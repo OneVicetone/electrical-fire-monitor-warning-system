@@ -1,7 +1,7 @@
 import moment from "moment"
 import { getBasePx } from "utils/initial"
 
-export const commonMinix = {
+export const commonMixin = {
 	computed: {
 		siderList() {
 			const { routes } = this.$store.state.account

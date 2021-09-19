@@ -38,6 +38,17 @@
 				<a-form-model-item>
 					<a-button type="primary" size="small">重置</a-button>
 				</a-form-model-item>
+				<div class="other-btns">
+					<a-popover trigger="click" placement="bottomRight">
+						<a-list slot="content" size="small" :data-source="batchOperationOptions">
+							<a-list-item slot="renderItem" slot-scope="item" @click="item.operate.call($router)">
+								{{ item.name }}
+							</a-list-item>
+						</a-list>
+						<a-button type="primary" size="small">批量操作<a-icon type="down" /></a-button>
+					</a-popover>
+					<a-button type="primary" size="small">导出</a-button>
+				</div>
 			</a-form-model>
 			<div class="device-list">
 				<DeviceCard />
@@ -64,8 +75,9 @@ import DeviceCard from "./components/DeviceCard.vue"
 import Pagination from "components/Pagination.vue"
 
 import optionsData from "utils/optionsData"
-
-import apis from 'apis'
+import { SHIP, TRANSFER, IMPORT } from "utils/baseData"
+import { commonMixin } from "mixins"
+import apis from "apis"
 
 const { createDevice, changeDeviceInfo } = apis
 
@@ -73,6 +85,7 @@ const { deviceTypeOptions, deviceIdOptions } = optionsData
 
 export default {
 	name: "DeviceManage",
+	mixins: [commonMixin],
 	components: { OrganizationList, DeviceCard, Pagination },
 	data() {
 		return {
@@ -90,6 +103,26 @@ export default {
 				current: 1,
 				size: 10,
 			},
+			batchOperationOptions: [
+				{
+					name: "批量转组",
+					operate() {
+						this.push(`/device-manage/batch-operation/${TRANSFER}`)
+					},
+				},
+				{
+					name: "批量导入",
+					operate() {
+						this.push(`/device-manage/batch-operation/${IMPORT}`)
+					},
+				},
+				{
+					name: "批量发货",
+					operate() {
+						this.push(`/device-manage/batch-operation/${SHIP}`)
+					},
+				},
+			],
 		}
 	},
 	computed: {
@@ -134,6 +167,18 @@ export default {
 
 		.table-search-form {
 			margin: 1.25rem 0 0;
+			position: relative;
+			.other-btns {
+				height: 40px;
+				display: flex;
+				align-items: center;
+				position: absolute;
+				right: 0;
+				top: 0;
+				> button {
+					margin: 0 1.17rem 0 0;
+				}
+			}
 		}
 		.device-list {
 			display: flex;

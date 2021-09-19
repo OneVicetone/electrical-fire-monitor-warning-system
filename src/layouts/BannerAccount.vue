@@ -18,11 +18,11 @@
 </template>
 
 <script>
-import { commonMinix } from "minixs"
+import { commonMixin } from "mixins"
 
 export default {
 	name: "BannerAccount",
-	mixins: [commonMinix],
+	mixins: [commonMixin],
 	data() {
 		return {
 			dropdownOptions: [

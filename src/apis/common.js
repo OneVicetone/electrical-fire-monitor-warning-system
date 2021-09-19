@@ -1,6 +1,6 @@
 const setupCommonApis = http => ({
 	getSelectOptions: type => http.get(`/api-common/common/parameter/${type}/list`),
-	getMapKey: () => http.get("/api-common/common/baiduAck"),
+	getMapKey: module => http.get("/api-common/common/baiduAck", { module }),
 })
 
 export default setupCommonApis
