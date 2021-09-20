@@ -1,21 +1,25 @@
 <template>
     <Dialog v-model="isShowHandle" title="报警处理">
+        <!-- <div v-for="(value, key,index) in showList" :key="index">
+            <span style="background: red">{{key}}</span>===
+            <span>{{value}}</span>
+        </div> -->
         <section class="dialog-area-content flex">
             <section class="left">
                 <Nav-titles title="报警设备信息" class="equipment">
                     <div class="mb175 flex-y-center">
                         <div class="display-ib t-center">
                             <a-icon type="apple" />
-                            <div class="yahei-400">高危</div>
+                            <div class="yahei-400">{{ mapValue(showList.alarmLevel, 'alarmLevel') }}</div> 
                         </div>
                         <div class="ml225 display-ib">
                             <div class="yahei-bold size133 mb58">过温报警</div>
-                            <div class="yahei-400">2020-08-10 10:20</div>
+                            <div class="yahei-400">{{ showList.alarmTime }}</div>
                         </div>
                     </div>
                     <div class="equipment-info flex-d-col yahei-400">
                         <span v-for="(value, key, index) in equipment" :key="index">
-                            {{ mapValue(key)+ '：' +value }}
+                            {{ mapValue(key, 'deviceInfo')+ '：' +value }}
                         </span>
                     </div>
                 </Nav-titles>
@@ -26,10 +30,10 @@
                 </Nav-titles>
                 <Nav-titles title="报警处理" class="deal">
                     <span class="yahei-400">警情确定：</span>
-                    <a-radio-group class="radio-wd" v-model="warnSure" :options="warnOpt" @change="e => onChanges(e, 'sure')" />
+                    <a-radio-group class="radio-wd" v-model="warnSure" :options="warnOpt" :disabled="!able" />
                     <br />
                     <span class="yahei-400">处理方式：</span>
-                    <a-radio-group class="radio-wd" v-model="dealWith" :options="methodOpt" @change="e => onChanges(e, 'deal')" />
+                    <a-radio-group class="radio-wd" v-model="dealWith" :options="methodOpt" :disabled="!able" />
                     <br />
                     <span class="yahei-400">指令下发：</span>
                     <a class="yahei-400 underline" href="javascript:void(0)">下发指令></a>
@@ -41,8 +45,8 @@
                 </Nav-titles>
             </section>
         </section>
-        <section class="btns pb t-center">
-            <a-button type="primary" class="mr125">确定</a-button>
+        <section class="btns pb t-center" v-if="able">
+            <a-button type="primary" class="mr125" @click="sure">确定</a-button>
             <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
         </section>
     </Dialog>
@@ -61,6 +65,14 @@ export default {
             type: Boolean,
             default: false
         },
+        able: {
+            type: Boolean,
+            default: false
+        },
+        alarmData: {
+            type: Object,
+            default: () => ({})
+        }
     },
     model: {
 		prop: "dialogVisible",
@@ -68,14 +80,6 @@ export default {
 	},
     data() {
         return {
-            equipment: {
-				detail: '65℃',
-				reset: '',
-				equips: '电气火灾探测器 DQ865651221',
-				unit: '深圳市',
-				address: '广东省深圳',
-				place: '办公室'
-			},
 			warnSure: '',
 			dealWith: '',
 			warnOpt: [
@@ -94,23 +98,57 @@ export default {
         isShowHandle: {
             get: function() { return this.dialogVisible },
 			set(v){ this.$emit('input', v) }
+        },
+        showList() {
+            return this.alarmData;
+        },
+        equipment() {
+            const { deviceAlias = '--', deviceSn = '--', groupName = '--', address = '--',  installPosition = '--'} = this.showList;
+            return {
+                address,
+				detail: '65℃',
+				reset: '',
+				equips: `${deviceAlias} ${deviceSn}`,
+				unit: groupName || '--',
+				place: installPosition || '--'
+			}
+        },
+    },
+    watch: {
+        dialogVisible(v) {
+            if (v) {
+                const { processBOList } = this.alarmData;
+                const { confirmFlag = '', processType = '' } = processBOList[0] || {};
+                this.log('---------', confirmFlag, processType)
+                this.warnSure = `${confirmFlag}`;
+                this.dealWith = `${processType}`;
+            }
         }
     },
     methods: {
-        mapValue(item) {
-			const key = {
-				detail: '报警详情',
-				reset: '报警恢复',
-				equips: '报警设备',
-				unit: '报警单位',
-				address: '报警地址',
-				place: '安装位置'
-			}
-			return key[item];
+        mapValue(item, type) {
+            const _map = {
+                alarmLevel: { 1: '预警', 2: '高危' },
+                deviceInfo: {
+                    detail: '报警详情',
+                    reset: '报警恢复',
+                    equips: '报警设备',
+                    unit: '报警单位',
+                    address: '报警地址',
+                    place: '安装位置'
+                },
+            }
+            return _map[type][item] || '--'
 		},
-        onChanges(e, type) {
-			console.log(e, type)
-		}
+        sure() {
+            const { showList: { id }, warnSure, dealWith } = this;
+            const params = { 
+                alarmId: id,
+                confirmFlag: warnSure,
+                processType: dealWith
+            }
+            this.$emit('on-sure', params);
+        }
     }
 }
 </script>
@@ -135,16 +173,12 @@ export default {
 				font-weight: 400;
 				color: #DCDCDC;
 			}
+            /deep/ .ant-radio-wrapper-disabled {
+                span:last-child {
+                    color: #DCDCDC;
+                }
+            }
 		}
 	}
-}
-.btns {
-    &.pb {
-        padding-bottom: 7.25rem;
-        padding-top: 8.42rem;
-    }
-    .bg-none {
-        background: none;
-    }
 }
 </style>
