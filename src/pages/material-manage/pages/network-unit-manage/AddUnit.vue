@@ -13,9 +13,9 @@
                     <a-input
                         v-model="unitForm.unitName"
                         @blur="() => {$refs.unitName.onFieldBlur()}"
-                        :suffix="inputLen"
+                        :suffix="computedLen(unitForm.unitName)"
                         :maxLength="20"
-                        placeholder="请选择单位名称"
+                        placeholder="请输入单位名称"
                     />
                 </a-form-model-item>
                 <a-form-model-item label="上级单位" prop="upUnit">
@@ -47,74 +47,90 @@
                 </a-form-model-item>
             </a-form-model>
             <a-form-model class="form-right" layout="inline" :model="unitForm" :labelCol="{ style: 'width: 72px;float: left;' }"
-                :wrapper-col="{ style: 'width: 21rem' }">
+                :wrapper-col="{ style: 'width: 22rem' }">
                 <a-form-model-item label="单位人数" class="mr0">
-                    <a-input v-model="unitForm.unitName" placeholder="请输入单位大概人数" />
+                    <a-input v-model="unitForm.unitCount" placeholder="请输入单位大概人数" />
                 </a-form-model-item>
                 <a-form-model-item label="占地面积" class="mr0">
-                    <a-input v-model="unitForm.unitName" placeholder="请输入单位占地面积（㎡）" />
+                    <a-input v-model="unitForm.area" placeholder="请输入单位占地面积（㎡）" />
                 </a-form-model-item>
             </a-form-model>
         </Nav-titles>
-        <Nav-titles class="qa" title="安全负责人">
+        <Nav-titles class="safe" title="安全负责人">
             <div class="form-content">
                 <a-form-model
-                    ref="unitInfo"
-                    :model="unitForm"
-                    :rules="baseInfoRules"
+                    ref="safe"
+                    :model="safe"
+                    :rules="safeRules"
                     labelAlign="right"
                     :labelCol="{ style: 'width: 132px;float: left;' }"
                     :wrapper-col="{ span: 18 }"
                     class="form-right"
                 >
-                    <a-form-model-item ref="unitName" label="安全负责人" prop="unitName">
+                    <a-form-model-item ref="safePrincipal" label="安全负责人" prop="safePrincipal">
                         <a-input
-                            v-model="unitForm.unitName"
-                            @blur="() => {$refs.unitName.onFieldBlur()}"
-                            :suffix="inputLen"
+                            v-model="safe.safePrincipal"
+                            @blur="() => {$refs.safePrincipal.onFieldBlur()}"
+                            :suffix="computedLen(safe.safePrincipal)"
                             :maxLength="20"
-                            placeholder="请选择单位名称"
+                            placeholder="请输入安全负责人姓名"
                         />
                     </a-form-model-item>
-                    <a-form-model-item ref="unitName" label="安全负责人登录账户" prop="unitName">
+                    <a-form-model-item ref="principalAccount" label="安全负责人登录账户" prop="principalAccount">
                         <a-input
-                            v-model="unitForm.unitName"
-                            @blur="() => {$refs.unitName.onFieldBlur()}"
-                            :suffix="inputLen"
+                            v-model="safe.principalAccount"
+                            @blur="() => {$refs.principalAccount.onFieldBlur()}"
+                            :suffix="computedLen(safe.principalAccount)"
                             :maxLength="20"
-                            placeholder="请选择单位名称"
+                            placeholder="请输入安全负责人登录账户名"
                         />
                     </a-form-model-item>
-                    <a-form-model-item ref="unitName" label="请输入联系电话" prop="unitName">
+                    <a-form-model-item ref="linkPhone" label="请输入联系电话" prop="linkPhone">
                         <a-input
-                            v-model="unitForm.unitName"
-                            @blur="() => {$refs.unitName.onFieldBlur()}"
-                            :suffix="inputLen"
+                            v-model="safe.linkPhone"
+                            @blur="() => {$refs.linkPhone.onFieldBlur()}"
+                            :suffix="computedLen(safe.linkPhone)"
                             :maxLength="20"
-                            placeholder="请选择单位名称"
+                            placeholder="请输入安全负责人联系电话"
                         />
                     </a-form-model-item>
                 </a-form-model>
             </div>
         </Nav-titles>
+        <Nav-titles class="unit-pic" title="单位图片">
+            <div class="flex upload-ins">
+                <Upload>
+                    <div class="yahei-400-81899C t-center">公司处景观/效果图</div>
+                </Upload>
+                <Upload class="ml408">
+                    <div class="yahei-400-81899C ml-58">电气火灾系统设计图纸(800*560)</div>
+                </Upload>
+            </div>
+        </Nav-titles>
+        <section class="btns pb t-center">
+            <a-button type="primary" class="mr125" @click="formSure">确定</a-button>
+            <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
+        </section>
     </Dialog>
 </template>
 
 <script>
 import Dialog from "components/Dialog.vue"
 import NavTitles from "components/NavTitles.vue"
+import Upload from "components/Upload.vue"
+import {form} from "mixins/form"
+
 
 export default {
-    name:"",
-    components: {
-        Dialog, NavTitles
-    },
+    name:"AddUnit",
+    components: { Dialog, NavTitles, Upload },
     props: {
         unitVisible: {
             type: Boolean,
             default: false
         }
     },
+    mixins: [form],
     model: {
         prop: "unitVisible",
         event: "input"
@@ -125,25 +141,25 @@ export default {
                 unitName: '',
                 upUnit: '',
                 unitType: '',
-                unitAddress: '',
+                unitAddress: '222',
+                unitCount: '',
+                area: '',
             },
             baseInfoRules: {
-                unitName: [
-                    { required: true, message: 'Please input Activity name', trigger: 'blur' },
-                    { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
-                ],
-                upUnit: [
-                    {
-                        type: 'array',
-                        required: true,
-                        message: 'Please select at least one activity type',
-                        trigger: 'change',
-                    },
-                ],
-                unitType: [
-                     { required: true, message: 'Please select activity resource', trigger: 'change' },
-                ],
-                unitAddress: [{ required: true, message: 'Please input activity form', trigger: 'blur' }],
+                unitName: [{ required: true, message: '请输入单位名称', trigger: 'blur' }],
+                upUnit: [{ required: true, message: '请选择上级单位', trigger: 'change' }],
+                unitType: [{ required: true, message: '请选择单位类型', trigger: 'change' }],
+                unitAddress: [{ required: true, message: '请选择单位地址', trigger: 'blur' }],
+            },
+            safe: {
+                safePrincipal: '',
+                principalAccount: '',
+                linkPhone: ''
+            },
+            safeRules: {
+                safePrincipal: [{ required: true, message: '请输入安全负责人姓名', trigger: 'blur' }],
+                principalAccount: [{ required: true, message: '请输入安全负责人登录账户名', trigger: 'blur' }],
+                linkPhone: [{ required: true, message: '请输入安全负责人联系电话', trigger: 'blur' }],
             }
         }
     },
@@ -152,16 +168,19 @@ export default {
             get(){return this.unitVisible},
             set(v){this.$emit('input', v)}
         },
-        inputLen() {
-            const lens = this.unitForm.unitName.length;
-            return `${lens}/20`
-        }
-    },
-    created() {
-
     },
     mounted() {
 
+    },
+    methods: {
+        computedLen(value, totalLen = 20) {
+            if (value === null || value === undefined || typeof value === 'number') value = '';
+            return `${value.length}/${totalLen}`
+        },
+        formSure() {
+            const validates = [this.$refs.unitInfo, this.$refs.safe];
+            this.recursionRef(validates).then(res=>console.log(res)).catch(error => console.log(error))
+        }
     }
 }
 </script>
@@ -180,7 +199,7 @@ export default {
         }
     }
 }
-.qa {
+.safe {
     /deep/ .little-nav__title {
         padding-left: calc(11.75rem - 35px);
     }
@@ -197,6 +216,14 @@ export default {
                 }
             }
         }
+    }
+}
+.unit-pic {
+    /deep/ .little-nav__title {
+        padding-left: calc(11.75rem - 35px);
+    }
+    .upload-ins {
+        padding-left: calc(11.75rem + 37px );
     }
 }
 </style>

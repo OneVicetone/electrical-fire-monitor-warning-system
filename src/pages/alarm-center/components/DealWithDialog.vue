@@ -1,9 +1,9 @@
 <template>
     <Dialog v-model="isShowHandle" title="报警处理">
-        <div v-for="(value, key,index) in showList" :key="index">
+        <!-- <div v-for="(value, key,index) in showList" :key="index">
             <span style="background: red">{{key}}</span>===
             <span>{{value}}</span>
-        </div>
+        </div> -->
         <section class="dialog-area-content flex">
             <section class="left">
                 <Nav-titles title="报警设备信息" class="equipment">
@@ -180,14 +180,5 @@ export default {
             }
 		}
 	}
-}
-.btns {
-    &.pb {
-        padding-bottom: 7.25rem;
-        padding-top: 8.42rem;
-    }
-    .bg-none {
-        background: none;
-    }
 }
 </style>

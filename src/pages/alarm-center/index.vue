@@ -224,6 +224,7 @@ export default {
 			const result = await processAlarm(params);
 			this.log('确定', result);
 			// 需要给提示
+			this.getTableData();
 			this.showAlert = false;
 		}
 	},
