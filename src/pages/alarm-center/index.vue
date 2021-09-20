@@ -54,7 +54,7 @@
 				<!-- <a-range-picker v-model="searchForm.alarmTime" size="small" format="YYYY-MM-DD" /> -->
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-button type="primary" size="small" @click="showAlert = true">搜索</a-button>
+				<a-button type="primary" size="small">搜索</a-button>
 			</a-form-model-item>
 			<a-form-model-item>
 				<a-button type="primary" size="small"><a-icon type="plus" />导出</a-button>
@@ -81,8 +81,8 @@
 			</div>
 
 			<div slot="operate" slot-scope="text, record">
-				<a v-if="record.status === 1" @click="toProcess(record)">处理</a>
-				<a v-else @click="toExamine(record)">查看</a>
+				<a v-if="record.status === 1" @click="toOperat(record, 'process')">处理</a>
+				<a v-else @click="toOperat(record, 'examine')">查看</a>
 			</div>
 		</a-table>
 
@@ -91,7 +91,11 @@
 			:changePageHandle="changePageHandle"
 			:changePageSizeHandle="changePageSizeHandle"
 		/>
-		<DealWithDialog v-model="showAlert"></DealWithDialog>
+		<DealWithDialog v-model="showAlert"
+			:able="isAble"
+			:alarmData="alarmHandleData"
+			@on-sure="dialogSure">
+		</DealWithDialog>
 	</div>
 </template>
 
@@ -161,6 +165,8 @@ export default {
 				current: 1,
 				size: 10,
 			},
+			isAble: false,
+			alarmHandleData: {}
 		}
 	},
 	mounted() {
@@ -201,14 +207,19 @@ export default {
 		changePageSizeHandle(current, size) {
 			this.getTableData(current, size)
 		},
-		toProcess(record) {
-			this.showAlert = true
-			console.log(record)
+		async toOperat({id}, type) {
+			this.isAble = type === 'process';
+			const { data } = await getAlarmDetail(id);
+			this.log(data)
+			this.alarmHandleData = data;
+			this.showAlert = true;
 		},
-		toExamine(record) {
-			this.showAlert = true
-			console.log(record)
-		},
+		async dialogSure(params) {
+			const result = await processAlarm(params);
+			this.log('确定', result);
+			// 需要给提示
+			this.showAlert = false;
+		}
 	},
 	watch: {
 		searchForm: {
