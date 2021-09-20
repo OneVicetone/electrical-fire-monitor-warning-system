@@ -7,7 +7,7 @@
 			</div>
 			<a-popover trigger="click" placement="bottomRight">
 				<a-list slot="content" size="small" :data-source="dropdownOptions">
-					<a-list-item slot="renderItem" slot-scope="item" @click="item.operate">
+					<a-list-item slot="renderItem" slot-scope="item" @click="item.operate.call(this)">
 						{{ item.name }}
 					</a-list-item>
 				</a-list>
@@ -57,14 +57,14 @@ export default {
 			dropdownOptions: [
 				{
 					name: "详情",
-					operate() {
-						console.log("详情")
+					operate:() => {
+						console.log("详情", this)
 					},
 				},
-				{ name: "编辑", operate() {} },
-				{ name: "转移", operate() {} },
-				{ name: "删除", operate() {} },
-				{ name: "更换", operate() {} },
+				{ name: "编辑", operate:() => {} },
+				{ name: "转移", operate:() => {} },
+				{ name: "删除", operate:() => {} },
+				{ name: "更换", operate:() => {} },
 			],
 			columns: [
 				{ title: "名称", dataIndex: "", key: "", align: "center" },

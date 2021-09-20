@@ -1,16 +1,18 @@
 export const form =  {
     methods: {
-        recursionRef(arr) {
-            const result = new Promise((resolve, reject) => {
-                arr.forEach(item=>  {
+        recursionRef(arr, cb) {
+            const result = arr.map(item => {
+                return new Promise((resolve, reject) => {
                     item.validate(valid => {
                         if (valid) resolve('ok')
                         reject('refuse');
                     });
-                    throw Error();
                 })
             })
-            return result;
+            console.log(result)
+            Promise.all(result).then(res=> {
+                if ( cb && typeof cb === 'function' ) cb();
+            }).catch(error=>this.log('我失败了', error))
         }
     },
 }

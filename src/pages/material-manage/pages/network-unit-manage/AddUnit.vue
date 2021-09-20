@@ -118,9 +118,10 @@
 import Dialog from "components/Dialog.vue"
 import NavTitles from "components/NavTitles.vue"
 import Upload from "components/Upload.vue"
-import {form} from "mixins/form"
+import apis from "apis"
+import { form } from "mixins/form"
 
-
+const { createUnit } = apis
 export default {
     name:"AddUnit",
     components: { Dialog, NavTitles, Upload },
@@ -179,7 +180,42 @@ export default {
         },
         formSure() {
             const validates = [this.$refs.unitInfo, this.$refs.safe];
-            this.recursionRef(validates).then(res=>console.log(res)).catch(error => console.log(error))
+            const cb = async () => {
+                const {
+                    unitForm: {
+                        unitName,
+                        upUnit,
+                        unitType,
+                        unitAddress,
+                        unitCount,
+                        area,
+                    },
+                    safe: {
+                        safePrincipal,
+                        principalAccount,
+                        linkPhone
+                    }
+                } = this;
+                // 参数
+                const params = {
+                    name: unitName,
+                    parentId: upUnit,
+                    typeCode: unitType,
+                    address: unitAddress,
+                    addressLat: 22.223323,
+                    addressLng: 118.332222,
+                    employeeNum: unitCount,
+                    floorSpace: area,
+                    principalUserName: safePrincipal,
+                    loginName: principalAccount,
+                    mobile: linkPhone,
+                    effectPicPath: "未定",
+                    designPicPath: "未定"
+                    };
+                const res = await createUnit(params);
+                this.log('表单填写', res)
+            }
+            this.recursionRef(validates);
         }
     }
 }
