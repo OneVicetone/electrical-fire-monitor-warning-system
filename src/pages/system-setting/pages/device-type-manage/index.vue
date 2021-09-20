@@ -8,7 +8,7 @@
 				<a-button type="primary" size="small">搜索</a-button>
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-button type="primary" size="small" @click="add"><a-icon type="plus" />新增型号</a-button>
+				<a-button type="primary" size="small" @click="addAndEdit('add')"><a-icon type="plus" />新增型号</a-button>
 			</a-form-model-item>
 		</a-form-model>
 
@@ -26,7 +26,7 @@
 				{{ text.updateTime | filterTimeToYYYYMMDD }}
 			</div>
 			<div slot="operate" slot-scope="text">
-				<a @click="edit(text)">编辑</a>
+				<a @click="addAndEdit(text.id)">编辑</a>
 				<a-divider type="vertical" />
 				<a-popconfirm title="确定要删除吗？" ok-text="确定" cancel-text="取消" @confirm="deleteById(text)">
 					<a>删除</a>
@@ -38,12 +38,6 @@
 			:paginationData="paginationData"
 			:changePageHandle="changePageHandle"
 			:changePageSizeHandle="changePageSizeHandle"
-		/>
-
-		<Dialog
-			v-model="isShowDialog"
-			:title="`${isEdit ? '编辑' : '新增'}设备
-        `"
 		/>
 	</div>
 </template>
@@ -57,7 +51,7 @@ import Pagination from "components/Pagination.vue"
 import apis from "apis"
 import { commonMixin } from "mixins"
 
-const { getDevicesTypeList, addDeviceType, updateDeviceTypeById, deleteDeviceType } = apis
+const { getDevicesTypeList, deleteDeviceType } = apis
 
 export default {
 	name: "DeviceTypeManage",
@@ -65,8 +59,6 @@ export default {
 	components: { Dialog, Pagination },
 	data() {
 		return {
-			isShowDialog: false,
-			isEdit: false,
 			searchForm: {
 				model: "",
 			},
@@ -98,7 +90,7 @@ export default {
 			const params = {
 				current,
 				size,
-				model: this.model,
+				...this.searchForm,
 			}
 			getDevicesTypeList(params).then(({ data: { records, total, current, size } }) => {
 				this.tableData = records
@@ -110,8 +102,8 @@ export default {
 				}
 			})
 		},
-		add() {
-			this.isShowDialog = true
+		addAndEdit(id) {
+			this.toPath(`/system-setting/add-and-edit-device-type/${id}`)
 		},
 		deleteById({ id }) {
 			// console.log(data)
@@ -121,7 +113,6 @@ export default {
 				this.getTableData(current, size)
 			})
 		},
-		edit(data) {},
 		changePageHandle(page, pageSize) {
 			this.getTableData(page, pageSize)
 		},

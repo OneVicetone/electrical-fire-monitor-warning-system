@@ -27,12 +27,14 @@
 					<span>{{ `${device.name}(${deviceStatus[device.key]})` }}</span>
 				</div>
 			</div>
+			<div id="device_status_chart"></div>
 		</div>
 	</div>
 </template>
 
 <script>
 import { cloneDeep } from "lodash"
+import * as echarts from "echarts"
 
 import Map from "components/Map.vue"
 import ContentTitle from "components/ContentTitle.vue"
@@ -56,7 +58,7 @@ export default {
 				{ name: "今日故障", value: "-", key: "todayFaultNum" },
 				{ name: "今日离线", value: "-", key: "todayOffLineDeviceNum" },
 			],
-			count: "98765",
+			count: "0",
 			filterTypesOptions: [
 				{ label: "按单位", value: "groupType", key: 1 },
 				{ label: "按设备", value: "deviceType", key: 2 },
@@ -82,6 +84,22 @@ export default {
 	mounted() {
 		const { getMonitorCount, getGroupOptions, getDeviceStatus } = this
 		Promise.allSettled([getMonitorCount(), getGroupOptions(), getDeviceStatus()])
+		const deviceStatusChart = echarts.init(document.querySelector("#device_status_chart"))
+		deviceStatusChart.setOption({
+			xAxis: {
+				type: "category",
+				data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+			},
+			yAxis: {
+				type: "value",
+			},
+			series: [
+				{
+					data: [120, 200, 150, 80, 70, 110, 130],
+					type: "bar",
+				},
+			],
+		})
 	},
 	methods: {
 		getMonitorCount() {
@@ -114,9 +132,10 @@ export default {
 				type: key,
 				grooupId: filterVal,
 			}
-			return getMonitorDataList(params).then(({ data }) => this.setMapPoint(data))
+			return getMonitorDataList(params).then(({ data }) => this.setMapPoint(data.filter(Boolean)))
 		},
 		setMapPoint(arr) {
+			this.count = String(arr.length)
 			arr.forEach((i, idx) => {
 				if (!i) return
 				const { lon, lat } = i
@@ -244,6 +263,10 @@ export default {
 					margin-top: 1.08rem;
 				}
 			}
+		}
+		#device_status_chart {
+			width: 100%;
+			height: 50%;
 		}
 	}
 }

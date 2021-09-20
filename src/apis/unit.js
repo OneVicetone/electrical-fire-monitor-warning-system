@@ -34,7 +34,7 @@ const setupUnitApis = http => ({
 	disableByUserId: userId => http.get("/api-user/auth/disable", { userId }),
 	enableByUserId: userId => http.get("/api-user/auth/disable", { userId }),
 	getUnitDetailById: id => http.get(`/api-user/group/detail/${id}`, {}),
-    getUnitTree: () => http.get('/api-user/group/tree', {})
+    getGroupTree: () => http.get('/api-user/group/tree', {})
 })
 
 export default setupUnitApis

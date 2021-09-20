@@ -57,6 +57,7 @@ const setupDeviceApis = http => ({
 	updateDeviceTypeById: ({ id, supplier, model, protocol, network, productImgPath, deviceTypeId }) =>
 		http.get("/api-device/deviceType/add", { id, supplier, model, protocol, network, productImgPath, deviceTypeId }),
 	deleteDeviceType: id => http.get("/api-device/deviceType/remove", { id }),
+	getDeviceTypeDetail: id => http.get(`/api-device/deviceInfo/detail/${id}`),
 })
 
 export default setupDeviceApis
