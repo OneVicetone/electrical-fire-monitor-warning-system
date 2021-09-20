@@ -1,4 +1,5 @@
 const optionsPlaceholder = {
+	groupTypeOptions: "情选择单位",
 	alarmTypeOptions: "请选择报警类型",
 	alarmLevelOptions: "请选择报警级别",
 	deviceIdOptions: "请选择设备编号",
@@ -52,4 +53,7 @@ for (let key in allOptionsData) {
     allOptionsData[key].unshift(defaultSelectItem)
 }
 
-export default allOptionsData
+export {
+	allOptionsData as default,
+	optionsPlaceholder
+}

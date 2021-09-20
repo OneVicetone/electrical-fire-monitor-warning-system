@@ -15,6 +15,7 @@ const NetworkUnitManage = () => import("pages/material-manage/pages/network-unit
 const DeviceTypeManage = () => import("pages/system-setting/pages/device-type-manage/index.vue")
 
 const DeviceInfo = () => import("pages/device-manage/pages/device-info/index.vue")
+const BatchOperation = () => import("pages/device-manage/pages/batch-operation/index.vue")
 
 const baseRoutes = [
 	{
@@ -33,6 +34,18 @@ const baseRoutes = [
 				name: "DeviceInfo",
 				component: DeviceInfo,
 				props: true,
+				meta: {
+					title: "设备详情",
+				},
+			},
+			{
+				path: "/device-manage/batch-operation/:operation_type",
+				name: "BatchOperation",
+				component: BatchOperation,
+				props: true,
+				meta: {
+					title: "批量操作",
+				},
 			},
 		],
 	},

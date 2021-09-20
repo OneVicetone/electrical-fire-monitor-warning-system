@@ -6,11 +6,11 @@
 
 <script>
 import ChildLayout from 'layouts/ChildLayout.vue'
-import { commonMinix } from "minixs"
+import { commonMixin } from "mixins"
 
 export default {
 	name: "MaterialManage",
-	mixins: [commonMinix],
+	mixins: [commonMixin],
     components: {
         ChildLayout
     }

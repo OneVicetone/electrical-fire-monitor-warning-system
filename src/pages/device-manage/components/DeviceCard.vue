@@ -7,7 +7,7 @@
 			</div>
 			<a-popover trigger="click" placement="bottomRight">
 				<a-list slot="content" size="small" :data-source="dropdownOptions">
-					<a-list-item slot="renderItem" slot-scope="item">
+					<a-list-item slot="renderItem" slot-scope="item" @click="item.operate">
 						{{ item.name }}
 					</a-list-item>
 				</a-list>
@@ -33,8 +33,11 @@
 <script>
 import SimpleTable from "components/SimpleTable.vue"
 
+import { commonMixin } from "mixins"
+
 export default {
 	name: "DeviceCard",
+	mixins: [commonMixin],
 	components: { SimpleTable },
 	props: {
 		deviceInfoObj: {
@@ -51,7 +54,18 @@ export default {
 	},
 	data() {
 		return {
-			dropdownOptions: [{ name: "详情" }, { name: "编辑" }, { name: "转移" }, { name: "删除" }, { name: "更换" }],
+			dropdownOptions: [
+				{
+					name: "详情",
+					operate() {
+						console.log("详情")
+					},
+				},
+				{ name: "编辑", operate() {} },
+				{ name: "转移", operate() {} },
+				{ name: "删除", operate() {} },
+				{ name: "更换", operate() {} },
+			],
 			columns: [
 				{ title: "名称", dataIndex: "", key: "", align: "center" },
 				{ title: "1/A", dataIndex: "", key: "" },

@@ -55,13 +55,13 @@ import Dialog from "components/Dialog.vue"
 import Pagination from "components/Pagination.vue"
 
 import apis from "apis"
-import { commonMinix } from "minixs"
+import { commonMixin } from "mixins"
 
 const { getDevicesTypeList, addDeviceType, updateDeviceTypeById, deleteDeviceType } = apis
 
 export default {
 	name: "DeviceTypeManage",
-	mixins: [commonMinix],
+	mixins: [commonMixin],
 	components: { Dialog, Pagination },
 	data() {
 		return {

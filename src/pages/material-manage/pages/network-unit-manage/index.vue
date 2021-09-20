@@ -58,7 +58,7 @@ import newAddUnit from "./AddUnit.vue"
 import OrganizationList from "components/OrganizationList.vue"
 import Pagination from "components/Pagination.vue"
 
-import { commonMinix } from "minixs"
+import { commonMixin } from "mixins"
 import apis from "apis"
 
 const { getUnitList, createUnit, disableByUserId, enableByUserId, getUnitDetailById, getUnitTree, changePassword } =
@@ -66,7 +66,7 @@ const { getUnitList, createUnit, disableByUserId, enableByUserId, getUnitDetailB
 
 export default {
 	name: "NetworkUnitManage",
-	mixins: [commonMinix],
+	mixins: [commonMixin],
 	components: { newAddUnit, OrganizationList, Pagination },
 	data() {
 		return {
