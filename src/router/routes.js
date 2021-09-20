@@ -13,9 +13,11 @@ const RoleManage = () => import("pages/material-manage/pages/role-manage/index.v
 const NetworkUnitManage = () => import("pages/material-manage/pages/network-unit-manage/index.vue")
 
 const DeviceTypeManage = () => import("pages/system-setting/pages/device-type-manage/index.vue")
+const AddAndEditDeviceType = () => import("pages/system-setting/pages/add-and-edit-device-type/index.vue")
 
 const DeviceInfo = () => import("pages/device-manage/pages/device-info/index.vue")
 const BatchOperation = () => import("pages/device-manage/pages/batch-operation/index.vue")
+
 
 const baseRoutes = [
 	{
@@ -45,6 +47,23 @@ const baseRoutes = [
 				props: true,
 				meta: {
 					title: "批量操作",
+				},
+			},
+			{
+				path: "/download-center",
+				name: "DownloadCenter",
+				component: DownloadCenter,
+				meta: {
+					title: "下载中心",
+				},
+			},
+			{
+				path: "/system-setting/add-and-edit-device-type/:id",
+				name: "AddAndEditDeviceType",
+				component: AddAndEditDeviceType,
+				props: true,
+				meta: {
+					title: "设备类型管理",
 				},
 			},
 		],
@@ -177,14 +196,6 @@ const pagesRoutes = [
 				meta: { title: "系统日志" },
 			},
 		],
-	},
-	{
-		path: "/download-center",
-		name: "DownloadCenter",
-		component: DownloadCenter,
-		meta: {
-			title: "下载中心",
-		},
 	},
 ]
 

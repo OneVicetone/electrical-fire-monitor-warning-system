@@ -150,7 +150,6 @@ export default {
 		}
 	},
 	mounted() {
-		console.log(this)
 		const historyChart = echarts.init(document.querySelector("#chart_container"))
 		historyChart.setOption({
 			xAxis: {

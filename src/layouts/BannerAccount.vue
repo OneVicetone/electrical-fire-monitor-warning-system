@@ -5,42 +5,122 @@
 		</a-badge>
 		<div class="account">
 			<a-avatar size="small" icon="user" />
-			<a-popover trigger="click">
+			<a-popover v-model="isShowPopover">
 				<a-list slot="content" size="small" :data-source="dropdownOptions">
-					<a-list-item slot="renderItem" slot-scope="item">
-						<span class="list-item" @click="handleClick(item)">{{ item.name }}</span>
+					<a-list-item
+						slot="renderItem"
+						slot-scope="item"
+						@click="
+							isShowPopover = false
+							item.operate.call($router, $data)
+						"
+					>
+						<span class="list-item">{{ item.name }}</span>
 					</a-list-item>
 				</a-list>
-				<a-button type="link" ghost> 您好，张三 <a-icon type="caret-down" /> </a-button>
+				<a-button type="link" ghost @click="isShowPopover = true"> 您好，张三 <a-icon type="caret-down" /> </a-button>
 			</a-popover>
 		</div>
+		<Dialog v-model="isShowChangePasswordDialog" title="修改密码">
+			<div class="change-password-dialog">
+				<NavTitles title="修改密码" />
+				<a-form-model :model="changePasswordForm">
+					<a-form-model-item label="原密码">
+						<a-input v-model="changePasswordForm.password" type="password" placeholder="请输入原密码" />
+					</a-form-model-item>
+					<a-form-model-item label="新密码">
+						<a-input v-model="changePasswordForm.newPassword" type="password" placeholder="请输入新密码" />
+					</a-form-model-item>
+					<a-form-model-item label="确认密码">
+						<a-input v-model="changePasswordForm.enterNewPassword" type="password" placeholder="请再次输入新密码" />
+					</a-form-model-item>
+				</a-form-model>
+				<div class="btn-group">
+					<a-button type="primary" @click="updatePassword">确定</a-button>
+					<a-button ghost @click="cancelChangePassword">取消</a-button>
+				</div>
+			</div>
+		</Dialog>
 	</div>
 </template>
 
 <script>
+import { cloneDeep } from "lodash"
+import { message as msg } from "ant-design-vue"
+
+import NavTitles from "components/NavTitles.vue"
+import Dialog from "components/Dialog.vue"
+
+import apis from "apis"
 import { commonMixin } from "mixins"
+const { getLoginCode, changePassword } = apis
 
 export default {
 	name: "BannerAccount",
 	mixins: [commonMixin],
+	components: { NavTitles, Dialog },
 	data() {
 		return {
+			isShowPopover: false,
+			isShowChangePasswordDialog: false,
+			changePasswordForm: {
+				password: "",
+				newPassword: "",
+				enterNewPassword: "",
+			},
 			dropdownOptions: [
-				{ name: "下载中心", path: "/download-center" },
-				{ name: "报警设置", path: "/download-center" },
-				{ name: "修改密码", path: "/download-center" },
-				{ name: "退出登录", path: "", func: "" },
+				{
+					name: "下载中心",
+					operate() {
+						this.push("/download-center")
+					},
+				},
+				{ name: "报警设置", operate() {} },
+				{
+					name: "修改密码",
+					operate(arg) {
+						arg.isShowChangePasswordDialog = true
+					},
+				},
+				{
+					name: "退出登录",
+					operate() {
+						const self = this
+						getLoginCode().then(() => {
+							localStorage.clear()
+							self.push("/login")
+						})
+					},
+				},
 			],
 		}
 	},
-    methods: {
-        handleClick({ path, func }) {
-            if (path) {
-                return this.toPath(path)
-            }
-            this[func]()
-        }
-    }
+	methods: {
+		resetChangePasswordForm() {
+			this.isShowChangePasswordDialog = false
+			const form = cloneDeep(this.changePasswordForm)
+			for (let key in form) {
+				form[key] = ""
+			}
+			this.changePasswordForm = form
+		},
+		updatePassword() {
+			// TODO: 解析用户信息获取到用户id
+			const params = {
+				id: "",
+				...this.changePasswordForm,
+			}
+			changePassword(params).then(() => {
+				msg.success("修改成功, 请使用新密码重新登录")
+				this.resetChangePasswordForm()
+				localStorage.clear()
+				this.toPath("/login")
+			})
+		},
+		cancelChangePassword() {
+			this.resetChangePasswordForm()
+		},
+	},
 }
 </script>
 
@@ -65,8 +145,21 @@ export default {
 	.account {
 		margin: 0 0 0 30px;
 	}
-	.ant-list .ant-list-item span {
-		cursor: pointer;
+}
+.ant-popover-inner {
+	background-color: #000;
+}
+.ant-list .ant-list-item span {
+	cursor: pointer;
+}
+.change-password-dialog {
+	padding: 2.75rem 8.67rem;
+	.btn-group {
+		display: flex;
+		justify-content: center;
+		> button {
+			margin: 0 0.5rem;
+		}
 	}
 }
 </style>

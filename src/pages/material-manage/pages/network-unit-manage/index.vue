@@ -61,7 +61,7 @@ import Pagination from "components/Pagination.vue"
 import { commonMixin } from "mixins"
 import apis from "apis"
 
-const { getUnitList, createUnit, disableByUserId, enableByUserId, getUnitDetailById, getUnitTree, changePassword } =
+const { getUnitList, createUnit, disableByUserId, enableByUserId, getUnitDetailById, getGroupTree, changePassword } =
 	apis
 
 export default {
@@ -91,11 +91,13 @@ export default {
 				current: 1,
 				size: 10,
 			},
+			treeData: [],
 			isShowDialog: false,
 		}
 	},
 	mounted() {
-		this.getTableData()
+		const { getGroupTreeData, getTableData } = this
+		Promise.allSettled([getGroupTreeData(), getTableData()])
 	},
 	methods: {
 		getTableData(current = 1, size = 10) {
@@ -105,7 +107,7 @@ export default {
 				...this.searchForm,
 				// TODO: 上级单位id
 			}
-			getUnitList(params).then(({data: { records, total, current, size }}) => {
+			getUnitList(params).then(({ data: { records, total, current, size } }) => {
 				this.tableData = records
 				this.paginationData = {
 					...this.paginationData,
@@ -113,6 +115,29 @@ export default {
 					current,
 					size,
 				}
+			})
+		},
+		getGroupTreeData() {
+			getGroupTree().then(({ data }) => {
+				// TODO: 递归修改key名
+				// const renameDataKeys = data => {
+				// 	for (let i = 0; i < data.length; i++) {
+				// 		let nowItem = data[i]
+				// 		data[i] = {
+				// 			...nowItem,
+				// 			title: nowItem.name,
+				// 			key: nowItem.id,
+				// 			children: nowItem.childList,
+				// 		}
+				// 		if (Array.isArray(nowItem.children) && nowItem.children.length > 0) {
+				// 			return renameDataKeys(data[i].children)
+				// 		}
+				// 	}
+				// 	console.log(data)
+				// }
+				// console.log(renameDataKeys(data))
+				// renameDataKeys(data)
+				this.treeData = data
 			})
 		},
 		add() {
