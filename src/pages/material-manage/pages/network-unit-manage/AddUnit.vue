@@ -215,7 +215,7 @@ export default {
                 const res = await createUnit(params);
                 this.log('表单填写', res)
             }
-            this.recursionRef(validates);
+            this.recursionRef(validates, cb);
         }
     }
 }
