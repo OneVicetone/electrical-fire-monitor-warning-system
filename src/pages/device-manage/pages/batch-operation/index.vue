@@ -4,7 +4,7 @@
 		<div class="batch-content">
 			<NavTitles :title="operationName" />
 			<div class="content">
-				<a-form-model v-if="operation_type === SHIP">
+				<a-form-model>
 					<a-form-model-item label="1、下载模板，填写信息：">
 						<a-button type="link" icon="download" @click="downloadTemplate">下载模板</a-button>
 					</a-form-model-item>
@@ -13,10 +13,15 @@
 							<a-button ghost icon="upload">Click to Upload </a-button>
 						</a-upload>
 					</a-form-model-item>
+					<a-form-model-item v-if="operation_type === IMPORT" label="3、请选择数据范围：">
+						<a-select />
+						<a-select />
+						<a-select />
+					</a-form-model-item>
 				</a-form-model>
 
-				<a-form-model v-else-if="operation_type === TRANSFER"></a-form-model>
-				<a-form-model v-else-if="operation_type === IMPORT"></a-form-model>
+				<!-- <a-form-model v-else-if="operation_type === TRANSFER"></a-form-model>
+				<a-form-model v-else-if="operation_type === IMPORT"></a-form-model> -->
 
 				<div class="btn-group">
 					<a-button type="primary" @click="enter">确定</a-button>
