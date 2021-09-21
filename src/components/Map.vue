@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { addMapScript, initMapTheme } from "utils/common-functions"
+import { addMapScript, initMapTheme } from "utils/commonFunctions"
 import apis from "apis"
 
 const { getMapKey } = apis

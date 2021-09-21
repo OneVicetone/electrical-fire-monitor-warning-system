@@ -51,13 +51,15 @@ const setupDeviceApis = http => ({
 			safetyDirector,
 			safetyDirectorMobile,
 		}),
-	getDevicesTypeList: ({ current, size, model }) => http.get("/api-device/deviceType/pageList", { current, size, model }),
+	getDevicesTypeList: ({ current, size, model }) =>
+		http.get("/api-device/deviceType/pageList", { current, size, model }),
 	addDeviceType: ({ supplier, model, protocol, network, productImgPath, deviceTypeId }) =>
 		http.get("/api-device/deviceType/add", { supplier, model, protocol, network, productImgPath, deviceTypeId }),
 	updateDeviceTypeById: ({ id, supplier, model, protocol, network, productImgPath, deviceTypeId }) =>
 		http.get("/api-device/deviceType/add", { id, supplier, model, protocol, network, productImgPath, deviceTypeId }),
 	deleteDeviceType: id => http.get("/api-device/deviceType/remove", { id }),
-	getDeviceTypeDetail: id => http.get(`/api-device/deviceInfo/detail/${id}`),
+	getDeviceTypeDetail: id => http.get("/api-device/deviceType/detail", { id }),
+	getDeviceInfoDetail: id => http.get(`/api-device/deviceInfo/detail/${id}`),
 })
 
 export default setupDeviceApis

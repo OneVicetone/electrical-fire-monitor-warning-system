@@ -1,4 +1,5 @@
 import moment from "moment"
+
 import { getBasePx } from "utils/initial"
 
 export const commonMixin = {
@@ -18,7 +19,7 @@ export const commonMixin = {
 		},
 		addRoutes(routes) {
 			routes.forEach(route => this.$router.addRoute("Layout", route))
-		},
+		}
 	},
 	filters: {
 		filterNull(val) {

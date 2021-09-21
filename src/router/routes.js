@@ -58,7 +58,7 @@ const baseRoutes = [
 				},
 			},
 			{
-				path: "/system-setting/add-and-edit-device-type/:id",
+				path: "/system-setting/device-type-manage/add-and-edit-device-type/:id",
 				name: "AddAndEditDeviceType",
 				component: AddAndEditDeviceType,
 				props: true,

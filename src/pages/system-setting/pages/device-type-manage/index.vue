@@ -103,7 +103,7 @@ export default {
 			})
 		},
 		addAndEdit(id) {
-			this.toPath(`/system-setting/add-and-edit-device-type/${id}`)
+			this.toPath(`/system-setting/device-type-manage/add-and-edit-device-type/${id}`)
 		},
 		deleteById({ id }) {
 			// console.log(data)

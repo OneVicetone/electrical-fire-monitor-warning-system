@@ -111,12 +111,6 @@ export default {
 		.content {
 			padding: 0 0 0 9.17rem;
 		}
-		.btn-group {
-			padding: 10rem 15rem;
-			> button {
-				margin: 0 0.5rem;
-			}
-		}
 		.progress {
 			// margin-top: 10rem;
 		}
