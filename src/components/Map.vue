@@ -34,9 +34,10 @@ export default {
 				addMapScript(data).then(BMap => {
 					const mapDefaultZoom = 15
 					const map = new BMap.Map("map_container")
+					map.enableScrollWheelZoom(true);
 					// initMapTheme(map)
 					this.mapInstance = map
-                    this.changeMapCenterAndZoom(this.centerPoint)
+                    this.changeMapCenterAndZoom(this.centerPoint, mapDefaultZoom)
 					this.$emit("setMapInstance", map)
 				})
 			})

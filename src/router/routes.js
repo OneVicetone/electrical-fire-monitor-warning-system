@@ -9,6 +9,8 @@ const MaterialManage = () => import("pages/material-manage/index.vue")
 const SystemSetting = () => import("pages/system-setting/index.vue")
 const DownloadCenter = () => import("pages/download-center/index.vue")
 
+const GroupDetail = () => import("pages/monitor/pages/group-detail/index.vue")
+
 const RoleManage = () => import("pages/material-manage/pages/role-manage/index.vue")
 const NetworkUnitManage = () => import("pages/material-manage/pages/network-unit-manage/index.vue")
 
@@ -64,6 +66,15 @@ const baseRoutes = [
 				props: true,
 				meta: {
 					title: "设备类型管理",
+				},
+			},
+			{
+				path: "/monitor/group-detail/:id",
+				name: "GroupDetail",
+				component: GroupDetail,
+				props: true,
+				meta: {
+					title: "单位详情",
 				},
 			},
 		],

@@ -29,6 +29,7 @@
 			</div>
 			<div id="device_status_chart"></div>
 		</div>
+		<MarkerInfo v-model="showMarkerInfo" :markerInfoObj="markerInfo" :position="position" />
 	</div>
 </template>
 
@@ -38,14 +39,15 @@ import * as echarts from "echarts"
 
 import Map from "components/Map.vue"
 import ContentTitle from "components/ContentTitle.vue"
+import MarkerInfo from "./components/MarkerInfo.vue"
 
 import apis from "apis"
 
-const { monitorCount, getSelectOptions, getMonitorDataList, monitorAllDeviceStatus } = apis
+const { monitorCount, getSelectOptions, getMonitorDataList, monitorAllDeviceStatus, getMonitorDataDetail } = apis
 
 export default {
 	name: "Monitor",
-	components: { Map, ContentTitle },
+	components: { Map, ContentTitle, MarkerInfo },
 	data() {
 		return {
 			mapInstance: null,
@@ -79,7 +81,18 @@ export default {
 				alarmNum: 0,
 				faultNum: 0,
 			},
+			showMarkerInfo: false,
+			markerInfo: {},
+			position: {
+				left: 0,
+				top: 0,
+			},
 		}
+	},
+	computed: {
+		filterTypeKey() {
+			return this.filterTypesOptions.find(i => i.value === this.filterType).key
+		},
 	},
 	mounted() {
 		const { getMonitorCount, getGroupOptions, getDeviceStatus } = this
@@ -126,10 +139,9 @@ export default {
 			this.filterVal = val
 		},
 		getMapPointList() {
-			const { filterType, filterVal, filterTypesOptions } = this
-			const { key } = filterTypesOptions.find(i => i.value === filterType)
+			const { filterTypeKey, filterVal } = this
 			const params = {
-				type: key,
+				type: filterTypeKey,
 				grooupId: filterVal,
 			}
 			return getMonitorDataList(params).then(({ data }) => this.setMapPoint(data.filter(Boolean)))
@@ -138,13 +150,31 @@ export default {
 			this.count = String(arr.length)
 			arr.forEach((i, idx) => {
 				if (!i) return
-				const { lon, lat } = i
+				const { lon, lat, id } = i
 				if (!lat || !lon) return
 				const point = new BMap.Point(lon, lat)
 				const marker = new BMap.Marker(point)
+				marker.addEventListener("click", e => {
+					const params = {
+						type: this.filterTypeKey,
+						id,
+					}
+					getMonitorDataDetail(params).then(({ data }) => {
+						const { top, left } = e.target.ca.getBoundingClientRect()
+						const { clientHeight, clientWidth } = document.querySelector(".marker-info-container")
+						this.position = {
+							top: top - clientHeight - 18,
+							left: left - clientWidth / 2 + 6,
+						}
+						this.markerInfo = data
+						this.showMarkerInfo = true
+					})
+				})
 				this.mapInstance.addOverlay(marker)
+				this.mapInstance.addEventListener("dragstart", () => {
+					if (this.showMarkerInfo) this.showMarkerInfo = false
+				})
 				// TODO: 地图中心设置为最后一个点位？
-				// if ()
 			})
 		},
 		setMapInstance(instance) {
