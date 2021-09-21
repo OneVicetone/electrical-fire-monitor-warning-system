@@ -27,18 +27,20 @@
 			</div>
 			<SimpleTable :columns="columns" />
 		</section>
+		<DeviceDetaiCommandl v-model="dialog"></DeviceDetaiCommandl>
 	</div>
 </template>
 
 <script>
 import SimpleTable from "components/SimpleTable.vue"
+import DeviceDetaiCommandl from "./DeviceDetaiCommandl.vue"
 
 import { commonMixin } from "mixins"
 
 export default {
 	name: "DeviceCard",
 	mixins: [commonMixin],
-	components: { SimpleTable },
+	components: { SimpleTable, DeviceDetaiCommandl },
 	props: {
 		deviceInfoObj: {
 			type: Object,
@@ -54,11 +56,13 @@ export default {
 	},
 	data() {
 		return {
+			dialog: false,
 			dropdownOptions: [
 				{
 					name: "详情",
 					operate:() => {
 						console.log("详情", this)
+						this.dialog = true;
 					},
 				},
 				{ name: "编辑", operate:() => {} },

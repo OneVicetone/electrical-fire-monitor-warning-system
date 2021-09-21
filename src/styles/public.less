@@ -12,6 +12,17 @@
     text-align: right;
 }
 
+.t-ellipsis {
+    white-space: nowrap; 
+    text-overflow: ellipsis; 
+    overflow: hidden; 
+    word-break: break-all; 
+}
+
+.nowrap {
+    white-space: nowrap; 
+}
+
 .underline {
     text-decoration: underline;
 }
@@ -25,12 +36,12 @@
     flex-direction: column;
 }
 
-.flex-y-center {
+.flex-yCenter {
     display: flex;
     align-items: center;
 }
 
-.flex-x-center {
+.flex-xCenter {
     display: flex;
     justify-content: center;
 }
@@ -44,6 +55,22 @@
 .flex-between {
     display: flex;
     justify-content: space-between;
+}
+
+.flex-between-center {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flex-around {
+    display: flex;
+    justify-content: space-around;
+}
+
+.flex-around-center {
+    display: flex;
+    justify-content: space-around;
     align-items: center;
 }
 

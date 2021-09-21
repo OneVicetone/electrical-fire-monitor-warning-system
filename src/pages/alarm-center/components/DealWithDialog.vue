@@ -7,7 +7,7 @@
         <section class="dialog-area-content flex">
             <section class="left">
                 <Nav-titles title="报警设备信息" class="equipment">
-                    <div class="mb175 flex-y-center">
+                    <div class="mb175 flex-yCenter">
                         <div class="display-ib t-center">
                             <a-icon type="apple" />
                             <div class="yahei-400">{{ mapValue(showList.alarmLevel, 'alarmLevel') }}</div> 
