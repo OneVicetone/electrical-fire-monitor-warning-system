@@ -60,15 +60,20 @@ export default {
 			dropdownOptions: [
 				{
 					name: "详情",
-					operate:() => {
-						console.log("详情", this)
-						this.dialog = true;
+					operate: () => {
+						this.toPath(`/device-manage/device-info/${this.deviceInfoObj.id || 2}`)
 					},
 				},
-				{ name: "编辑", operate:() => {} },
-				{ name: "转移", operate:() => {} },
-				{ name: "删除", operate:() => {} },
-				{ name: "更换", operate:() => {} },
+				{
+					name: "编辑",
+					operate: () => {
+						console.log("详情", this)
+						this.dialog = true
+					},
+				},
+				{ name: "转移", operate: () => {} },
+				{ name: "删除", operate: () => {} },
+				{ name: "更换", operate: () => {} },
 			],
 			columns: [
 				{ title: "名称", dataIndex: "", key: "", align: "center" },

@@ -29,21 +29,27 @@ export default {
 	},
 	methods: {
 		setMap() {
+			if (window.BMapGL) return this.setMapToContainer(window.BMapGL)
 			const mapModule = "web"
-			getMapKey(mapModule).then(({ data }) => {
-				addMapScript(data).then(BMap => {
-					const mapDefaultZoom = 15
-					const map = new BMap.Map("map_container")
-					map.enableScrollWheelZoom(true);
-					// initMapTheme(map)
-					this.mapInstance = map
-                    this.changeMapCenterAndZoom(this.centerPoint, mapDefaultZoom)
-					this.$emit("setMapInstance", map)
-				})
+			getMapKey(mapModule).then(({ data: { ak, defaultStyleId } }) => {
+				addMapScript(ak).then(BMapGL => this.setMapToContainer(BMapGL, defaultStyleId))
 			})
 		},
+		setMapToContainer(BMapGL, defaultStyleId) {
+			const mapDefaultZoom = 8
+			const map = new BMapGL.Map("map_container")
+			this.mapInstance = map
+			map.enableScrollWheelZoom(true)
+			this.changeMapCenterAndZoom(this.centerPoint, mapDefaultZoom)
+			// initMapTheme(map, defaultStyleId)
+			map.enableScrollWheelZoom(true)
+			map.setMapStyleV2({
+				defaultStyleId,
+			})
+			this.$emit("setMapInstance", map)
+		},
 		changeMapCenterAndZoom({ lon, lat }, zoom = 15) {
-			const point = new BMap.Point(lon, lat)
+			const point = new BMapGL.Point(lon, lat)
 			this.mapInstance.centerAndZoom(point, zoom)
 		},
 	},
