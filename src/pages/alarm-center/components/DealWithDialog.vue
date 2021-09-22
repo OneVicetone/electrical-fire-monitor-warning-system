@@ -10,33 +10,33 @@
                     <div class="mb175 flex-yCenter">
                         <div class="display-ib t-center">
                             <a-icon type="apple" />
-                            <div class="yahei-400">{{ mapValue(showList.alarmLevel, 'alarmLevel') }}</div> 
+                            <div class="yahei">{{ mapValue(showList.alarmLevel, 'alarmLevel') }}</div> 
                         </div>
                         <div class="ml225 display-ib">
                             <div class="yahei-bold size133 mb58">过温报警</div>
-                            <div class="yahei-400">{{ showList.alarmTime }}</div>
+                            <div class="yahei">{{ showList.alarmTime }}</div>
                         </div>
                     </div>
-                    <div class="equipment-info flex-d-col yahei-400">
+                    <div class="equipment-info flex-d-col yahei">
                         <span v-for="(value, key, index) in equipment" :key="index">
                             {{ mapValue(key, 'deviceInfo')+ '：' +value }}
                         </span>
                     </div>
                 </Nav-titles>
                 <Nav-titles title="报警处理意见">
-                    <div class="yahei-400">
+                    <div class="yahei">
                         电线头接触不良或电路过载可能会引起电路温度过高。建议查看电线接头处是否接触不良。若同时发生过载报警，则可能是电路超负载引起的电路高温报警。
                     </div>
                 </Nav-titles>
                 <Nav-titles title="报警处理" class="deal">
-                    <span class="yahei-400">警情确定：</span>
+                    <span class="yahei">警情确定：</span>
                     <a-radio-group class="radio-wd" v-model="warnSure" :options="warnOpt" :disabled="!able" />
                     <br />
-                    <span class="yahei-400">处理方式：</span>
+                    <span class="yahei">处理方式：</span>
                     <a-radio-group class="radio-wd" v-model="dealWith" :options="methodOpt" :disabled="!able" />
                     <br />
-                    <span class="yahei-400">指令下发：</span>
-                    <a class="yahei-400 underline" href="javascript:void(0)">下发指令></a>
+                    <span class="yahei">指令下发：</span>
+                    <a class="yahei underline" href="javascript:void(0)">下发指令></a>
                 </Nav-titles>
             </section>
             <section class="right">

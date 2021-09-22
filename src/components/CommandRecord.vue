@@ -9,8 +9,8 @@
                     <div>指令状态：发送成功</div>
                     <div>指令内容：漏电阈值  20...</div>
                     <div>发  送 人：王标</div>
-                    <div class="wd1633 yahei-400 t-ellipsis">发送时间：2018-06-14 17：26：18</div>
-                    <div class="wd1633 yahei-400 t-ellipsis">应答时间：2018-06-14 17：27：10</div>
+                    <div class="wd1633 yahei t-ellipsis">发送时间：2018-06-14 17：26：18</div>
+                    <div class="wd1633 yahei t-ellipsis">应答时间：2018-06-14 17：27：10</div>
                 </div>
                 <a-popover title="Title" trigger="hover">
                     <template slot="content">

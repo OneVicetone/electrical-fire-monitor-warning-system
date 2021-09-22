@@ -39,11 +39,21 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+		forms: {
+			type: Object,
+			default: () => {},
+		}
 	},
 	computed: {
 		visible: {
 			get: function() { return this.show },
 			set: () => {}
+		}
+	},
+	watch: {
+		visible(v) {
+			const keys = Object.keys(this.forms);
+			!v && keys.length && keys.forEach(y=> this.forms[y] = '');
 		}
 	},
 	methods: {

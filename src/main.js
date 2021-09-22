@@ -17,7 +17,7 @@ Vue.use(Vuex)
 Vue.use(Antd)
 Vue.use(VueRouter)
 
-Vue.prototype.log = (v) => console.log(v);
+Vue.prototype.log = (...v) => console.log(...v);
 
 function main() {
     new Vue({

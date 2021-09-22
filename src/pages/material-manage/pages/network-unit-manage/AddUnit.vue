@@ -100,10 +100,10 @@
         <Nav-titles class="unit-pic" title="单位图片">
             <div class="flex upload-ins">
                 <Upload>
-                    <div class="yahei-400-81899C t-center">公司处景观/效果图</div>
+                    <div class="yahei-81899C t-center">公司处景观/效果图</div>
                 </Upload>
                 <Upload class="ml408">
-                    <div class="yahei-400-81899C ml-58">电气火灾系统设计图纸(800*560)</div>
+                    <div class="yahei-81899C ml-58">电气火灾系统设计图纸(800*560)</div>
                 </Upload>
             </div>
         </Nav-titles>

@@ -1,5 +1,5 @@
 <template>
-    <a-tabs class="global-tab" v-model="activeKey" :type="type" @change="callback">
+    <a-tabs class="global-tab" v-model="activeKey" :type="type" @change="callbacks">
         <a-tab-pane v-for="tab in tabs" :key="tab.key" :tab="tab.name">
             <slot></slot>
         </a-tab-pane>
@@ -13,8 +13,8 @@ export default {
         tabs: {
             type: Array,
             default: () => ([
-                {name: '夏海洋夏海洋夏海洋', key: '1'},
-                {name: '数据阈值', key: '2'},
+                {name: '数据阈值', key: '1'},
+                {name: '消音&复位', key: '2'},
             ])
         },
         type: {
@@ -28,8 +28,8 @@ export default {
         }
     },
     methods: {
-        callback(key) {
-            console.log(key);
+        callbacks(key) {
+            this.$emit('tab-change', key)
         },
     }
 }
@@ -42,7 +42,7 @@ export default {
         border-bottom: 1px solid #0096FF;
     }
     /deep/ .ant-tabs-tab {
-        width: 8.58rem;
+        width: 10.58rem;
         text-align: center;
         white-space: nowrap; 
         text-overflow: ellipsis; 
@@ -51,6 +51,10 @@ export default {
         background: #090D18 !important;
         border-color: #3F4A77 !important;
         border-bottom: 1px solid #0096FF !important;
+        font-size: 1.17rem;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        color: #DCDCDC;
     }
     /deep/.ant-tabs-tab-active {
         border-color: #0096FF !important;
