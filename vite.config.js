@@ -1,6 +1,7 @@
-import { defineConfig } from "vite";
-import path from 'path'
-const { createVuePlugin } = require("vite-plugin-vue2");
+import { defineConfig } from "vite"
+import path from "path"
+import { createVuePlugin } from "vite-plugin-vue2"
+import { viteCommonjs } from "@originjs/vite-plugin-commonjs"
 
 // const alias = require(path.resolve(__dirname, "vite-config/alias.js"))
 const theme = require(path.resolve(__dirname, "vite-config/theme.js"))
@@ -19,38 +20,39 @@ const storePath = path.resolve(__dirname, "src/store")
 
 const alias = {
 	"@": srcPath,
-	"layouts": layoutsPath,
-	"utils": utilsPath,
-	"styles": stylesPath,
-	"components": componentsPath,
-	"pages": pagesPath,
-	"mixins": minixsPath,
-	"apis": apisPath,
-	"assets": assetsPath,
-  "store": storePath
+	layouts: layoutsPath,
+	utils: utilsPath,
+	styles: stylesPath,
+	components: componentsPath,
+	pages: pagesPath,
+	mixins: minixsPath,
+	apis: apisPath,
+	assets: assetsPath,
+	store: storePath,
 }
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    createVuePlugin({
-      jsx: true,
-    }),
-  ],
-  resolve: {
-    alias
-  },
-  server: {
-    proxy
-  },
-  css: {
-    preprocessorOptions: {
-      less: {
-        loader: "less-loader",
-        javascriptEnabled: true,
-        modifyVars: theme
-      }
-    }
-  },
-  hmr: { overlay: false }
-});
+	plugins: [
+		createVuePlugin({
+			jsx: true,
+		}),
+		viteCommonjs(),
+	],
+	resolve: {
+		alias,
+	},
+	server: {
+		proxy,
+	},
+	css: {
+		preprocessorOptions: {
+			less: {
+				loader: "less-loader",
+				javascriptEnabled: true,
+				modifyVars: theme,
+			},
+		},
+	},
+	hmr: { overlay: false },
+})
