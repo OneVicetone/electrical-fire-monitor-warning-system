@@ -976,13 +976,6 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@originjs/vite-plugin-commonjs@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@originjs/vite-plugin-commonjs/-/vite-plugin-commonjs-1.0.0.tgz#6e0e483c4f42ca94cd6693b039120eab346a1424"
-  integrity sha512-c38cnifsBxTx1nS/sSA8IVFj26Qvne1+Ys/0pZH2gsQsXAnlwJk6yhAgLf7TdQxsrV11ly56DNRsO8cQfynwVQ==
-  dependencies:
-    esbuild "^0.12.6"
-
 "@rollup/pluginutils@^4.1.0":
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-4.1.1.tgz#1d4da86dd4eded15656a57d933fda2b9a08d47ec"
@@ -3499,7 +3492,7 @@ es6-promise@^4.2.8:
   resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.2.8.tgz#4eb21594c972bc40553d276e510539143db53e0a"
   integrity sha512-HJDGx5daxeIvxdBxvG2cb9g4tEvwIk3i8+nhX0yGrYmZUzbkdg8QbDevheDB8gd0//uPj4c1EQua8Q+MViT0/w==
 
-esbuild@^0.12.17, esbuild@^0.12.6:
+esbuild@^0.12.17:
   version "0.12.29"
   resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.12.29.tgz#be602db7c4dc78944a9dbde0d1ea19d36c1f882d"
   integrity sha512-w/XuoBCSwepyiZtIRsKsetiLDUVGPVw1E/R3VTFSecIy8UR7Cq3SOtwKHJMFoVqqVG36aGkzh4e8BvpO1Fdc7g==

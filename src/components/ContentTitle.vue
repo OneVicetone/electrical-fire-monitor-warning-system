@@ -34,7 +34,7 @@ header {
 		.bevel-pseudo-element();
 		left: -5px;
 		border-width: 20px 6px;
-		border-top-color: #090d18;
+		// border-top-color: #090d18;
 	}
 	// opacity: 0.6;
 	> div {
