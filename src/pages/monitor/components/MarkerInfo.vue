@@ -76,6 +76,7 @@ export default {
     background-color: transparent;
 	opacity: 0.5;
 	transition: all 0.5s;
+	z-index: 2;
 	.title {
 		height: 2.58rem;
 		color: #0096ff;

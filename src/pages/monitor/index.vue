@@ -96,7 +96,9 @@ export default {
 	},
 	mounted() {
 		const { getMonitorCount, getGroupOptions, getDeviceStatus } = this
-		Promise.allSettled([getMonitorCount(), getGroupOptions(), getDeviceStatus()])
+		this.$nextTick(() => {
+			Promise.allSettled([getMonitorCount(), getGroupOptions(), getDeviceStatus()])
+		})
 		const deviceStatusChart = echarts.init(document.querySelector("#device_status_chart"))
 		deviceStatusChart.setOption({
 			xAxis: {
@@ -152,15 +154,15 @@ export default {
 				if (!i) return
 				const { lon, lat, id } = i
 				if (!lat || !lon) return
-				const point = new BMap.Point(lon, lat)
-				const marker = new BMap.Marker(point)
+				const point = new BMapGL.Point(lon, lat)
+				const marker = new BMapGL.Marker(point)
 				marker.addEventListener("click", e => {
 					const params = {
 						type: this.filterTypeKey,
 						id,
 					}
 					getMonitorDataDetail(params).then(({ data }) => {
-						const { top, left } = e.target.ca.getBoundingClientRect()
+						const { top, left } = e.target.domElement.getBoundingClientRect()
 						const { clientHeight, clientWidth } = document.querySelector(".marker-info-container")
 						this.position = {
 							top: top - clientHeight - 18,
@@ -205,6 +207,7 @@ export default {
 		background-color: #12223d;
 		border: 0.08px solid rgba(0, 0, 0, 0.5);
 		opacity: 0.6;
+		z-index: 2;
 	}
 	.network-group,
 	.device-status {

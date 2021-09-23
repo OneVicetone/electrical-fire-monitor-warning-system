@@ -11,8 +11,10 @@
 						slot="renderItem"
 						slot-scope="item"
 						@click="
-							isShowPopover = false
-							item.operate.call($router, $data)
+							() => {
+								isShowPopover = false
+								item.operate.call($router, $data)
+							}
 						"
 					>
 						<span class="list-item">{{ item.name }}</span>
