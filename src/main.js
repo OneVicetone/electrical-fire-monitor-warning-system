@@ -2,8 +2,6 @@ import Vue from "vue"
 import VueRouter from "vue-router"
 import Antd from "ant-design-vue"
 import Vuex from "vuex"
-import "es6-promise/auto"
-
 import router from "./router"
 import createStore from "./store"
 import App from "./App.vue"
