@@ -1,5 +1,5 @@
 <template>
-    <Dialog v-model="addVisible" title="发送指令" :forms="formData">
+    <Dialog v-model="visibles" title="发送指令" :forms="formData">
         <Tabs @tab-change="onChanges"></Tabs>
         <div class="comp-content flex-between">
             <div class="comp-content__form">
@@ -25,21 +25,14 @@
 import Dialog from "components/Dialog.vue"
 import Tabs from "components/Tabs.vue"
 import CommandRecord from "components/CommandRecord.vue"
+import { dialogControl } from "mixins"
+
 export default {
-    name:"",
+    name:"DeviceDetaiCommandl",
     components: {
         Dialog, Tabs, CommandRecord
     },
-    props: {
-        unitVisible: {
-            type: Boolean,
-            default: false
-        }
-    },
-    model: {
-        prop: "unitVisible",
-        event: "input"
-    },
+    mixins: [dialogControl],
     data() {
         return {
             formData: {},
@@ -53,12 +46,6 @@ export default {
                 {label: '心跳频率：', model: 'heartRate', desc: '（建议设置2-1440分钟）'},
             ],
         }
-    },
-    computed: {
-        addVisible: {
-            get(){return this.unitVisible},
-            set(v){this.$emit('input', v)}
-        },
     },
     methods: {
         onChanges(key) {

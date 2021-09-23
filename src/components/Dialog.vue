@@ -39,9 +39,10 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+		// 弹窗内的表单
 		forms: {
 			type: Object,
-			default: () => {},
+			default: () => ({}),
 		}
 	},
 	computed: {
