@@ -4,7 +4,7 @@
          <!-- v-for="(status, index) in details" :key="index" -->
         <a-timeline-item>
             <!-- <a-icon slot="dot" type="check-circle" style="font-size: 16px" /> -->
-            <img slot="dot" src="assets/images/bingo.png" alt="">
+            <img slot="dot" src="assets/icons/bingo.png" class="icons" alt="">
             <div class="flex-yCenter">
                 <div class="mr317">
                     <div>指令状态：发送成功</div>
@@ -23,7 +23,7 @@
             </div>
         </a-timeline-item>
         <a-timeline-item>
-            <img slot="dot" src="assets/images/error.png" alt="">
+            <img slot="dot" src="assets/icons/error.png" class="icons" alt="">
             <div>指令状态：发送成功</div>
             <div>指令内容：漏电阈值  20...</div>
             <div>发  送 人：王标</div>
@@ -31,7 +31,7 @@
             <div>应答时间：2018-06-14 17：27：10</div>
         </a-timeline-item>
         <a-timeline-item>
-            <img slot="dot" src="assets/images/waiting.png" alt="">
+            <img slot="dot" src="assets/icons/waiting.png" class="icons" alt="">
             <div>指令状态：发送成功</div>
             <div>指令内容：漏电阈值  20...</div>
             <div>发  送 人：王标</div>
@@ -58,10 +58,20 @@ export default {
 }
 </script>
 <style lang='less' scoped>
-.mr317 {
-    margin-right: 3.17rem;
-}
-.wd1633 {
-    width: 16.33rem;
+.reset-timeline {
+    /deep/ .ant-timeline-item-head-custom {
+        background: #090D18;
+        padding: 0;
+        .icons {
+            width: 1.33rem;
+            height: 1.33rem;
+        }
+    }
+    .mr317 {
+        margin-right: 3.17rem;
+    }
+    .wd1633 {
+        width: 16.33rem;
+    }
 }
 </style>
