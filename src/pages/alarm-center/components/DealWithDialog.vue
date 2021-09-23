@@ -37,6 +37,12 @@
                     <br />
                     <span class="yahei">指令下发：</span>
                     <a class="yahei underline" href="javascript:void(0)">下发指令></a>
+                    <br />
+                    <div class="flex mt">
+                        <span class="yahei">现场图片：</span>
+                        <img v-if="!able" alt="图片已损坏">
+                         <Upload v-else></Upload>
+                    </div>
                 </Nav-titles>
             </section>
             <section class="right">
@@ -56,10 +62,11 @@
 import Dialog from "components/Dialog.vue"
 import NavTitles from "components/NavTitles.vue"
 import SimpleTable from "components/SimpleTable.vue"
+import Upload from "components/Upload.vue"
 
 export default {
     name:"DealWithDialog",
-    components: { Dialog, NavTitles, SimpleTable },
+    components: { Dialog, NavTitles, SimpleTable, Upload },
     props: {
         dialogVisible: {
             type: Boolean,
@@ -179,6 +186,9 @@ export default {
                 }
             }
 		}
+        .mt {
+            margin-top: 2.58rem;
+        }
 	}
 }
 </style>

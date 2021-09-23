@@ -1,6 +1,6 @@
 <template>
     <a-tabs class="global-tab" v-model="activeKey" :type="type" @change="callbacks">
-        <a-tab-pane v-for="tab in tabs" :key="tab.key" :tab="tab.name">
+        <a-tab-pane v-for="tab in tabs" :key="tab.key" :tab="tab.name" :disabled="tab.disabled">
             <slot></slot>
         </a-tab-pane>
     </a-tabs>
@@ -14,7 +14,7 @@ export default {
             type: Array,
             default: () => ([
                 {name: '数据阈值', key: '1'},
-                {name: '消音&复位', key: '2'},
+                {name: '消音&复位', key: '2', disabled: true},
             ])
         },
         type: {
@@ -54,7 +54,7 @@ export default {
         font-size: 1.17rem;
         font-family: Microsoft YaHei;
         font-weight: 400;
-        color: #DCDCDC;
+        color: #DCDCDC !important;
     }
     /deep/.ant-tabs-tab-active {
         border-color: #0096FF !important;

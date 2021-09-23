@@ -1,5 +1,5 @@
 <template>
-    <Dialog v-model="addVisible" title="新增单位">
+    <Dialog v-model="visibles" title="新增单位">
         <Nav-titles class="unit-base-info" title="单位基本信息">
             <a-form-model
                 ref="unitInfo"
@@ -119,23 +119,13 @@ import Dialog from "components/Dialog.vue"
 import NavTitles from "components/NavTitles.vue"
 import Upload from "components/Upload.vue"
 import apis from "apis"
-import { form } from "mixins/form"
+import { dialogControl, form } from "mixins"
 
 const { createUnit } = apis
 export default {
     name:"AddUnit",
     components: { Dialog, NavTitles, Upload },
-    props: {
-        unitVisible: {
-            type: Boolean,
-            default: false
-        }
-    },
-    mixins: [form],
-    model: {
-        prop: "unitVisible",
-        event: "input"
-    },
+    mixins: [dialogControl, form],
     data() {
         return {
             unitForm: {
@@ -163,12 +153,6 @@ export default {
                 linkPhone: [{ required: true, message: '请输入安全负责人联系电话', trigger: 'blur' }],
             }
         }
-    },
-    computed: {
-        addVisible: {
-            get(){return this.unitVisible},
-            set(v){this.$emit('input', v)}
-        },
     },
     mounted() {
 
