@@ -1,7 +1,6 @@
 import { defineConfig } from "vite"
 import path from "path"
 import { createVuePlugin } from "vite-plugin-vue2"
-import { viteCommonjs } from "@originjs/vite-plugin-commonjs"
 
 // const alias = require(path.resolve(__dirname, "vite-config/alias.js"))
 const theme = require(path.resolve(__dirname, "vite-config/theme.js"))
@@ -17,6 +16,7 @@ const minixsPath = path.resolve(__dirname, "src/mixins")
 const apisPath = path.resolve(__dirname, "src/apis")
 const assetsPath = path.resolve(__dirname, "src/assets")
 const storePath = path.resolve(__dirname, "src/store")
+
 
 const alias = {
 	"@": srcPath,
@@ -37,7 +37,6 @@ export default defineConfig({
 		createVuePlugin({
 			jsx: true,
 		}),
-		viteCommonjs(),
 	],
 	resolve: {
 		alias,
