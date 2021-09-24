@@ -1,6 +1,9 @@
 <template>
     <div class="little-nav">
-        <div class="little-nav__title">{{title}}</div>
+        <div class="little-nav__title flex-yCenter">
+            {{title}}
+            <slot name="header"></slot>
+        </div>
         <slot></slot>
     </div>
 </template>
@@ -19,7 +22,7 @@ export default {
 <style lang='less' scoped>
 .little-nav {
     &__title {
-        font-size: 16px;
+        font-size: 1.33rem;
         font-family: Microsoft YaHei;
         font-weight: bold;
         color: #8FD6FF;

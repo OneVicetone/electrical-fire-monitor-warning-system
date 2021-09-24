@@ -1,5 +1,5 @@
 <template>
-    <Dialog v-model="visibles" title="发送指令" :forms="formData">
+    <Dialog class="dialog-custom" v-model="visibles" title="发送指令" :forms="formData">
         <Tabs @tab-change="onChanges"></Tabs>
         <div class="comp-content flex-between">
             <div class="comp-content__form">
@@ -16,7 +16,26 @@
                     <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
                 </section>
             </div>
-            <CommandRecord></CommandRecord>
+            <NavTitles class="vs-custom" title="指令记录">
+                <div slot="header" class="header">
+                    <a-select default-value="lucy" style="width: 9.67rem" @change="handleChange">
+                        <a-select-option value="jack">
+                            Jack
+                        </a-select-option>
+                        <a-select-option value="lucy">
+                            Lucy
+                        </a-select-option>
+                        <a-select-option value="disabled" disabled>
+                            Disabled
+                        </a-select-option>
+                        <a-select-option value="Yiminghe">
+                            yiminghe
+                        </a-select-option>
+                    </a-select>
+                    <img class="icons-wd" src="assets/icons/refresh.png" alt="">
+                </div>
+                <CommandRecord></CommandRecord>
+            </NavTitles>
         </div>
     </Dialog>
 </template>
@@ -24,13 +43,14 @@
 <script>
 import Dialog from "components/Dialog.vue"
 import Tabs from "components/Tabs.vue"
+import NavTitles from "components/NavTitles.vue"
 import CommandRecord from "components/CommandRecord.vue"
 import { dialogControl } from "mixins"
 
 export default {
     name:"DeviceDetaiCommandl",
     components: {
-        Dialog, Tabs, CommandRecord
+        Dialog, Tabs, NavTitles, CommandRecord
     },
     mixins: [dialogControl],
     data() {
@@ -78,6 +98,11 @@ export default {
             padding-top: 7.08rem;
             padding-bottom: calc( 10.83rem - 24px);
             padding-right: 0;
+        }
+    }
+    .vs-custom {
+        /deep/ .little-nav__title {
+            margin-top: 0;
         }
     }
 }
