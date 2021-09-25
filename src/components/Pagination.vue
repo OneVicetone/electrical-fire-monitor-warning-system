@@ -30,7 +30,6 @@ export default {
 		},
 		size: {
 			type: String,
-			default: 'small'
 		},
 		showQuickJumper: {
 			type: Boolean,

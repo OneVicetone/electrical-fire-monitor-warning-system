@@ -1,7 +1,7 @@
 <template>
 	<div class="device-manage-container">
 		<div class="organization">
-			<OrganizationList />
+			<OrganizationList :treeData="treeData" @handleSelectFunc="handleSelectTreeNode" />
 		</div>
 		<div class="device-manage">
 			<a-radio-group v-model="deviceStatusRadio">
@@ -51,7 +51,12 @@
 				</div>
 			</a-form-model>
 			<div class="device-list">
-				<DeviceCard v-for="device of deviceListData" :key="device.id" :deviceInfoObj="device" @changeDeviceWorkStatus="changeDeviceWorkStatus" />
+				<DeviceCard
+					v-for="device of deviceListData"
+					:key="device.id"
+					:deviceInfoObj="device"
+					@changeDeviceWorkStatus="changeDeviceWorkStatus"
+				/>
 			</div>
 			<Pagination
 				:paginationData="paginationData"
@@ -129,6 +134,7 @@ export default {
 				},
 			],
 			deviceListData: [],
+			treeData: [],
 		}
 	},
 	mounted() {
@@ -160,7 +166,7 @@ export default {
 			const {
 				paginationData: { current, size },
 			} = this
-			this.getTableData(current, size)
+			this.getDeviceListData(current, size)
 		},
 		reset() {
 			this.searchForm = cloneDeep(searchFromInitial)
@@ -176,9 +182,11 @@ export default {
 		exportDeviceList() {
 			exportDeviceList()
 		},
-		changeDeviceWorkStatus() {
-			
-		}
+		changeDeviceWorkStatus() {},
+		handleSelectTreeNode(key) {
+			this.parentId = key
+			this.search()
+		},
 	},
 	watch: {
 		deviceStatusRadio() {
@@ -202,9 +210,9 @@ export default {
 		border-right: 1px solid #3f4a77;
 	}
 	.device-manage {
+		width: 100%;
 		padding: 4.08rem 1.75rem 1rem;
 		overflow-x: auto;
-
 		.table-search-form {
 			margin: 1.25rem 0 0;
 			position: relative;

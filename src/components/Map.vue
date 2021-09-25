@@ -41,11 +41,8 @@ export default {
 			this.mapInstance = map
 			map.enableScrollWheelZoom(true)
 			this.changeMapCenterAndZoom(this.centerPoint, mapDefaultZoom)
-			// initMapTheme(map, defaultStyleId)
+			initMapTheme(map, defaultStyleId)
 			map.enableScrollWheelZoom(true)
-			map.setMapStyleV2({
-				defaultStyleId,
-			})
 			// map.addControl(new BMapGL.LocationControl)
 			// map.addControl(new BMapGL.CityListControl)
 			this.$emit("setMapInstance", map)

@@ -15,15 +15,29 @@ export default {
 	props: {
 		treeData: {
 			type: Array,
-			default: () => [{ key: 1, title: "黑龙江农业银行", children: [{ key: 11, title: "黑龙江农业银行光明支行" }] }],
-		},
-		handleSelectFunc: {
-			type: Function,
-			default: key => console.log(key),
+			required: true,
 		},
 	},
 	methods: {
 		search({ target: { value } }) {},
+		handleSelectFunc([nowSelctItemKey]) {
+			const findNowSelectItemParentKey = (arr, key) => {
+				for (let i = 0; i < arr.length; i++) {
+					const { key: nowKey, children, parentId } = arr[i]
+					const getObj = nowKey === key ? arr[i] : null
+					if (!getObj && Array.isArray(children) && children.length > 0) {
+						return findNowSelectItemParentKey(children, key)
+					}
+					if (getObj) {
+						return parentId
+					}
+				}
+			}
+			const parentKey = findNowSelectItemParentKey(this.treeData, nowSelctItemKey)
+			console.log("key --> ", nowSelctItemKey)
+			console.log("parentKey --> ", parentKey)
+			this.$emit("handleSelectFunc", parentKey)
+		},
 	},
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
 	<div class="network-unit-manage-container">
 		<div class="organization">
-			<OrganizationList />
+			<OrganizationList :treeData="treeData" @handleSelectFunc="handleSelectTreeNode" />
 		</div>
 		<div class="network-unit-manage-content">
 			<a-form-model class="table-search-form" layout="inline" :model="searchForm">
@@ -70,7 +70,7 @@ export default {
 	components: { newAddUnit, OrganizationList, Pagination },
 	data() {
 		return {
-			parentId: "",
+			parentId: null,
 			searchForm: {
 				name: "",
 				principalUserName: "",
@@ -104,6 +104,7 @@ export default {
 			const params = {
 				current,
 				size,
+				...(this.parentId && { parentId: this.parentId }),
 				...this.searchForm,
 				// TODO: 上级单位id
 			}
@@ -189,6 +190,10 @@ export default {
 					}
 				},
 			})
+		},
+		handleSelectTreeNode(key) {
+			this.parentId = key
+			this.search()
 		},
 	},
 }
