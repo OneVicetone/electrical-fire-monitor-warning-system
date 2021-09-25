@@ -12,7 +12,7 @@ export const form =  {
             console.log(result)
             Promise.all(result).then(res=> {
                 if ( cb && typeof cb === 'function' ) cb();
-            }).catch(error=>this.log('我失败了', error))
+            }).catch(error=>console.log('我失败了', error))
         }
     },
 }

@@ -216,13 +216,13 @@ export default {
 		async toOperat({id}, type) {
 			this.isAble = type === 'process';
 			const { data } = await getAlarmDetail(id);
-			this.log(data)
+			console.log(data)
 			this.alarmHandleData = data;
 			this.showAlert = true;
 		},
 		async dialogSure(params) {
 			const result = await processAlarm(params);
-			this.log('确定', result);
+			console.log('确定', result);
 			// 需要给提示
 			this.getTableData();
 			this.showAlert = false;

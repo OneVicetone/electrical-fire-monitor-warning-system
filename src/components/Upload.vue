@@ -51,10 +51,10 @@ export default {
     },
     methods: {
         beforeUpload(file) {
-            this.log(file)
+            console.log(file)
         },
         handleChange(info) {
-            this.log(info)
+            console.log(info)
         }
     }
 }

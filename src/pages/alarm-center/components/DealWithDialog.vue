@@ -126,7 +126,7 @@ export default {
             if (v) {
                 const { processBOList } = this.alarmData;
                 const { confirmFlag = '', processType = '' } = processBOList[0] || {};
-                this.log('---------', confirmFlag, processType)
+                console.log('---------', confirmFlag, processType)
                 this.warnSure = `${confirmFlag}`;
                 this.dealWith = `${processType}`;
             }

@@ -1,11 +1,11 @@
-export const getBasePx = () => {
-    const { width } = document.body.getBoundingClientRect()
-    return width / 160
+export const getBasePx = scale => {
+	const { width } = document.body.getBoundingClientRect()
+	return width / scale
 }
 
-export const setHtmlBasePx = basePx => document.querySelector('html').style.fontSize = `${basePx}px`
+export const setHtmlBasePx = basePx => (document.querySelector("html").style.fontSize = `${basePx}px`)
 
-export const initHtmlBasePx = () => {
-    setHtmlBasePx(getBasePx())
-    window.onresize = () => setHtmlBasePx(getBasePx())
+export const initHtmlBasePx = (scale = 160) => {
+	setHtmlBasePx(getBasePx(scale))
+	window.onresize = () => setHtmlBasePx(getBasePx(scale))
 }

@@ -14,7 +14,7 @@ module.exports = {
 		filename: "js/[name][hash].bundle.js",
 		path: path.resolve(process.cwd(), "./dist"),
 		clean: true,
-		// publicPath: "/dist/",
+		publicPath: "/",
 	},
 	resolve: {
 		alias,
@@ -36,6 +36,13 @@ module.exports = {
 			},
 		},
 		minimizer: ["...", new CssMinimizerPlugin()],
+	},
+	externals: {
+		vue: "Vue",
+		vuex: "Vuex",
+		echarts: "echarts",
+		"vue-router": "VueRouter",
+		"ant-design-vue": "ant-design-vue",
 	},
 	module: {
 		rules: [

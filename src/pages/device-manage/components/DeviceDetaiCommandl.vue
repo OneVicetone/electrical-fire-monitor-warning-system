@@ -129,7 +129,7 @@ export default {
 				}
 			}
             const result = await deviceCmd(params);
-            this.log('指令结果', result)
+            console.log('指令结果', result)
         },
     }
 }

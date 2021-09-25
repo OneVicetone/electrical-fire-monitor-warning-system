@@ -20,12 +20,33 @@ const AddAndEditDeviceType = () => import("pages/system-setting/pages/add-and-ed
 const DeviceInfo = () => import("pages/device-manage/pages/device-info/index.vue")
 const BatchOperation = () => import("pages/device-manage/pages/batch-operation/index.vue")
 
+const PhoneLogin = () => import("pages/phone-pages/login/index.vue")
+const PhoneAlarmList = () => import("pages/phone-pages/alarm-list/index.vue")
 
 const baseRoutes = [
 	{
 		path: "/login",
 		name: "Login",
 		component: Login,
+		meta: {
+			title: "登录",
+		},
+	},
+	{
+		path: "/phone-login",
+		name: "PhoneLogin",
+		component: PhoneLogin,
+		meta: {
+			title: "登录",
+		},
+	},
+	{
+		path: "/phone-alarm-list",
+		name: "PhoneAlarmList",
+		component: PhoneAlarmList,
+		meta: {
+			title: "报警列表",
+		},
 	},
 	{
 		path: "/",

@@ -10,7 +10,7 @@
 						list-type="picture-card"
 						class="file-uploader"
 						:show-upload-list="false"
-						:customRequest="uploadFile"
+						:customRequest="handleUploadFile"
 						@change="handleChange"
 					>
 						<img v-if="formData.productImgPath" :src="formData.productImgPath" />
@@ -133,7 +133,7 @@ export default {
 				})
 			}
 		},
-		uploadFile(arg) {
+		handleUploadFile(arg) {
 			arg.file instanceof File && this.uploadFile(arg.file)
 		},
 	},
