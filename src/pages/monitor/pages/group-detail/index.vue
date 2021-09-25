@@ -25,7 +25,7 @@
 
 			<div class="center-content">
 				<div class="history-chart">
-					<ContentTitle title="历史用电统计" />
+					<ContentTitle :title="historyChartTitle" @changeTitleContent="changeTitleContent" />
 				</div>
 			</div>
 
@@ -60,6 +60,11 @@ export default {
 	data() {
 		return {
 			historyList: ["首页", "设备监控", "单位详情"],
+			historyChartTitle: [
+				{ name: '历史用电统计', key: 'history' },
+				{ name: '历史报警统计', key: 'alarm' },
+				{ name: '设备列表', key: 'device' },
+			],
 			groupInfoList: [
 				{ label: "单位类型", value: "国有企业" },
 				{ label: "占地面积", value: "2500㎡" },
@@ -75,6 +80,9 @@ export default {
 	},
 	methods: {
 		enlargeImg() {},
+		changeTitleContent(key) {
+			console.log(key)
+		}
 	},
 }
 </script>

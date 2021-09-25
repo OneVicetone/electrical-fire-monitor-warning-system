@@ -27,7 +27,10 @@
 					<span>{{ `${device.name}(${deviceStatus[device.key]})` }}</span>
 				</div>
 			</div>
-			<div id="device_status_chart"></div>
+			<div class="alarm-type-count">
+				<ContentTitle title="报警类型统计" />
+				<div id="device_status_chart"></div>
+			</div>
 		</div>
 		<MarkerInfo v-model="showMarkerInfo" :markerInfoObj="markerInfo" :position="position" />
 	</div>
@@ -43,7 +46,14 @@ import MarkerInfo from "./components/MarkerInfo.vue"
 
 import apis from "apis"
 
-const { monitorCount, getSelectOptions, getMonitorDataList, monitorAllDeviceStatus, getMonitorDataDetail } = apis
+const {
+	monitorCount,
+	getSelectOptions,
+	getMonitorDataList,
+	monitorAllDeviceStatus,
+	getMonitorDataDetail,
+	monitorAllAlarmType,
+} = apis
 
 export default {
 	name: "Monitor",
@@ -95,25 +105,9 @@ export default {
 		},
 	},
 	mounted() {
-		const { getMonitorCount, getGroupOptions, getDeviceStatus } = this
+		const { getMonitorCount, getGroupOptions, getDeviceStatus, getAllAlarmType } = this
 		this.$nextTick(() => {
-			Promise.allSettled([getMonitorCount(), getGroupOptions(), getDeviceStatus()])
-		})
-		const deviceStatusChart = echarts.init(document.querySelector("#device_status_chart"))
-		deviceStatusChart.setOption({
-			xAxis: {
-				type: "category",
-				data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-			},
-			yAxis: {
-				type: "value",
-			},
-			series: [
-				{
-					data: [120, 200, 150, 80, 70, 110, 130],
-					type: "bar",
-				},
-			],
+			Promise.allSettled([getMonitorCount(), getGroupOptions(), getDeviceStatus(), getAllAlarmType()])
 		})
 	},
 	methods: {
@@ -124,6 +118,26 @@ export default {
 					i.value = data[i.key]
 				})
 				this.groupCount = groupCountClone
+			})
+		},
+		getAllAlarmType() {
+			return monitorAllAlarmType().then(({ data }) => {
+				const deviceStatusChart = echarts.init(document.querySelector("#device_status_chart"))
+				deviceStatusChart.setOption({
+					xAxis: {
+						type: "category",
+						data: Object.keys(data) || [],
+					},
+					yAxis: {
+						type: "value",
+					},
+					series: [
+						{
+							data: Object.values(data) || [],
+							type: "bar",
+						},
+					],
+				})
 			})
 		},
 		getGroupOptions(val = "groupType") {
@@ -297,9 +311,12 @@ export default {
 				}
 			}
 		}
-		#device_status_chart {
-			width: 100%;
-			height: 50%;
+		.alarm-type-count {
+			margin: 6.58rem 0 0;
+			#device_status_chart {
+				width: 100%;
+				height: 50%;
+			}
 		}
 	}
 }

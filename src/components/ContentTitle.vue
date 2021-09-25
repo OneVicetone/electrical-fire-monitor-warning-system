@@ -1,15 +1,32 @@
 <template>
 	<header>
-		<div>{{ title }}</div>
+		<div class="string-title" v-if="typeof title === 'string'">{{ title }}</div>
+		<div class="array-title" v-else-if="title instanceof Array">
+			<div :class="`title-item ${selectIdx === index ? 'active' : ''}`" v-for="(item, index) of title" :key="item.name">
+				<span @click="changeSelectIdx(index)">{{ item.name }}</span>
+				<a-divider v-if="index !== title.length - 1" type="vertical" />
+			</div>
+		</div>
 	</header>
 </template>
 
 <script>
 export default {
 	name: "ContentTitle",
+	data() {
+		return {
+			selectIdx: 0,
+		}
+	},
 	props: {
 		title: {
-			type: String,
+			type: [String, Array],
+		},
+	},
+	methods: {
+		changeSelectIdx(idx) {
+			this.selectIdx = idx
+			this.emit("changeTitleContent", idx.key)
 		},
 	},
 }
@@ -42,7 +59,7 @@ header {
 		font-size: 1.33rem;
 		font-weight: bold;
 		position: relative;
-		&::before {
+		&:first-child::before {
 			content: "";
 			display: block;
 			width: 1.48rem;
@@ -53,6 +70,22 @@ header {
 			transform: translateY(-50%);
 			background: url("assets/icons/company.png") no-repeat;
 			background-size: 100%;
+		}
+	}
+	.string-title {
+	}
+	.array-title {
+		display: flex;
+		.title-item {
+			color: #81899c;
+			> span {
+				padding: 0 2.58rem 0 1.83rem;
+				cursor: pointer;
+			}
+		}
+		.title-item.active {
+			color: #fff;
+			background: linear-gradient(90deg, #2f6bfd 0%, rgba(0, 0, 0, 0) 100%);
 		}
 	}
 }
