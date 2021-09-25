@@ -98,14 +98,14 @@
             </div>
         </Nav-titles>
         <Nav-titles class="unit-pic" title="单位图片">
-            <div class="flex upload-ins">
-                <Upload>
+            <!-- <div class="flex upload-ins">
+                <Upload :fileList="fileList" @upload-change="onUpload">
                     <div class="yahei-81899C t-center">公司处景观/效果图</div>
                 </Upload>
-                <Upload class="ml408">
+                <Upload class="ml408" :fileList="fileList" @upload-change="onUpload">
                     <div class="yahei-81899C ml-58">电气火灾系统设计图纸(800*560)</div>
                 </Upload>
-            </div>
+            </div> -->
         </Nav-titles>
         <section class="btns pb t-center">
             <a-button type="primary" class="mr125" @click="formSure">确定</a-button>
@@ -151,7 +151,8 @@ export default {
                 safePrincipal: [{ required: true, message: '请输入安全负责人姓名', trigger: 'blur' }],
                 principalAccount: [{ required: true, message: '请输入安全负责人登录账户名', trigger: 'blur' }],
                 linkPhone: [{ required: true, message: '请输入安全负责人联系电话', trigger: 'blur' }],
-            }
+            },
+            fileList: []
         }
     },
     mounted() {
@@ -200,7 +201,10 @@ export default {
                 console.log('表单填写', res)
             }
             this.recursionRef(validates, cb);
-        }
+        },
+        onUpload(e) {
+            this.fileList = e;
+        },
     }
 }
 </script>

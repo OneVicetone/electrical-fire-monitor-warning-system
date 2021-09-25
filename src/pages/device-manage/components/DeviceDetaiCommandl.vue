@@ -20,16 +20,13 @@
                 <div slot="header" class="header">
                     <a-select class="ml375" default-value="lucy" style="width: 9.67rem" @change="selectChange">
                         <a-select-option value="jack">
-                            Jack
+                            指令类型
                         </a-select-option>
                         <a-select-option value="lucy">
-                            Lucy
-                        </a-select-option>
-                        <a-select-option value="disabled" disabled>
-                            Disabled
+                            数据阈值
                         </a-select-option>
                         <a-select-option value="Yiminghe">
-                            yiminghe
+                            消音&复位
                         </a-select-option>
                     </a-select>
                     <img class="icons-wd ml83 pointer" src="assets/icons/refresh.png" alt="">

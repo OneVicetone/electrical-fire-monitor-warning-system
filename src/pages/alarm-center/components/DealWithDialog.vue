@@ -1,15 +1,12 @@
 <template>
     <Dialog v-model="isShowHandle" title="报警处理">
-        <!-- <div v-for="(value, key,index) in showList" :key="index">
-            <span style="background: red">{{key}}</span>===
-            <span>{{value}}</span>
-        </div> -->
         <section class="dialog-area-content flex">
             <section class="left">
                 <Nav-titles title="报警设备信息" class="equipment">
                     <div class="mb175 flex-yCenter">
                         <div class="display-ib t-center">
-                            <a-icon type="apple" />
+                            <!-- <a-icon type="apple" /> -->
+                            <img class="imgs" :src="mapValue(showList.alarmLevel, 'alarmIcons')" alt="">
                             <div class="yahei">{{ mapValue(showList.alarmLevel, 'alarmLevel') }}</div> 
                         </div>
                         <div class="ml225 display-ib">
@@ -24,9 +21,7 @@
                     </div>
                 </Nav-titles>
                 <Nav-titles title="报警处理意见">
-                    <div class="yahei">
-                        电线头接触不良或电路过载可能会引起电路温度过高。建议查看电线接头处是否接触不良。若同时发生过载报警，则可能是电路超负载引起的电路高温报警。
-                    </div>
+                    <div class="yahei opinions">{{opinions}}</div>
                 </Nav-titles>
                 <Nav-titles title="报警处理" class="deal">
                     <span class="yahei">警情确定：</span>
@@ -39,15 +34,17 @@
                     <a class="yahei underline" href="javascript:void(0)">下发指令></a>
                     <br />
                     <div class="flex mt">
-                        <span class="yahei">现场图片：</span>
-                        <img v-if="!able" alt="图片已损坏">
-                         <Upload v-else></Upload>
+                        <span class="yahei nowrap">现场图片：</span>
+                        <img v-if="able" alt="图片已损坏">
+                         <Upload v-else :len="6"
+                         :fileList="fileList"
+                         @upload-change="onUpload"></Upload>
                     </div>
                 </Nav-titles>
             </section>
             <section class="right">
                 <Nav-titles title="报警处理">
-                    <Simple-table></Simple-table>
+                    <Simple-table :columns="columns" :tableData="list"></Simple-table>
                 </Nav-titles>
             </section>
         </section>
@@ -64,6 +61,15 @@ import NavTitles from "components/NavTitles.vue"
 import SimpleTable from "components/SimpleTable.vue"
 import Upload from "components/Upload.vue"
 
+const nameForKey = {
+	temp: "温度",
+	electricLeakage: "漏电",
+	electricity: "电流",
+	voltage: "电压",
+	power: "功率",
+	electricEnergy: "电量",
+}
+
 export default {
     name:"DealWithDialog",
     components: { Dialog, NavTitles, SimpleTable, Upload },
@@ -76,7 +82,15 @@ export default {
             type: Boolean,
             default: false
         },
+        opinions: {
+            type: String,
+            default: ''
+        },
         alarmData: {
+            type: Object,
+            default: () => ({})
+        },
+        handAlarmList: {
             type: Object,
             default: () => ({})
         }
@@ -98,7 +112,23 @@ export default {
 				{ label: '已核查', value: '1' },
 				{ label: '已通知用户', value: '2' },
 				{ label: '下发整改通知', value: '3' },
-			]
+			],
+            columns: [
+				{ title: "名称", key: "name" },
+				{ title: "1/A", key: "1a" },
+				{ title: "2/B", key: "2b" },
+				{ title: "3/C", key: "3c" },
+				{ title: "4/N", key: "4n" },
+			],
+            defaultTableData: [
+				{ name: "漏电(mA)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "温度(c)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "电压(V)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "电流(A)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "功率(W)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "电量(度)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+			],
+            fileList: []
         }
     },
     computed: {
@@ -120,6 +150,11 @@ export default {
 				place: installPosition || '--'
 			}
         },
+        list() {
+            for (const key in this.handAlarmList) {
+                console.log(key)
+            }
+        }
     },
     watch: {
         dialogVisible(v) {
@@ -136,6 +171,10 @@ export default {
         mapValue(item, type) {
             const _map = {
                 alarmLevel: { 1: '预警', 2: '高危' },
+                alarmIcons: {
+                    1: '/src/assets/icons/warn-icon.png',
+                    2: '/src/assets/icons/danger-icon.png'
+                },
                 deviceInfo: {
                     detail: '报警详情',
                     reset: '报警恢复',
@@ -147,6 +186,9 @@ export default {
             }
             return _map[type][item] || '--'
 		},
+        onUpload(e) {
+            this.fileList = e;
+        },
         sure() {
             const { showList: { id }, warnSure, dealWith } = this;
             const params = { 
@@ -163,6 +205,10 @@ export default {
 .dialog-area-content {
 	.left {
 		.equipment {
+            .imgs {
+                width: 0.92rem;
+                height: 1.67rem;
+            }
 			&-info {
 				span {
 					display: block;
@@ -170,6 +216,9 @@ export default {
 			}
 		}
 	}
+    .opinions {
+        width: 43rem;
+    }
 	.deal {
 		.radio-wd {
 			margin-bottom: 2rem;
