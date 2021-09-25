@@ -1,7 +1,7 @@
 <template>
     <div class="little-nav">
         <div class="little-nav__title flex-yCenter">
-            {{title}}
+            <div class="inline-block">{{title}}</div>
             <slot name="header"></slot>
         </div>
         <slot></slot>

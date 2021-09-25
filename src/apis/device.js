@@ -82,6 +82,37 @@ const setupDeviceApis = http => ({
 	getDeviceTypeDetail: id => http.get("/api-device/deviceType/detail", { id }),
 	
 	getDeviceInfoDetail: id => http.get(`/api-device/deviceInfo/detail/${id}`),
+
+	deviceCmd: ({
+		deviceId,
+		cmdType,
+		content: {
+			iz = '',
+			temp = '',
+			rv = '',
+			rc = '',
+			ccr = '',
+			realFreq = '',
+			beatsFreq = ''
+		}
+	}) =>
+		http.post("/api-device/deviceCmd/send", 
+		{
+			deviceId,
+			cmdType,
+			content: {
+				iz,
+				temp,
+				rv,
+				rc,
+				ccr,
+				realFreq,
+				beatsFreq
+			}
+		}
+	),
+	commandPageList: ({ current, size, deviceId }) =>
+		http.get("/api-device/deviceCmd/pageList", { current, size, deviceId }),
 })
 
 export default setupDeviceApis

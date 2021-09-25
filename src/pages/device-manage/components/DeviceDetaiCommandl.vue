@@ -1,6 +1,6 @@
 <template>
     <Dialog class="dialog-custom" v-model="visibles" title="发送指令" :forms="formData">
-        <Tabs @tab-change="onChanges"></Tabs>
+        <Tabs v-model="tabModel"></Tabs>
         <div class="comp-content flex-between">
             <div class="comp-content__form">
                 <a-form-model :model="formData" :label-col="{ span: 4 }" :wrapper-col="{ style: 'width: 19.08rem' }">
@@ -18,7 +18,7 @@
             </div>
             <NavTitles class="vs-custom" title="指令记录">
                 <div slot="header" class="header">
-                    <a-select default-value="lucy" style="width: 9.67rem" @change="handleChange">
+                    <a-select class="ml375" default-value="lucy" style="width: 9.67rem" @change="selectChange">
                         <a-select-option value="jack">
                             Jack
                         </a-select-option>
@@ -32,9 +32,9 @@
                             yiminghe
                         </a-select-option>
                     </a-select>
-                    <img class="icons-wd" src="assets/icons/refresh.png" alt="">
+                    <img class="icons-wd ml83 pointer" src="assets/icons/refresh.png" alt="">
                 </div>
-                <CommandRecord></CommandRecord>
+                <CommandRecord :details="records"></CommandRecord>
             </NavTitles>
         </div>
     </Dialog>
@@ -46,6 +46,9 @@ import Tabs from "components/Tabs.vue"
 import NavTitles from "components/NavTitles.vue"
 import CommandRecord from "components/CommandRecord.vue"
 import { dialogControl } from "mixins"
+import apis from "apis"
+
+const { deviceCmd, commandPageList } = apis;
 
 export default {
     name:"DeviceDetaiCommandl",
@@ -55,6 +58,7 @@ export default {
     mixins: [dialogControl],
     data() {
         return {
+            tabModel: '1',
             formData: {},
             threshold: [
                 {label: '漏电阈值：', model: 'leakage', desc: '（建议设置80~1000mA）'},
@@ -65,14 +69,67 @@ export default {
                 {label: '上传频率：', model: 'uploadFrequency', desc: '（建议设置5-1440分钟）'},
                 {label: '心跳频率：', model: 'heartRate', desc: '（建议设置2-1440分钟）'},
             ],
+            records: []
+        }
+    },
+    watch: {
+       visibles(v) {
+            v && this.getList()
         }
     },
     methods: {
         onChanges(key) {
 
         },
-        doSure() {
-            this.log('确定', this.formData)
+        selectChange() {},
+        getList({ current = 1, size = 10 } = {}) {
+            const {
+                $route: {
+                    params: { id }
+                }
+            } = this;
+            const params = {
+                current,
+                size,
+                deviceId: id
+            }
+            commandPageList(params).then(({ data }) => {
+                const { records = [] } = data || {};
+                console.log('获取弹窗内list', records)
+                this.records = records;
+            });
+        },
+        async doSure() {
+            const {
+                tabModel,
+                formData: {
+                    leakage = "",
+                    temperature = "",
+                    ratedVoltage = "",
+                    ratedCurrent = "",
+                    threePhase = "",
+                    uploadFrequency = "",
+                    heartRate = ""
+                },
+                $route: {
+                    params: { id }
+                }
+            } = this;
+            const params = {
+				deviceId: id,
+				cmdType: tabModel,
+				content: {
+					iz: leakage,
+					temp: temperature,
+					rv: ratedVoltage,
+					rc: ratedCurrent,
+					ccr: threePhase,
+					realFreq: uploadFrequency,
+					beatsFreq: heartRate
+				}
+			}
+            const result = await deviceCmd(params);
+            this.log('指令结果', result)
         },
     }
 }
@@ -101,8 +158,16 @@ export default {
         }
     }
     .vs-custom {
+        // 待修改
+        width: 31rem;
         /deep/ .little-nav__title {
             margin-top: 0;
+        }
+        .ml375 {
+            margin-left: 3.75rem;
+        }
+        .ml83 {
+            margin-left: .83rem;
         }
     }
 }
