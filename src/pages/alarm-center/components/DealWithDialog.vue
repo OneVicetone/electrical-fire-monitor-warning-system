@@ -1,15 +1,12 @@
 <template>
     <Dialog v-model="isShowHandle" title="报警处理">
-        <!-- <div v-for="(value, key,index) in showList" :key="index">
-            <span style="background: red">{{key}}</span>===
-            <span>{{value}}</span>
-        </div> -->
         <section class="dialog-area-content flex">
             <section class="left">
                 <Nav-titles title="报警设备信息" class="equipment">
                     <div class="mb175 flex-yCenter">
                         <div class="display-ib t-center">
-                            <a-icon type="apple" />
+                            <!-- <a-icon type="apple" /> -->
+                            <img class="imgs" :src="mapValue(showList.alarmLevel, 'alarmIcons')" alt="">
                             <div class="yahei">{{ mapValue(showList.alarmLevel, 'alarmLevel') }}</div> 
                         </div>
                         <div class="ml225 display-ib">
@@ -37,9 +34,11 @@
                     <a class="yahei underline" href="javascript:void(0)">下发指令></a>
                     <br />
                     <div class="flex mt">
-                        <span class="yahei">现场图片：</span>
+                        <span class="yahei nowrap">现场图片：</span>
                         <img v-if="able" alt="图片已损坏">
-                         <Upload v-else :len="6"></Upload>
+                         <Upload v-else :len="6"
+                         :fileList="fileList"
+                         @upload-change="onUpload"></Upload>
                     </div>
                 </Nav-titles>
             </section>
@@ -129,6 +128,7 @@ export default {
 				{ name: "功率(W)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 				{ name: "电量(度)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 			],
+            fileList: []
         }
     },
     computed: {
@@ -171,6 +171,10 @@ export default {
         mapValue(item, type) {
             const _map = {
                 alarmLevel: { 1: '预警', 2: '高危' },
+                alarmIcons: {
+                    1: '/src/assets/icons/warn-icon.png',
+                    2: '/src/assets/icons/danger-icon.png'
+                },
                 deviceInfo: {
                     detail: '报警详情',
                     reset: '报警恢复',
@@ -182,6 +186,9 @@ export default {
             }
             return _map[type][item] || '--'
 		},
+        onUpload(e) {
+            this.fileList = e;
+        },
         sure() {
             const { showList: { id }, warnSure, dealWith } = this;
             const params = { 
@@ -198,6 +205,10 @@ export default {
 .dialog-area-content {
 	.left {
 		.equipment {
+            .imgs {
+                width: 0.92rem;
+                height: 1.67rem;
+            }
 			&-info {
 				span {
 					display: block;

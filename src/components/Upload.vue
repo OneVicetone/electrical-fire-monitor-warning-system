@@ -1,5 +1,5 @@
 <template>
-    <div class="clearfix">
+    <div>
         <a-upload
             :list-type="uploadInlineStyle"
             class="uploader"
@@ -7,8 +7,6 @@
             :file-list="fileList"
             @change="handleChange"
         >
-            <!-- <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
-            <a-icon  v-else :type="loading ? 'loading' : 'plus'" /> -->
             <div v-if="limitLen">
                 <a-icon type="plus" />
             </div>
@@ -33,41 +31,11 @@ export default {
             type: String,
             default: 'https://www.mocky.io/v2/5cc8019d300000980a055e76'
         },
-        len: Number
+        len: Number,
+        fileList: Array
     },
     data() {
         return {
-            loading: false,
-            imageUrl: '',
-            fileList: [{
-          uid: '-1',
-          name: 'image.png',
-          status: 'done',
-          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-          uid: '-2',
-          name: 'image.png',
-          status: 'done',
-          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-          uid: '-3',
-          name: 'image.png',
-          status: 'done',
-          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-          uid: '-4',
-          name: 'image.png',
-          status: 'done',
-          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-          uid: '-5',
-          name: 'image.png',
-          status: 'error',
-        },]
         }
     },
     computed: {
@@ -76,11 +44,12 @@ export default {
         }
     },
     methods: {
-        beforeUpload(file) {
-            this.log(file)
-        },
+        // beforeUpload(file) {
+        //     this.log(file)
+        // },
         handleChange({ fileList }) {
-            this.fileList = fileList;
+            console.log(fileList)
+            this.$emit('upload-change', fileList)
         },
     }
 }
@@ -89,24 +58,30 @@ export default {
 /deep/ .uploader > .ant-upload {
   width: 6.67rem;
   height: 6.67rem;
-//   background: #090D18;
-//   margin: 0;
 }
+
 /deep/ .ant-upload-list-picture-card-container {
    width: 6.67rem;
     height: 6.67rem;
 }
+
+/deep/ .ant-upload-list-picture-card {
+    float: left;
+}
+
 /deep/ .ant-upload-list-picture-card .ant-upload-list-item {
     width: 6.67rem;
     height: 6.67rem;
 }
-// .ant-upload-select-picture-card i {
-//   font-size: 32px;
-//   color: #999;
-// }
 
-// .ant-upload-select-picture-card .ant-upload-text {
-//   margin-top: 8px;
-//   color: #666;
-// }
+/deep/ .ant-upload-list-item-uploading .ant-upload-list-item-info span {
+    display: flex;
+    justify-content: center;
+}
+
+/deep/ .ant-upload-list-item-uploading-text {
+    font-size: 1rem;
+    transform: scale(.6);
+    white-space: nowrap;
+}
 </style>
