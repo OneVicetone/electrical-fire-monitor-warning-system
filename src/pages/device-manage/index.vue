@@ -4,18 +4,18 @@
 			<OrganizationList />
 		</div>
 		<div class="device-manage">
-			<a-radio-group :value="deviceStatusRadio">
+			<a-radio-group v-model="deviceStatusRadio">
 				<a-radio-button v-for="radio of deviceStatusOptions" :key="radio.value" :value="radio.value">
 					{{ radio.label }}
 				</a-radio-button>
 			</a-radio-group>
 			<a-form-model class="table-search-form" layout="inline" :model="searchForm">
 				<a-form-model-item>
-					<a-input v-model="searchForm.deviceName" placeholder="请输入角色名称" size="small" />
+					<a-input v-model="searchForm.sn" placeholder="请输入设备编码/名称" size="small" />
 				</a-form-model-item>
 				<a-form-model-item>
 					<a-select
-						v-model="searchForm.deviceType"
+						v-model="searchForm.deviceTypeId"
 						:options="deviceTypeOptions"
 						placeholder="请选择设备类型"
 						size="small"
@@ -23,7 +23,7 @@
 				</a-form-model-item>
 				<a-form-model-item>
 					<a-select
-						v-model="searchForm.deviceId"
+						v-model="searchForm.deviceModelId"
 						:options="deviceIdOptions"
 						placeholder="请选择设备编号"
 						size="small"
@@ -33,10 +33,10 @@
 					<a-input v-model="searchForm.iccid" placeholder="请输入ICCID号" size="small" />
 				</a-form-model-item>
 				<a-form-model-item>
-					<a-button type="primary" size="small">搜索</a-button>
+					<a-button type="primary" size="small" @click="search">搜索</a-button>
 				</a-form-model-item>
 				<a-form-model-item>
-					<a-button type="primary" size="small">重置</a-button>
+					<a-button type="primary" size="small" @click="reset">重置</a-button>
 				</a-form-model-item>
 				<div class="other-btns">
 					<a-popover trigger="click" placement="bottomRight">
@@ -47,18 +47,11 @@
 						</a-list>
 						<a-button type="primary" size="small">批量操作<a-icon type="down" /></a-button>
 					</a-popover>
-					<a-button type="primary" size="small">导出</a-button>
+					<a-button type="primary" size="small" @click="exportDeviceList">导出</a-button>
 				</div>
 			</a-form-model>
 			<div class="device-list">
-				<DeviceCard />
-				<DeviceCard />
-				<DeviceCard />
-				<DeviceCard />
-				<DeviceCard />
-				<DeviceCard />
-				<DeviceCard />
-				<DeviceCard />
+				<DeviceCard v-for="device of deviceListData" :key="device.id" :deviceInfoObj="device" @changeDeviceWorkStatus="changeDeviceWorkStatus" />
 			</div>
 			<Pagination
 				:paginationData="paginationData"
@@ -70,6 +63,8 @@
 </template>
 
 <script>
+import { cloneDeep } from "lodash"
+
 import OrganizationList from "components/OrganizationList.vue"
 import DeviceCard from "./components/DeviceCard.vue"
 import Pagination from "components/Pagination.vue"
@@ -79,9 +74,17 @@ import { SHIP, TRANSFER, IMPORT } from "utils/baseData"
 import { commonMixin } from "mixins"
 import apis from "apis"
 
-const { createDevice, changeDeviceInfo } = apis
+const { getDeviceList, createDevice, changeDeviceInfo, exportDeviceList } = apis
 
 const { deviceTypeOptions, deviceIdOptions } = optionsData
+
+const searchFromInitial = {
+	sn: "",
+	deviceTypeId: 0,
+	deviceModelId: 0,
+	iccid: "",
+}
+const deviceStatusRadioInitial = "0"
 
 export default {
 	name: "DeviceManage",
@@ -89,19 +92,21 @@ export default {
 	components: { OrganizationList, DeviceCard, Pagination },
 	data() {
 		return {
-			deviceStatusRadio: "1",
-			searchForm: {
-				deviceName: "",
-				deviceType: 0,
-				deviceId: 0,
-				iccid: "",
-			},
+			deviceStatusOptions: [
+				{ label: "全部设备", value: "0" },
+				{ label: "在线", value: "1" },
+				{ label: "离线", value: "2" },
+				{ label: "报警", value: "3" },
+				{ label: "故障", value: "4" },
+			],
+			deviceStatusRadio: deviceStatusRadioInitial,
+			searchForm: cloneDeep(searchFromInitial),
 			deviceTypeOptions,
 			deviceIdOptions,
 			paginationData: {
 				total: 0,
 				current: 1,
-				size: 10,
+				size: 8,
 			},
 			batchOperationOptions: [
 				{
@@ -123,26 +128,61 @@ export default {
 					},
 				},
 			],
+			deviceListData: [],
 		}
 	},
-	computed: {
-		deviceStatusOptions() {
-			return [
-				{ label: "全部设备", value: "1" },
-				{ label: "在线", value: "2" },
-				{ label: "离线", value: "3" },
-				{ label: "报警", value: "4" },
-				{ label: "故障", value: "5" },
-			]
-		},
+	mounted() {
+		const {
+			getDeviceListData,
+			paginationData: { current, size },
+		} = this
+		getDeviceListData(current, size)
 	},
 	methods: {
-		getDeviceListData(current = 1, size = 10) {},
+		getDeviceListData(current = 1, size = 10) {
+			const params = {
+				current,
+				size,
+				...this.searchForm,
+				...(this.deviceStatusRadio !== "0" && { status: this.deviceStatusRadio }),
+			}
+			getDeviceList(params).then(({ data: { records, total, current, size } }) => {
+				this.deviceListData = records
+				this.paginationData = {
+					...this.paginationData,
+					total,
+					current,
+					size,
+				}
+			})
+		},
+		search() {
+			const {
+				paginationData: { current, size },
+			} = this
+			this.getTableData(current, size)
+		},
+		reset() {
+			this.searchForm = cloneDeep(searchFromInitial)
+			this.deviceStatusRadio = deviceStatusRadioInitial
+			this.search()
+		},
 		changePageHandle(page, pageSize) {
 			this.getDeviceListData(page, pageSize)
 		},
 		changePageSizeHandle(current, size) {
 			this.getDeviceListData(current, size)
+		},
+		exportDeviceList() {
+			exportDeviceList()
+		},
+		changeDeviceWorkStatus() {
+			
+		}
+	},
+	watch: {
+		deviceStatusRadio() {
+			this.search()
 		},
 	},
 }

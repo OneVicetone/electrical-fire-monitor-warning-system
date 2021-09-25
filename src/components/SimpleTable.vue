@@ -21,25 +21,10 @@ export default {
 	props: {
 		columns: {
 			type: Array,
-            // required: true,
-			default: () => [
-				{ title: "名称", key: "name", wider: true },
-				{ title: "1/A", key: "1a" },
-				{ title: "2/B", key: "2b" },
-				{ title: "3/C", key: "3c" },
-				{ title: "4/N", key: "4n" },
-			],
+			required: true,
 		},
 		tableData: {
 			type: Array,
-			default: () => [
-				{ name: "漏电(mA)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
-				{ name: "温度(c)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
-				{ name: "电压(V)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
-				{ name: "电流(A)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
-				{ name: "功率(W)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
-				{ name: "电量(度)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
-			],
 		},
 	},
 }
@@ -60,6 +45,9 @@ export default {
 			border-collapse: collapse;
 			font-size: 1rem;
 			color: #aaddff;
+		}
+		> div:first-child {
+			width: 8rem;
 		}
 		.wdier {
 			width: 6.75rem;

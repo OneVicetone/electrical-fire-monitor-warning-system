@@ -46,6 +46,8 @@ export default {
 			map.setMapStyleV2({
 				defaultStyleId,
 			})
+			// map.addControl(new BMapGL.LocationControl)
+			// map.addControl(new BMapGL.CityListControl)
 			this.$emit("setMapInstance", map)
 		},
 		changeMapCenterAndZoom({ lon, lat }, zoom = 15) {

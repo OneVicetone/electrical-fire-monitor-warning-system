@@ -3,29 +3,40 @@
 		<header>
 			<div class="device-name">
 				<img src="assets/icons/device-icon.png" alt="设备图标" />
-				<span class="device-name">{{ deviceInfoObj.deviceName }}</span>
+				<span class="device-name">{{ deviceInfoObj.deviceTypeName }}</span>
 			</div>
-			<a-popover trigger="click" placement="bottomRight">
-				<a-list slot="content" size="small" :data-source="dropdownOptions">
-					<a-list-item slot="renderItem" slot-scope="item" @click="item.operate.call(this)">
-						{{ item.name }}
-					</a-list-item>
-				</a-list>
-				<a-icon type="ellipsis" />
-			</a-popover>
+			<div>
+				<a-switch
+					v-if="deviceInfoObj.workStatus !== 0"
+					:defaultChecked="deviceInfoObj.workStatus === 1"
+					checked-children="开"
+					un-checked-children="关"
+					@change="changeDeviceWorkStatus"
+				/>
+				<a-popover trigger="click" placement="bottomRight">
+					<a-list slot="content" size="small" :data-source="dropdownOptions">
+						<a-list-item slot="renderItem" slot-scope="item" @click="item.operate.call(this)">
+							{{ item.name }}
+						</a-list-item>
+					</a-list>
+					<a-icon type="ellipsis" />
+				</a-popover>
+			</div>
 		</header>
 		<section>
 			<div class="device-info">
 				<div class="img" alt="设备图片" />
 				<div class="info">
-					<p>设备ID：{{ deviceInfoObj.deviceId }}</p>
-					<p>设备类型：{{ deviceInfoObj.deviceType }}</p>
-					<p>信号时间：{{ deviceInfoObj.signalTime }}</p>
-					<p>设备状态：{{ deviceInfoObj.deviceStatus }}</p>
-					<p>到期时间：{{ deviceInfoObj.maturityTime }}</p>
+					<p>设备ID：{{ deviceInfoObj.sn }}</p>
+					<p>设备类型：{{ deviceInfoObj.deviceTypeName }}</p>
+					<p>信号时间：{{ deviceInfoObj.reportTime | filterTimeToYYYYMMDD }}</p>
+					<p>设备状态：{{ deviceInfoObj.online }}</p>
+					<p>到期时间：{{ deviceInfoObj.endDate | filterTimeToYYYYMMDD }}</p>
 				</div>
 			</div>
-			<SimpleTable :columns="columns" />
+			<div>
+				<SimpleTable :columns="columns" :tableData="tableData" />
+			</div>
 		</section>
 		<DeviceDetaiCommandl v-model="dialog"></DeviceDetaiCommandl>
 	</div>
@@ -36,6 +47,15 @@ import SimpleTable from "components/SimpleTable.vue"
 import DeviceDetaiCommandl from "./DeviceDetaiCommandl.vue"
 
 import { commonMixin } from "mixins"
+
+const nameForKey = {
+	temp: "温度",
+	electricLeakage: "漏电",
+	electricity: "电流",
+	voltage: "电压",
+	power: "功率",
+	electricEnergy: "电量",
+}
 
 export default {
 	name: "DeviceCard",
@@ -76,13 +96,40 @@ export default {
 				{ name: "更换", operate: () => {} },
 			],
 			columns: [
-				{ title: "名称", dataIndex: "", key: "", align: "center" },
-				{ title: "1/A", dataIndex: "", key: "" },
-				{ title: "2/B", dataIndex: "", key: "" },
-				{ title: "3/C", dataIndex: "", key: "" },
-				{ title: "4/N", dataIndex: "", key: "" },
+				{ title: "名称", key: "name" },
+				{ title: "1/A", key: "1a" },
+				{ title: "2/B", key: "2b" },
+				{ title: "3/C", key: "3c" },
+				{ title: "4/N", key: "4n" },
+			],
+			defaultTableData: [
+				{ name: "漏电(mA)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "温度(c)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "电压(V)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "电流(A)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "功率(W)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "电量(度)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 			],
 		}
+	},
+	computed: {
+		tableData() {
+			return this.defaultTableData.map(i => {
+				Object.keys(i).forEach((j, idx) => {
+					const num = idx - 1
+					if (num >= 0) {
+						const key = Object.keys(nameForKey)[Object.values(nameForKey).findIndex(k => i.name.includes(k))]
+						i[j] = this.deviceInfoObj.channelDataMap[num][key]
+					}
+				})
+				return i
+			})
+		},
+	},
+	methods: {
+		changeDeviceWorkStatus() {
+			this.$emit("changeDeviceWorkStatus")
+		},
 	},
 }
 </script>
@@ -90,7 +137,7 @@ export default {
 <style lang="less">
 .device-card {
 	width: 30rem;
-	height: 28.33rem;
+	height: 29rem;
 	background-color: #131a2d;
 	border: 1px solid #00a0e9;
 	box-shadow: 0px 3px 16px 0px rgba(0, 150, 255, 0.25);
@@ -100,6 +147,7 @@ export default {
 		display: flex;
 		justify-content: space-between;
 		.device-name {
+			padding: 0 0 0 1rem;
 			color: #fff;
 			> img {
 				width: 2rem;
@@ -145,6 +193,11 @@ export default {
 					padding: 0;
 				}
 			}
+		}
+		> div:last-child {
+			width: 100%;
+			display: flex;
+			justify-content: center;
 		}
 	}
 }
