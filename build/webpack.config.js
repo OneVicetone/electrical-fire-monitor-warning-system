@@ -64,22 +64,22 @@ module.exports = {
 					},
 				],
 			},
-			// {
-			// 	test: /\.(jpe?g|png|svg|gif)/i,
-			// 	type: "asset",
-			// 	generator: {
-			// 		filename: "assets/[hash][ext][query]", // 局部指定输出位置
-			// 	},
-			// 	parser: {
-			// 		dataUrlCondition: {
-			// 			maxSize: 8 * 1024, // 限制于 8kb
-			// 		},
-			// 	},
-			// },
 			{
-				test: /.(png|jpg|jpeg|svg|gif)$/i,
+				test: /\.(jpe?g|png|svg|gif)/i,
 				type: "asset",
+				generator: {
+					filename: "assets/[hash][ext][query]", // 局部指定输出位置
+				},
+				parser: {
+					dataUrlCondition: {
+						maxSize: 8 * 1024, // 限制于 8kb
+					},
+				},
 			},
+			// {
+			// 	test: /.(png|jpg|jpeg|svg|gif)$/i,
+			// 	type: "asset",
+			// },
 		],
 	},
 	plugins: [

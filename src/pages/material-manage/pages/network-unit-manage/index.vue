@@ -120,24 +120,6 @@ export default {
 		},
 		getGroupTreeData() {
 			getGroupTree().then(({ data }) => {
-				// TODO: 递归修改key名
-				// const renameDataKeys = data => {
-				// 	for (let i = 0; i < data.length; i++) {
-				// 		let nowItem = data[i]
-				// 		data[i] = {
-				// 			...nowItem,
-				// 			title: nowItem.name,
-				// 			key: nowItem.id,
-				// 			children: nowItem.childList,
-				// 		}
-				// 		if (Array.isArray(nowItem.children) && nowItem.children.length > 0) {
-				// 			return renameDataKeys(data[i].children)
-				// 		}
-				// 	}
-				// 	console.log(data)
-				// }
-				// console.log(renameDataKeys(data))
-				// renameDataKeys(data)
 				this.treeData = data
 			})
 		},

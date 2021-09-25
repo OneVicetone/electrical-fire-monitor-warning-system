@@ -12,6 +12,7 @@
 			:showQuickJumper="showQuickJumper"
 			:simple="simple"
 		/>
+		<slot />
 	</div>
 </template>
 
@@ -57,7 +58,7 @@ export default {
 .pagination-container {
 	width: 100%;
 	position: relative;
-	margin: 1rem 0 0;
+	margin: 2.75rem 0 0;
 	.ant-pagination {
 		position: absolute;
 		top: 0;

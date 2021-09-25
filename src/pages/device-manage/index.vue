@@ -79,7 +79,7 @@ import { SHIP, TRANSFER, IMPORT } from "utils/baseData"
 import { commonMixin } from "mixins"
 import apis from "apis"
 
-const { getDeviceList, createDevice, changeDeviceInfo, exportDeviceList } = apis
+const { getDeviceList, createDevice, changeDeviceInfo, exportDeviceList, getGroupTree } = apis
 
 const { deviceTypeOptions, deviceIdOptions } = optionsData
 
@@ -140,9 +140,10 @@ export default {
 	mounted() {
 		const {
 			getDeviceListData,
+			getGroupTreeData,
 			paginationData: { current, size },
 		} = this
-		getDeviceListData(current, size)
+		Promise.allSettled([getDeviceListData(current, size), getGroupTreeData()])
 	},
 	methods: {
 		getDeviceListData(current = 1, size = 10) {
@@ -183,6 +184,11 @@ export default {
 			exportDeviceList()
 		},
 		changeDeviceWorkStatus() {},
+		getGroupTreeData() {
+			getGroupTree().then(({ data }) => {
+				this.treeData = data
+			})
+		},
 		handleSelectTreeNode(key) {
 			this.parentId = key
 			this.search()

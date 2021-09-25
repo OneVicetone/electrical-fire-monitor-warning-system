@@ -3,6 +3,11 @@ const setupCommonApis = http => ({
 
 	getMapKey: module => http.get("/api-common/common/baiduAk", { module }),
 
+	getDownloadList: ({ current, size, downName }) =>
+		http.get("/api-common/download/pageList", { current, size, downName }),
+		
+	getDownloadCountById: id => http.get("/api-common/download/downloadCount", { id }),
+
 	uploadFile: ({ url, data }) => http.post(url, data),
 })
 
