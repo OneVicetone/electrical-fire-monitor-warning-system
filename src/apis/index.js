@@ -7,6 +7,7 @@ import setupDeviceApis from './device'
 import setupMonitorApis from './monitor'
 import setupCommonApis from './common'
 import setupUnitApis from './unit'
+import setupReportApis from './reportData'
 
 export default {
     ...setupAccoutApis(http),
@@ -14,5 +15,6 @@ export default {
     ...setupDeviceApis(http),
     ...setupMonitorApis(http),
     ...setupCommonApis(http),
-    ...setupUnitApis(http)
+    ...setupUnitApis(http),
+    ...setupReportApis(http)
 }

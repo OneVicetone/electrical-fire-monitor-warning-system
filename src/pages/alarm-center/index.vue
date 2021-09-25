@@ -91,9 +91,12 @@
 			:changePageHandle="changePageHandle"
 			:changePageSizeHandle="changePageSizeHandle"
 		/>
+		{{remarks}}
 		<DealWithDialog v-model="showAlert"
 			:able="isAble"
+			:opinions="remarks"
 			:alarmData="alarmHandleData"
+			:handAlarmList="handAlarm"
 			@on-sure="dialogSure">
 		</DealWithDialog>
 	</div>
@@ -109,7 +112,7 @@ import optionsData, { optionsPlaceholder } from "utils/optionsData"
 import apis from "apis"
 import { commonMixin } from "mixins"
 
-const { getAlarmCount, getAlarmList, getSelectOptions, getAlarmDetail, processAlarm } = apis
+const { getAlarmCount, getAlarmList, getSelectOptions, getAlarmDetail, processAlarm, reportData } = apis
 const { alarmLevelOptions, deviceIdOptions, handleStatusOptions } = optionsData
 
 export default {
@@ -166,7 +169,15 @@ export default {
 				size: 10,
 			},
 			isAble: false,
-			alarmHandleData: {}
+			alarmHandleData: {},
+			handAlarm: []
+		}
+	},
+	computed: {
+		remarks() {
+			const { alarmTypeOptions, searchForm: { alarmType } } = this;
+			const findRes = alarmTypeOptions.find(({ value }) => value === alarmType);
+			return findRes?.remark;
 		}
 	},
 	mounted() {
@@ -180,8 +191,9 @@ export default {
 				getSelectOptions(i).then(({ data }) => {
 					const optionsKey = `${i}Options`
 					this[optionsKey] = [
-						{ label: optionsPlaceholder[optionsKey], value: 0 },
-						...data.map(({ id, parameterName }) => ({
+						{ label: optionsPlaceholder[optionsKey], value: 0, remark: '' },
+						...data.map(({ id, parameterName, remark }) => ({
+							remark,
 							label: parameterName,
 							value: id,
 						})),
@@ -213,11 +225,15 @@ export default {
 		changePageSizeHandle(current, size) {
 			this.getTableData(current, size)
 		},
-		async toOperat({id}, type) {
+		async toOperat(item, type) {
+			const { deviceId, id, alarmTime, createTime} = item;
 			this.isAble = type === 'process';
-			const { data } = await getAlarmDetail(id);
-			this.log(data)
-			this.alarmHandleData = data;
+			const { data: alarmDetail } = await getAlarmDetail(id);
+			this.log(alarmDetail)
+			this.alarmHandleData = alarmDetail;
+			const { data: tableList} = await reportData({ deviceId, startDate: alarmTime, endDate: createTime })
+			this.log(tableList)
+			this.handAlarm = tableList;
 			this.showAlert = true;
 		},
 		async dialogSure(params) {
