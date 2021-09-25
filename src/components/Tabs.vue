@@ -9,12 +9,20 @@
 <script>
 export default {
     name:"Tabs",
+    model: {
+		prop: "tab",
+		event: "tabEvent",
+	},
     props: {
+        tab: {
+            type: String,
+            default: '1'
+        },
         tabs: {
             type: Array,
             default: () => ([
                 {name: '数据阈值', key: '1'},
-                {name: '消音&复位', key: '2', disabled: true},
+                {name: '消音&复位', key: '2', disabled: false},
             ])
         },
         type: {
@@ -24,12 +32,19 @@ export default {
     },
     data() {
         return {
-            activeKey: '1'
+            // activeKey: '1'
+        }
+    },
+    computed: {
+        activeKey: {
+            get() {return this.tab},
+            set(v) {this.$emit('tabEvent', v)}
         }
     },
     methods: {
         callbacks(key) {
             this.$emit('tab-change', key)
+            this.$emit('tabEvent', key)
         },
     }
 }

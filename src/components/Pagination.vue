@@ -57,7 +57,7 @@ export default {
 <style lang="less" scoped>
 .pagination-container {
 	width: 100%;
-	// position: relative;
+	position: relative;
 	margin: 1rem 0 0;
 	.ant-pagination {
 		position: absolute;

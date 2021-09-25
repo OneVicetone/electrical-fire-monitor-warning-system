@@ -92,6 +92,7 @@
 				</div>
 			</div>
 		</div>
+		<DeviceDetaiCommandl v-model="dialog"></DeviceDetaiCommandl>
 	</div>
 </template>
 
@@ -105,10 +106,11 @@ import ContentTitle from "components/ContentTitle.vue"
 import LabelAndValue from "components/LabelAndValue.vue"
 import Pagination from "components/Pagination.vue"
 import SimpleTable from "components/SimpleTable.vue"
+import DeviceDetaiCommandl from "../../components/DeviceDetaiCommandl.vue"
 
 export default {
 	name: "DeviceInfo",
-	components: { Breadcrumb, NumCount, ContentTitle, LabelAndValue, Pagination, SimpleTable },
+	components: { Breadcrumb, NumCount, ContentTitle, LabelAndValue, Pagination, SimpleTable, DeviceDetaiCommandl },
 	data() {
 		return {
 			historyList: ["首页", "设备监控", "设备详情"],
@@ -147,6 +149,7 @@ export default {
 				current: 1,
 				size: 10,
 			},
+			dialog: false,
 		}
 	},
 	mounted() {
@@ -168,7 +171,9 @@ export default {
 		})
 	},
 	methods: {
-		sendCommand() {},
+		sendCommand() {
+			this.dialog = true
+		},
 		previewSetupPhoto() {},
 		getTableData(current = 1, size = 10) {},
 		changePageHandle(page, pageSize) {
