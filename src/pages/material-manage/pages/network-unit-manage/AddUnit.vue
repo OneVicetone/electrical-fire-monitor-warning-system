@@ -41,13 +41,15 @@
                 <a-form-model-item label="单位地址" prop="unitAddress">
                     <a-input
                         v-model="unitForm.unitAddress"
+                        class="ipt-disabled__color"
                         disabled
-                        placeholder="请选择单位地址"
-                    />
+                        placeholder="请选择单位地址">
+                        <a-icon slot="suffix" type="bulb" />
+                    </a-input>
                 </a-form-model-item>
             </a-form-model>
             <a-form-model class="form-right" layout="inline" :model="unitForm" :labelCol="{ style: 'width: 72px;float: left;' }"
-                :wrapper-col="{ style: 'width: 22rem' }">
+                :wrapper-col="{ span: 16 }">
                 <a-form-model-item label="单位人数" class="mr0">
                     <a-input v-model="unitForm.unitCount" placeholder="请输入单位大概人数" />
                 </a-form-model-item>
@@ -98,14 +100,42 @@
             </div>
         </Nav-titles>
         <Nav-titles class="unit-pic" title="单位图片">
-            <!-- <div class="flex upload-ins">
-                <Upload :fileList="fileList" @upload-change="onUpload">
+            <div class="uploads flex">
+                <div class="content-wd effect-picture">
+                    <a-upload
+                        name="avatar"
+                        list-type="picture-card"
+                        class="avatar-uploader"
+                        :show-upload-list="false"
+                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                        :before-upload="beforeUpload"
+                        @change="handleChange"
+                    >
+                        <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+                        <div v-else>
+                            <a-icon :type="loading ? 'loading' : 'plus'" />
+                        </div>
+                    </a-upload>
                     <div class="yahei-81899C t-center">公司处景观/效果图</div>
-                </Upload>
-                <Upload class="ml408" :fileList="fileList" @upload-change="onUpload">
+                </div>
+                <div class="content-wd design-diagram">
+                    <a-upload
+                        name="avatar"
+                        list-type="picture-card"
+                        class="avatar-uploader"
+                        :show-upload-list="false"
+                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                        :before-upload="beforeUpload"
+                        @change="handleChange"
+                    >
+                        <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+                        <div v-else>
+                            <a-icon :type="loading ? 'loading' : 'plus'" />
+                        </div>
+                    </a-upload>
                     <div class="yahei-81899C ml-58">电气火灾系统设计图纸(800*560)</div>
-                </Upload>
-            </div> -->
+                </div>
+            </div>
         </Nav-titles>
         <section class="btns pb t-center">
             <a-button type="primary" class="mr125" @click="formSure">确定</a-button>
@@ -246,8 +276,23 @@ export default {
     /deep/ .little-nav__title {
         padding-left: calc(11.75rem - 35px);
     }
-    .upload-ins {
+    .uploads {
         padding-left: calc(11.75rem + 37px );
+        .content-wd {
+            /deep/ .ant-upload  {
+                width: 13.42rem;
+                height: 13.42rem;
+                margin-bottom: 1.08rem;
+                margin-right: 0;
+                svg {
+                    width: 3.33rem;
+                    height: 3.33rem;
+                }
+            }
+        }
+        .design-diagram {
+            margin-left: 4.08rem
+        }
     }
 }
 </style>

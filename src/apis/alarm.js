@@ -27,6 +27,7 @@ const setupAlarmApis = http => ({
 	getAlarmDetail: id => http.get(`/api-alarm/alarm/detail/${id}`),
 	processAlarm: ({ alarmId, confirmFlag, processType, remark = '' }) =>
 		http.post("/api-alarm/alarm/process", { alarmId, confirmFlag, processType, remark }),
+	realTimeData: ({ deviceId }) => http.get("/api-device/deviceMgr/realTimeData",{ deviceId }),
 })
 
 export default setupAlarmApis
