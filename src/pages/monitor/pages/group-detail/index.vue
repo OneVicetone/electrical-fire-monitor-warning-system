@@ -19,13 +19,14 @@
 				<div class="system-design-drawings">
 					<ContentTitle title="电气火灾系统设计图纸" />
 					<img class="enlarge-icon" src="assets/icons/enlarge-img-icon.png" alt="enlarge-icon" @click="enlargeImg" />
-					<img class="drawings-img" src="assets/icons/enlarge-img-icon.png" alt="drawings-img" />
+					<img class="drawings-img" :src="designPicPath" alt="drawings-img" />
 				</div>
 			</div>
 
 			<div class="center-content">
 				<div class="history-chart">
 					<ContentTitle :title="historyChartTitle" @changeTitleContent="changeTitleContent" />
+					<LineChart :xAxisData="chartData.xAxisData" :seriesData="chartData.seriesData" />
 				</div>
 			</div>
 
@@ -37,10 +38,9 @@
 				<div class="alarm-type-count">
 					<ContentTitle title="报警类型统计" />
 					<div id="alarm_type_count_chart"></div>
-
 				</div>
 				<div class="service-type-count">
-					<ContentTitle title="设备服务期统计" />
+					<ContentTitle title="服务类型统计" />
 				</div>
 			</div>
 		</section>
@@ -48,12 +48,29 @@
 </template>
 
 <script>
+import { cloneDeep } from "lodash"
+// import * as echarts from "echarts"
+
 import Breadcrumb from "components/Breadcrumb.vue"
 import ContentTitle from "components/ContentTitle.vue"
+import LineChart from "components/LineChart.vue"
+
+import apis from "apis"
+const {
+	getUnitDetailById,
+	getGroupDetailDeviceTypeCount,
+	getGroupDetailDeviceStatusCount,
+	getGroupDetailAlarmTypeCount,
+	getGroupDetailHistoryElectricityList,
+	getGroupDetailHistoryAlarmList,
+	getGroupDetailDeviceList,
+	groupDetailUpdateImg,
+	groupDetailDevicePeriod,
+} = apis
 
 export default {
 	name: "GroupDetail",
-	components: { Breadcrumb, ContentTitle },
+	components: { Breadcrumb, ContentTitle, LineChart },
 	props: {
 		id: String,
 	},
@@ -61,28 +78,65 @@ export default {
 		return {
 			historyList: ["首页", "设备监控", "单位详情"],
 			historyChartTitle: [
-				{ name: '历史用电统计', key: 'history' },
-				{ name: '历史报警统计', key: 'alarm' },
-				{ name: '设备列表', key: 'device' },
+				{ name: "历史用电统计", key: "electricity" },
+				{ name: "历史报警统计", key: "alarm" },
+				{ name: "设备列表", key: "device" },
 			],
 			groupInfoList: [
-				{ label: "单位类型", value: "国有企业" },
-				{ label: "占地面积", value: "2500㎡" },
-				{ label: "公司人数", value: "500" },
-				{ label: "安全负责人", value: "张三" },
-				{ label: "联系方式", value: "135785623552" },
-				{ label: "公司地址", value: "广东省深圳市宝安区华丰机器人产业园F栋413" },
+				{ label: "单位类型", value: "-", key: "typeCode" },
+				{ label: "占地面积", value: "-", key: "floorSpace" },
+				{ label: "公司人数", value: "-", key: "employeeNum" },
+				{ label: "安全负责人", value: "-", key: "principalUserName" },
+				{ label: "联系方式", value: "-", key: "mobile" },
+				{ label: "公司地址", value: "-", key: "address" },
 			],
+			designPicPath: "",
+			chartData: {
+				xAxisData: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+				seriesData: [10, 52, 200, 334, 390, 330, 220],
+			},
+			devicePeriodData: {
+				totalNum: 0,
+				normalNum: 0,
+				expiredNum: 0,
+				dueNum: 0,
+			},
 		}
 	},
 	mounted() {
-		console.log(this.id)
+		const { getGroupDetailData } = this
+		Promise.allSettled([getGroupDetailData()])
+		// this.setChart()
 	},
 	methods: {
+		getGroupDetailData() {
+			return getUnitDetailById(this.id).then(({ data }) => {
+				const groupInfoListCopy = cloneDeep(this.groupInfoList)
+				groupInfoListCopy.forEach(i => {
+					i.value = data[i.key] || "-"
+				})
+				this.groupInfoList = groupInfoListCopy
+				this.designPicPath = data.designPicPath
+			})
+		},
+		getChartData(type = "electricity") {
+			if (type === "electricity") {
+				return getGroupDetailHistoryElectricityList().then()
+			}
+			if (type === "alarm") {
+				return getGroupDetailHistoryAlarmList().then()
+			}
+			if (type === "device") {
+				return getGroupDetailDeviceList().then()
+			}
+		},
+		getDevicePeriodData() {
+			return groupDetailDevicePeriod(this.id).then(({ data }) => (this.devicePeriodData = data))
+		},
 		enlargeImg() {},
 		changeTitleContent(key) {
-			console.log(key)
-		}
+			this.getChartData(key)
+		},
 	},
 }
 </script>

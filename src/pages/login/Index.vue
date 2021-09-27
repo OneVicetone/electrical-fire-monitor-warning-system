@@ -63,7 +63,7 @@ export default {
 				await login(formData)
 				setRoutes(this.routes)
 				addRoutes(this.routes)
-				$router.push("/device-manage")
+				$router.push("/monitor")
 			} catch (err) {
 				this.isLogining = false
 				console.error(err)

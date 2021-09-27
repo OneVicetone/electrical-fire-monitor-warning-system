@@ -68,7 +68,7 @@ header {
 			left: -1.68rem;
 			top: 50%;
 			transform: translateY(-50%);
-			background: url("assets/icons/company.png") no-repeat;
+			background: url("assets/icons/content-title-icon.png") no-repeat;
 			background-size: 100%;
 		}
 	}
@@ -77,6 +77,7 @@ header {
 	.array-title {
 		display: flex;
 		.title-item {
+			min-width: 11.42rem;
 			color: #81899c;
 			> span {
 				padding: 0 2.58rem 0 1.83rem;
@@ -85,7 +86,9 @@ header {
 		}
 		.title-item.active {
 			color: #fff;
-			background: linear-gradient(90deg, #2f6bfd 0%, rgba(0, 0, 0, 0) 100%);
+			background: url("assets/images/title-bg.png") no-repeat;
+			background-position: 0px 10px;
+			background-size: 18rem;
 		}
 	}
 }

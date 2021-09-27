@@ -73,7 +73,7 @@
 							</a-form-model-item>
 						</a-form-model>
 					</div>
-					<div id="chart_container"></div>
+					<LineChart :xAxisData="chartData.xAxisData" :seriesData="chartData.seriesData" />
 				</div>
 				<div class="history-alarm-log">
 					<ContentTitle title="历史报警记录" />
@@ -98,7 +98,6 @@
 
 <script>
 import moment from "moment"
-import * as echarts from "echarts"
 
 import Breadcrumb from "components/Breadcrumb.vue"
 import NumCount from "components/NumCount.vue"
@@ -106,11 +105,28 @@ import ContentTitle from "components/ContentTitle.vue"
 import LabelAndValue from "components/LabelAndValue.vue"
 import Pagination from "components/Pagination.vue"
 import SimpleTable from "components/SimpleTable.vue"
+import LineChart from "components/LineChart.vue"
 import DeviceDetaiCommandl from "../../components/DeviceDetaiCommandl.vue"
+
+import apis from "apis"
+
+const { getDeviceInfoDetail } = apis
 
 export default {
 	name: "DeviceInfo",
-	components: { Breadcrumb, NumCount, ContentTitle, LabelAndValue, Pagination, SimpleTable, DeviceDetaiCommandl },
+	components: {
+		Breadcrumb,
+		NumCount,
+		ContentTitle,
+		LabelAndValue,
+		Pagination,
+		SimpleTable,
+		DeviceDetaiCommandl,
+		LineChart,
+	},
+	props: {
+		id: String,
+	},
 	data() {
 		return {
 			historyList: ["首页", "设备监控", "设备详情"],
@@ -150,29 +166,21 @@ export default {
 				size: 10,
 			},
 			dialog: false,
+			chartData: {
+				xAxisData: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+				seriesData: [10, 52, 200, 334, 390, 330, 220],
+			},
+			deviceInfoObj: {},
 		}
 	},
 	mounted() {
-		const historyChart = echarts.init(document.querySelector("#chart_container"))
-		historyChart.setOption({
-			xAxis: {
-				type: "category",
-				data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-			},
-			yAxis: {
-				type: "value",
-			},
-			series: [
-				{
-					data: [150, 230, 224, 218, 135, 147, 260],
-					type: "line",
-				},
-			],
-		})
 	},
 	methods: {
 		sendCommand() {
 			this.dialog = true
+		},
+		getDeviceInfoDetail() {
+			return getDeviceInfoDetail(this.id).then(({ data }) => (this.deviceInfoObj = data))
 		},
 		previewSetupPhoto() {},
 		getTableData(current = 1, size = 10) {},
