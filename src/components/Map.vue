@@ -1,5 +1,5 @@
 <template>
-	<div id="map_container"></div>
+	<div id="map_container" :style="customStyle"></div>
 </template>
 
 <script>
@@ -11,6 +11,10 @@ const { getMapKey } = apis
 export default {
 	name: "Map",
 	props: {
+		customStyle: {
+			type: Object,
+			default: () => ({width: '100vw',height: '100vh'})
+		},
 		centerPoint: {
 			type: Object,
 			default: () => ({
@@ -57,8 +61,8 @@ export default {
 
 <style lang="less" scoped>
 #map_container {
-	width: 100vw;
-	height: 100vh;
+	// width: 100vw;
+	// height: 100vh;
 	position: fixed;
 	z-index: 1;
 }

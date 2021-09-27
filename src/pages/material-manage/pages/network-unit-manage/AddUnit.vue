@@ -42,9 +42,8 @@
                     <a-input
                         v-model="unitForm.unitAddress"
                         class="ipt-disabled__color"
-                        disabled
                         placeholder="请选择单位地址">
-                        <a-icon slot="suffix" type="bulb" />
+                        <a-icon slot="suffix" type="bulb" @click="alertMap" />
                     </a-input>
                 </a-form-model-item>
             </a-form-model>
@@ -102,19 +101,19 @@
         <Nav-titles class="unit-pic" title="单位图片">
             <div class="uploads flex">
                 <div class="content-wd effect-picture">
+                    <!-- :before-upload="beforeUpload"
+                        @change="handleChange" -->
                     <a-upload
                         name="avatar"
                         list-type="picture-card"
                         class="avatar-uploader"
                         :show-upload-list="false"
                         action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                        :before-upload="beforeUpload"
-                        @change="handleChange"
                     >
-                        <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+                        <!-- <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
                         <div v-else>
                             <a-icon :type="loading ? 'loading' : 'plus'" />
-                        </div>
+                        </div> -->
                     </a-upload>
                     <div class="yahei-81899C t-center">公司处景观/效果图</div>
                 </div>
@@ -125,13 +124,11 @@
                         class="avatar-uploader"
                         :show-upload-list="false"
                         action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                        :before-upload="beforeUpload"
-                        @change="handleChange"
                     >
-                        <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+                        <!-- <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
                         <div v-else>
                             <a-icon :type="loading ? 'loading' : 'plus'" />
-                        </div>
+                        </div> -->
                     </a-upload>
                     <div class="yahei-81899C ml-58">电气火灾系统设计图纸(800*560)</div>
                 </div>
@@ -141,6 +138,7 @@
             <a-button type="primary" class="mr125" @click="formSure">确定</a-button>
             <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
         </section>
+        <MapModal v-model="showMap"></MapModal>
     </Dialog>
 </template>
 
@@ -148,13 +146,14 @@
 import Dialog from "components/Dialog.vue"
 import NavTitles from "components/NavTitles.vue"
 import Upload from "components/Upload.vue"
+import MapModal from "components/MapModal.vue"
 import apis from "apis"
 import { dialogControl, form } from "mixins"
 
 const { createUnit } = apis
 export default {
     name:"AddUnit",
-    components: { Dialog, NavTitles, Upload },
+    components: { Dialog, NavTitles, Upload, MapModal },
     mixins: [dialogControl, form],
     data() {
         return {
@@ -182,7 +181,8 @@ export default {
                 principalAccount: [{ required: true, message: '请输入安全负责人登录账户名', trigger: 'blur' }],
                 linkPhone: [{ required: true, message: '请输入安全负责人联系电话', trigger: 'blur' }],
             },
-            fileList: []
+            fileList: [],
+            showMap: false
         }
     },
     mounted() {
@@ -192,6 +192,9 @@ export default {
         computedLen(value, totalLen = 20) {
             if (value === null || value === undefined || typeof value === 'number') value = '';
             return `${value.length}/${totalLen}`
+        },
+        alertMap() {
+            this.showMap = true;
         },
         formSure() {
             const validates = [this.$refs.unitInfo, this.$refs.safe];

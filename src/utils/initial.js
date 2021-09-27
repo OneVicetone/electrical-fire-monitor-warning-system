@@ -1,4 +1,4 @@
-export const getBasePx = scale => {
+export const getBasePx = (scale = 160) => {
 	const { width } = document.body.getBoundingClientRect()
 	return width / scale
 }
