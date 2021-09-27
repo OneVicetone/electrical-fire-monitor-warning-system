@@ -44,7 +44,7 @@
 					{{ text.updateTime | filterTimeToYYYYMMDD }}
 				</div>
 				<div slot="operate" slot-scope="text">
-					<a>编辑</a>
+					<a @click="editCell(text)">编辑</a>
 					<a-divider type="vertical" />
 					<a>监控</a>
 					<a-divider type="vertical" />
@@ -60,7 +60,11 @@
 				:changePageSizeHandle="changePageSizeHandle"
 			/>
 		</div>
-		<new-add-unit v-model="isShowDialog"></new-add-unit>
+		<new-add-unit
+			v-model="isShowDialog"
+			:treeData="treeData"
+			:formCell="formCell"
+			@on-fresh-data="getTableData"></new-add-unit>
 	</div>
 </template>
 
@@ -69,6 +73,7 @@ import md5 from "md5"
 
 import OrganizationList from "components/OrganizationList.vue"
 import Pagination from "components/Pagination.vue"
+import newAddUnit from "./newAddUnit.vue"
 
 import { commonMixin } from "mixins"
 import apis from "apis"
@@ -78,7 +83,7 @@ const { getDeviceListForSystemSettiing, getGroupTree } = apis
 export default {
 	name: "DeviceList",
 	mixins: [commonMixin],
-	components: { OrganizationList, Pagination },
+	components: { OrganizationList, Pagination, newAddUnit },
 	data() {
 		return {
 			parentId: null,
@@ -104,6 +109,8 @@ export default {
 			},
 			treeData: [],
 			isShowDialog: false,
+			formCell: {},
+			// buttonType: '',
 		}
 	},
 	mounted() {
@@ -138,7 +145,11 @@ export default {
 			this.isShowDialog = true
 		},
 		delete(id) {},
-		edit(id) {},
+		editCell(text) {
+			console.log(text)
+			this.formCell = text;
+			this.isShowDialog = true
+		},
 		search() {
 			const {
 				paginationData: { current, size },

@@ -19,22 +19,14 @@
                     />
                 </a-form-model-item>
                 <a-form-model-item label="上级单位" prop="upUnit">
-                    <a-select v-model="unitForm.upUnit" placeholder="请选择上级单位">
-                        <a-select-option value="shanghai">
-                        Zone one
-                        </a-select-option>
-                        <a-select-option value="beijing">
-                        Zone two
-                        </a-select-option>
-                    </a-select>
+                    <a-cascader :options="groupOptions"
+                        :fieldNames="{ label: 'title', value: 'key', children: 'children' }"
+                        placeholder="请选择上级单位" @change="treeChange" />
                 </a-form-model-item>
                 <a-form-model-item label="单位类型" prop="unitType">
                     <a-select v-model="unitForm.unitType" placeholder="请选择单位类型">
-                        <a-select-option value="shanghai">
-                        Zone one
-                        </a-select-option>
-                        <a-select-option value="beijing">
-                        Zone two
+                        <a-select-option v-for="item in unitTypeOption" :key="item.value" :value="item.value">
+                            {{item.name}}
                         </a-select-option>
                     </a-select>
                 </a-form-model-item>
@@ -48,7 +40,7 @@
                 </a-form-model-item>
             </a-form-model>
             <a-form-model class="form-right" layout="inline" :model="unitForm" :labelCol="{ style: 'width: 72px;float: left;' }"
-                :wrapper-col="{ span: 16 }">
+                :wrapper-col="{ style: 'width: 22rem;' }">
                 <a-form-model-item label="单位人数" class="mr0">
                     <a-input v-model="unitForm.unitCount" placeholder="请输入单位大概人数" />
                 </a-form-model-item>
@@ -150,13 +142,15 @@ import MapModal from "components/MapModal.vue"
 import apis from "apis"
 import { dialogControl, form } from "mixins"
 
-const { createUnit } = apis
+const { createUnit, getSelectOptions, getGroupTree } = apis
 export default {
     name:"AddUnit",
     components: { Dialog, NavTitles, Upload, MapModal },
     mixins: [dialogControl, form],
     data() {
         return {
+            unitTypeOption: [],
+            groupOptions: [],
             unitForm: {
                 unitName: '',
                 upUnit: '',
@@ -185,10 +179,37 @@ export default {
             showMap: false
         }
     },
+    watch: {
+        visibles(v) {
+            if (v) {
+                this.getTreeGroup();
+                this.getOptions();
+            }
+        }
+    },
     mounted() {
 
     },
     methods: {
+        getOptions() {
+            getSelectOptions('groupType').then(option => {
+                const data = option.data;
+                this.unitTypeOption = data.map(item => ({
+                    value: item.code,
+                    name: item.name
+                }))
+            })
+        },
+        getTreeGroup() {
+            getGroupTree().then(result => {
+                const data = result.data;
+                this.groupOptions = data;
+            })
+        },
+        treeChange(value) {
+            const [firstKey] = value;
+            this.unitForm.upUnit = firstKey;
+        },
         computedLen(value, totalLen = 20) {
             if (value === null || value === undefined || typeof value === 'number') value = '';
             return `${value.length}/${totalLen}`
