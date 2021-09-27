@@ -15,7 +15,7 @@
 						<img v-if="formData.productImgPath" :src="formData.productImgPath" />
 						<div v-else>
 							<a-icon :type="uploading ? 'loading' : 'plus'" />
-							<div class="ant-upload-text">Upload</div>
+							<div class="ant-upload-text">上传图片</div>
 						</div>
 					</a-upload>
 					<a-form-model :model="formData">

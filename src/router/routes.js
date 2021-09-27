@@ -15,6 +15,7 @@ const RoleManage = () => import("pages/material-manage/pages/role-manage/index.v
 const NetworkUnitManage = () => import("pages/material-manage/pages/network-unit-manage/index.vue")
 
 const DeviceTypeManage = () => import("pages/system-setting/pages/device-type-manage/index.vue")
+const DeviceList = () => import("pages/system-setting/pages/device-list/index.vue")
 const AddAndEditDeviceType = () => import("pages/system-setting/pages/add-and-edit-device-type/index.vue")
 
 const DeviceInfo = () => import("pages/device-manage/pages/device-info/index.vue")
@@ -212,9 +213,15 @@ const pagesRoutes = [
 		name: "SystemSetting",
 		component: SystemSetting,
 		meta: {
-			title: "系统管理",
+			title: "系统设置",
 		},
 		children: [
+			{
+				path: "device-list",
+				name: "DeviceList",
+				component: DeviceList,
+				meta: { title: "设备列表" },
+			},
 			{
 				path: "device-type-manage",
 				name: "DeviceTypeManage",

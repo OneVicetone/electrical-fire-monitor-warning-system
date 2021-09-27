@@ -20,7 +20,9 @@
 						<span class="list-item">{{ item.name }}</span>
 					</a-list-item>
 				</a-list>
-				<a-button type="link" ghost @click="isShowPopover = true"> 您好，张三 <a-icon type="caret-down" /> </a-button>
+				<a-button type="link" ghost @click="isShowPopover = true">
+					您好，{{ userInfo.loginName }} <a-icon type="caret-down" />
+				</a-button>
 			</a-popover>
 		</div>
 		<Dialog v-model="isShowChangePasswordDialog" title="修改密码">
@@ -96,6 +98,13 @@ export default {
 				},
 			],
 		}
+	},
+	computed: {
+		userInfo() {
+			console.log(this.$store)
+			const { loginName } = this.$store.state.account.userInfo
+			return { loginName }
+		},
 	},
 	methods: {
 		resetChangePasswordForm() {

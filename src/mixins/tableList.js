@@ -17,10 +17,10 @@ export const tableListMixin = {
 					const optionsKey = `${i}Options`
 					this[optionsKey] = [
 						{ label: optionsPlaceholder[optionsKey], value: 99, remark: "" },
-						...data.map(({ id, parameterName, remark }) => ({
+						...data.map(({ code, name, remark }) => ({
 							remark,
-							label: parameterName,
-							value: id,
+							label: name,
+							value: code,
 						})),
 					]
 				})

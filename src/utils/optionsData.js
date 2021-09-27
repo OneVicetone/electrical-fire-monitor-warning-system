@@ -36,7 +36,6 @@ const allOptionsData = {
 		{ label: "已处理", value: 2 },
 		{ label: "已恢复", value: 3 },
 	],
-
 	deviceTypeOptions: [
 		{ label: "电气火灾探测器", value: 1 },
 		{ label: "智能空气开关", value: 2 },

@@ -72,7 +72,15 @@ const setupDeviceApis = http => ({
 		http.get("/api-device/deviceType/pageList", { current, size, model }),
 
 	addDeviceType: ({ supplier, model, protocol, network, productImgPath, deviceTypeId, gateway }) =>
-		http.get("/api-device/deviceType/add", { supplier, model, protocol, network, productImgPath, deviceTypeId, gateway }),
+		http.get("/api-device/deviceType/add", {
+			supplier,
+			model,
+			protocol,
+			network,
+			productImgPath,
+			deviceTypeId,
+			gateway,
+		}),
 
 	updateDeviceTypeById: ({ id, supplier, model, protocol, network, productImgPath, deviceTypeId }) =>
 		http.get("/api-device/deviceType/add", { id, supplier, model, protocol, network, productImgPath, deviceTypeId }),
@@ -107,8 +115,11 @@ const setupDeviceApis = http => ({
 
 	getDeviceDetailCount: deviceId => http.get("/api-device/monitor/device/statisticCommon", { deviceId }),
 
-	getDeviceDetailHistortAlarmList: ({ current, size, deviceId }) => http.get("/api-alarm/history/device/pageList", { current, size, deviceId }),
-	
+	getDeviceDetailHistortAlarmList: ({ current, size, deviceId }) =>
+		http.get("/api-alarm/history/device/pageList", { current, size, deviceId }),
+
+	getDeviceListForSystemSettiing: ({ current, size, groupId, deviceTypeId, deviceModelId, sn }) =>
+		http.get("/api-device/device/pageList", { current, size, groupId, deviceTypeId, deviceModelId, sn }),
 })
 
 export default setupDeviceApis

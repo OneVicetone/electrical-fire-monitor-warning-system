@@ -5,12 +5,12 @@
 	>
 		<h2 class="title">
 			<!-- {{ markerInfoObj.name | filterNull }} -->
-			测试测试测试
+			{{ markerInfoObj.name }}
 		</h2>
 		<div class="info">
-			<p>入网设备: {{ markerInfoObj.totalNum | filterNull }}</p>
-			<p>报警设备: {{ markerInfoObj.alarmNum | filterNull }}</p>
-			<p>离线设备: {{ markerInfoObj.offLineNum | filterNull }}</p>
+			<p>入网设备: {{ markerInfoObj.totalNum }}</p>
+			<p>报警设备: {{ markerInfoObj.alarmNum }}</p>
+			<p>离线设备: {{ markerInfoObj.offLineNum }}</p>
 			<p>单位地址设备: {{ markerInfoObj.address | filterNull }}</p>
 		</div>
 
@@ -72,8 +72,8 @@ export default {
 	padding: 1.5rem 1.75rem;
 	position: fixed;
 	background: url("assets/images/marker-info-bg.png") no-repeat;
-    background-size: 100%;
-    background-color: transparent;
+	background-size: 100%;
+	background-color: transparent;
 	opacity: 0.5;
 	transition: all 0.5s;
 	z-index: 2;
@@ -98,7 +98,7 @@ export default {
 			color: #fff;
 			overflow: hidden;
 			text-overflow: ellipsis;
-            margin: 0;
+			margin: 0;
 			&:last-child {
 				margin: 0 0 0.75rem 0;
 				height: 1.5rem;

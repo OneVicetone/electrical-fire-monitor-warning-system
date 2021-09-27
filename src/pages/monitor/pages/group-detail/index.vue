@@ -5,7 +5,10 @@
 			<div class="left-content">
 				<div class="fraction">
 					<ContentTitle title="电气消防安全21年8月评估分" />
-					<div class="fraction-text"></div>
+					<div class="fraction-text">
+						<p>{{ groupDetailObj.score }}</p>
+						<p>{{ groupDetailObj.scoreLevel }}</p>
+					</div>
 				</div>
 				<div class="group-info">
 					<ContentTitle title="单位信息" />
@@ -90,6 +93,7 @@ export default {
 				{ label: "联系方式", value: "-", key: "mobile" },
 				{ label: "公司地址", value: "-", key: "address" },
 			],
+			groupDetailObj: {},
 			designPicPath: "",
 			chartData: {
 				xAxisData: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
@@ -117,6 +121,7 @@ export default {
 				})
 				this.groupInfoList = groupInfoListCopy
 				this.designPicPath = data.designPicPath
+				this.groupDetailObj = data
 			})
 		},
 		getChartData(type = "electricity") {
@@ -175,9 +180,24 @@ export default {
 				.fraction-text {
 					width: 12.5rem;
 					height: 9.75rem;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					flex-direction: column;
 					margin: 1.83rem 0 0 8.17rem;
 					background: url("assets/images/marker-info-fraction.png") no-repeat;
 					background-size: 100%;
+					color: #0096ff;
+					> p {
+						margin: 0;
+					}
+					> p:first-child {
+						margin-top: -2rem;
+						font-size: 2.44rem;
+					}
+					> p:last-child {
+						font-size: 1.41rem;
+					}
 				}
 			}
 			.group-info {
