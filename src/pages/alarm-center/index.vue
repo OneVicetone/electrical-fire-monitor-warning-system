@@ -112,7 +112,7 @@ import optionsData, { optionsPlaceholder } from "utils/optionsData"
 import apis from "apis"
 import { commonMixin } from "mixins"
 
-const { getAlarmCount, getAlarmList, getSelectOptions, getAlarmDetail, processAlarm, reportData } = apis
+const { getAlarmCount, getAlarmList, getSelectOptions, getAlarmDetail, processAlarm, realTimeData } = apis
 const { alarmLevelOptions, deviceIdOptions, handleStatusOptions } = optionsData
 
 export default {
@@ -170,7 +170,7 @@ export default {
 			},
 			isAble: false,
 			alarmHandleData: {},
-			handAlarm: []
+			handAlarm: {}
 		}
 	},
 	computed: {
@@ -229,14 +229,12 @@ export default {
 			const { deviceId, id, alarmTime, createTime} = item;
 			this.isAble = type === 'process';
 			const { data: alarmDetail } = await getAlarmDetail(id);
-			console.log(alarmDetail)
 			this.alarmHandleData = alarmDetail;
-			const { data: tableList} = await reportData({ deviceId, startDate: alarmTime, endDate: createTime })
-			console.log(tableList)
-			this.handAlarm = tableList;
+			const { data: tableList} = await realTimeData({ deviceId })
+			this.handAlarm = tableList || {};
 			this.showAlert = true;
 		},
-		async dialogSure(params) {
+		async dialogSure(params) {s
 			const result = await processAlarm(params);
 			console.log('确定', result);
 			// 需要给提示
