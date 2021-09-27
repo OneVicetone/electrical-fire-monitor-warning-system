@@ -54,7 +54,7 @@
 				<!-- <a-range-picker v-model="searchForm.alarmTime" size="small" format="YYYY-MM-DD" /> -->
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-button type="primary" size="small">搜索</a-button>
+				<a-button type="primary" size="small" @click="search">搜索</a-button>
 			</a-form-model-item>
 			<a-form-model-item>
 				<a-button type="primary" size="small"><a-icon type="plus" />导出</a-button>
@@ -91,13 +91,15 @@
 			:changePageHandle="changePageHandle"
 			:changePageSizeHandle="changePageSizeHandle"
 		/>
-		{{remarks}}
-		<DealWithDialog v-model="showAlert"
+		{{ remarks }}
+		<DealWithDialog
+			v-model="showAlert"
 			:able="isAble"
 			:opinions="remarks"
 			:alarmData="alarmHandleData"
 			:handAlarmList="handAlarm"
-			@on-sure="dialogSure">
+			@on-sure="dialogSure"
+		>
 		</DealWithDialog>
 	</div>
 </template>
@@ -107,17 +109,17 @@ import moment from "moment"
 import Pagination from "components/Pagination.vue"
 import NumCount from "components/NumCount.vue"
 import DealWithDialog from "./components/DealWithDialog.vue"
-import optionsData, { optionsPlaceholder } from "utils/optionsData"
+import allOptionsData from "utils/optionsData"
 
 import apis from "apis"
-import { commonMixin } from "mixins"
+import { commonMixin, tableListMixin } from "mixins"
 
-const { getAlarmCount, getAlarmList, getSelectOptions, getAlarmDetail, processAlarm, realTimeData } = apis
-const { alarmLevelOptions, deviceIdOptions, handleStatusOptions } = optionsData
+const { getAlarmCount, getAlarmList, getAlarmDetail, processAlarm, realTimeData } = apis
+const { alarmLevelOptions, deviceIdOptions, handleStatusOptions } = allOptionsData
 
 export default {
 	name: "AlarmCenter",
-	mixins: [commonMixin],
+	mixins: [commonMixin, tableListMixin],
 	components: { Pagination, NumCount, DealWithDialog },
 	data() {
 		return {
@@ -132,12 +134,12 @@ export default {
 			],
 			showAlert: false,
 			searchForm: {
-				unit: 0,
+				unit: 99,
 				deviceSnName: "",
-				alarmType: 0,
-				alarmLevel: 0,
-				deviceTypeId: 0,
-				status: 0,
+				alarmType: 99,
+				alarmLevel: 99,
+				deviceTypeId: 99,
+				status: 99,
 				alarmTime: [moment(), moment()],
 			},
 			groupTypeOptions: [],
@@ -170,36 +172,28 @@ export default {
 			},
 			isAble: false,
 			alarmHandleData: {},
-			handAlarm: {}
+			handAlarm: {},
 		}
 	},
 	computed: {
 		remarks() {
-			const { alarmTypeOptions, searchForm: { alarmType } } = this;
-			const findRes = alarmTypeOptions.find(({ value }) => value === alarmType);
-			return findRes?.remark;
-		}
+			const {
+				alarmTypeOptions,
+				searchForm: { alarmType },
+			} = this
+			const findRes = alarmTypeOptions.find(({ value }) => value === alarmType)
+			return findRes?.remark
+		},
 	},
 	mounted() {
 		const optionsTypes = ["alarmType", "groupType"]
+		const { getOptionsListPromiseArr, getTableData } = this
 		Promise.allSettled([
 			getAlarmCount().then(({ data }) => {
 				this.alarmCountData.forEach(i => (i.num = data[i.key]))
 			}),
-			this.getTableData(),
-			...optionsTypes.map(i =>
-				getSelectOptions(i).then(({ data }) => {
-					const optionsKey = `${i}Options`
-					this[optionsKey] = [
-						{ label: optionsPlaceholder[optionsKey], value: 0, remark: '' },
-						...data.map(({ id, parameterName, remark }) => ({
-							remark,
-							label: parameterName,
-							value: id,
-						})),
-					]
-				})
-			),
+			getTableData(),
+			...getOptionsListPromiseArr(optionsTypes),
 		])
 	},
 	methods: {
@@ -226,21 +220,21 @@ export default {
 			this.getTableData(current, size)
 		},
 		async toOperat(item, type) {
-			const { deviceId, id, alarmTime, createTime} = item;
-			this.isAble = type === 'process';
-			const { data: alarmDetail } = await getAlarmDetail(id);
-			this.alarmHandleData = alarmDetail;
-			const { data: tableList} = await realTimeData({ deviceId })
-			this.handAlarm = tableList || {};
-			this.showAlert = true;
+			const { deviceId, id, alarmTime, createTime } = item
+			this.isAble = type === "process"
+			const { data: alarmDetail } = await getAlarmDetail(id)
+			this.alarmHandleData = alarmDetail
+			const { data: tableList } = await realTimeData({ deviceId })
+			this.handAlarm = tableList || {}
+			this.showAlert = true
 		},
-		async dialogSure(params) {s
-			const result = await processAlarm(params);
-			console.log('确定', result);
+		async dialogSure(params) {
+			const result = await processAlarm(params)
+			console.log("确定", result)
 			// 需要给提示
-			this.getTableData();
-			this.showAlert = false;
-		}
+			this.getTableData()
+			this.showAlert = false
+		},
 	},
 	watch: {
 		searchForm: {

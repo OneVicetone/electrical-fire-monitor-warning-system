@@ -7,9 +7,7 @@
         </div>
         <div class="val-list">
             <p v-for="item of labels" :key="item.label">
-                <!-- TODO: 需要配置value -->
-                <!-- {{ values[item.key] || '-' }} -->
-                -
+                {{ item.key && values[item.key] ? values[item.key] : '-' }}
             </p>
         </div>
     </div>

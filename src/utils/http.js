@@ -35,6 +35,9 @@ const responseInterceptFunc = res => {
 		config: { url },
 		headers: { authorization },
 	} = res
+	if (res.headers["content-type"] === "application/xml") {
+		return data
+	}
 	if (status > 200) {
 		message.error(statusText)
 		throw new Error(data.message)

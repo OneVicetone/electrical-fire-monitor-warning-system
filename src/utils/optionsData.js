@@ -5,7 +5,10 @@ const optionsPlaceholder = {
 	deviceIdOptions: "请选择设备编号",
 	handleStatusOptions: "请选择报警处理状态",
 	deviceTypeOptions: "请选择设备类型",
-	deviceIdOptions: "请选择设备编号"
+	deviceIdOptions: "请选择设备编号",
+	networkTypeOptions: "请选择联网方式",
+	needGatewayOptions: "请选择是否需要网关",
+	protocolTypeOptions: "请选择设备协议"
 }
 const allOptionsData = {
 	alarmTypeOptions: [
@@ -43,17 +46,22 @@ const allOptionsData = {
 		{ label: "BY-002", value: 2 },
 		{ label: "BY-003", value: 3 },
 	],
+	networkTypeOptions: [
+		{ label: "蜂窝（2G/3G/4G)", value: 0 },
+		{ label: "NB", value: 1 },
+	],
+	needGatewayOptions: [
+		{ label: "是", value: 0 },
+		{ label: "否", value: 1 },
+	],
 }
 
 for (let key in allOptionsData) {
-    const defaultSelectItem = {
-        label: optionsPlaceholder[key],
-        value: 0
-    }
-    allOptionsData[key].unshift(defaultSelectItem)
+	const defaultSelectItem = {
+		label: optionsPlaceholder[key],
+		value: 99,
+	}
+	allOptionsData[key].unshift(defaultSelectItem)
 }
 
-export {
-	allOptionsData as default,
-	optionsPlaceholder
-}
+export { allOptionsData as default, optionsPlaceholder }

@@ -8,7 +8,7 @@ const setupCommonApis = http => ({
 		
 	getDownloadCountById: id => http.get("/api-common/download/downloadCount", { id }),
 
-	uploadFile: ({ url, data }) => http.post(url, data),
+	uploadFile: ({ url, data }) => http.formPost(url, data),
 })
 
 export default setupCommonApis
