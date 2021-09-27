@@ -7,15 +7,15 @@
 					<div class="info">
 						<div class="device-img"></div>
 						<div class="info-text">
-							<p class="device-type">电气火灾控测器</p>
+							<p class="device-type">{{ deviceInfoObj.deviceTypeName | filterNull }}</p>
 							<p class="device-id">
-								<span>DQ84564511</span>
+								<span>{{ deviceInfoObj.id | filterNull }}</span>
 								<i>在线</i>
 							</p>
 							<p class="device-address">
 								<img src="assets/icons/company.png" alt="" />
-								<span>黑龙江农业银行</span>
-								<span>一楼配电箱</span>
+								<span>{{ deviceInfoObj.groupName | filterNull }}</span>
+								<span>{{ deviceInfoObj.installPosition | filterNull }}</span>
 							</p>
 						</div>
 					</div>
@@ -32,11 +32,11 @@
 				</div>
 				<div class="device-status">
 					<ContentTitle title="设备实时状态" />
-					<SimpleTable />
+					<!-- <SimpleTable /> -->
 				</div>
 				<div class="device-detailed-info">
 					<ContentTitle title="设备详细信息" />
-					<LabelAndValue />
+					<LabelAndValue :labels="deviceDetailedLabel" :values="deviceInfoObj" />
 				</div>
 			</div>
 			<div class="device-info-right">
@@ -63,7 +63,7 @@
 								</a-radio-group>
 							</a-form-model-item>
 							<a-form-model-item>
-								<a-range-picker v-model="filterForm.chartTime" />
+								<!-- <a-range-picker v-model="filterForm.chartTime" /> -->
 							</a-form-model-item>
 							<a-form-model-item>
 								<a-button type="primary" size="small">查询</a-button>
@@ -73,15 +73,32 @@
 							</a-form-model-item>
 						</a-form-model>
 					</div>
-					<div id="chart_container"></div>
+					<LineChart :xAxisData="chartData.xAxisData" :seriesData="chartData.seriesData" />
 				</div>
 				<div class="history-alarm-log">
 					<ContentTitle title="历史报警记录" />
 					<a-table :columns="columns" :data-source="tableData" :pagination="false">
-						<div slot="operate">
-							<a>编辑</a>
-							<a-divider type="vertical" />
-							<a>删除</a>
+						<div slot="idx" slot-scope="text, record, index">
+							{{ index + 1 }}
+						</div>
+
+						<div slot="alarmTypeName" slot-scope="text, record"></div>
+						<div slot="alarmTime" slot-scope="text">
+							{{ text.alarmTime | filterTimeToYYYYMMDD }}
+						</div>
+						<div slot="recoverTime" slot-scope="text">
+							{{ text.recoverTime | filterTimeToYYYYMMDD }}
+						</div>
+						<div slot="alarmLevel" slot-scope="text">
+							{{ text.alarmLevel | filterAlarmLevel }}
+						</div>
+						<div slot="status" slot-scope="text">
+							{{ text.status | filterAlarmStatus }}
+						</div>
+
+						<div slot="operate" slot-scope="text, record">
+							<a v-if="record.status === 1" @click="toOperat(record, 'process')">处理</a>
+							<a v-else @click="toOperat(record, 'examine')">查看</a>
 						</div>
 					</a-table>
 					<Pagination
@@ -98,7 +115,7 @@
 
 <script>
 import moment from "moment"
-import * as echarts from "echarts"
+import { cloneDeep } from "lodash"
 
 import Breadcrumb from "components/Breadcrumb.vue"
 import NumCount from "components/NumCount.vue"
@@ -106,19 +123,38 @@ import ContentTitle from "components/ContentTitle.vue"
 import LabelAndValue from "components/LabelAndValue.vue"
 import Pagination from "components/Pagination.vue"
 import SimpleTable from "components/SimpleTable.vue"
+import LineChart from "components/LineChart.vue"
 import DeviceDetaiCommandl from "../../components/DeviceDetaiCommandl.vue"
+
+import apis from "apis"
+import { commonMixin } from "mixins"
+
+const { getDeviceInfoDetail, getDeviceDetailCount, getDeviceDetailHistortAlarmList } = apis
 
 export default {
 	name: "DeviceInfo",
-	components: { Breadcrumb, NumCount, ContentTitle, LabelAndValue, Pagination, SimpleTable, DeviceDetaiCommandl },
+	mixins: [commonMixin],
+	components: {
+		Breadcrumb,
+		NumCount,
+		ContentTitle,
+		LabelAndValue,
+		Pagination,
+		SimpleTable,
+		DeviceDetaiCommandl,
+		LineChart,
+	},
+	props: {
+		id: String,
+	},
 	data() {
 		return {
 			historyList: ["首页", "设备监控", "设备详情"],
 			historyCountData: [
-				{ title: "本设备报警次数", num: "10" },
-				{ title: "本设备报警处理次数", num: "96" },
-				{ title: "本设备故障次数", num: "84" },
-				{ title: "本设备入网天数(天)", num: "365", afterHasDivider: false },
+				{ title: "本设备报警次数", num: "-", key: "alarmTotal" },
+				{ title: "本设备报警处理次数", num: "-", key: "resolvedNum" },
+				{ title: "本设备故障次数", num: "-", key: "faultNum" },
+				{ title: "本设备入网天数(天)", num: "-", key: "netDayDiff", afterHasDivider: false },
 			],
 			filterForm: {
 				chartRadioValue: "1",
@@ -132,16 +168,16 @@ export default {
 				{ label: "电能", value: "5" },
 			],
 			columns: [
-				{ title: "序号", dataIndex: "", key: "" },
-				{ title: "报警类型", dataIndex: "", key: "" },
-				{ title: "报警级别", dataIndex: "", key: "" },
-				{ title: "报警详情", dataIndex: "", key: "" },
-				{ title: "报警时间", dataIndex: "", key: "" },
-				{ title: "报警恢复时间", dataIndex: "", key: "" },
-				{ title: "报警位置", dataIndex: "", key: "" },
-				{ title: "处理状态", dataIndex: "", key: "" },
-				{ title: "处理人", dataIndex: "", key: "" },
-				{ title: "操作", dataIndex: "", key: "", scopedSlots: { customRender: "operate" } },
+				{ title: "序号", scopedSlots: { customRender: "idx" } },
+				{ title: "报警类型", scopedSlots: { customRender: "alarmTypeName" } },
+				{ title: "报警级别", scopedSlots: { customRender: "alarmLevel" } },
+				{ title: "报警详情", dataIndex: "alarmValue" },
+				{ title: "报警时间", scopedSlots: { customRender: "alarmTime" } },
+				{ title: "报警恢复时间", scopedSlots: { customRender: "recoverTime" } },
+				{ title: "报警位置", dataIndex: "address" },
+				{ title: "处理状态", scopedSlots: { customRender: "status" } },
+				{ title: "处理人", dataIndex: "processUserName" },
+				{ title: "操作", key: "", scopedSlots: { customRender: "operate" } },
 			],
 			tableData: [],
 			paginationData: {
@@ -150,32 +186,72 @@ export default {
 				size: 10,
 			},
 			dialog: false,
+			chartData: {
+				xAxisData: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+				seriesData: [10, 52, 200, 334, 390, 330, 220],
+			},
+			deviceInfoObj: {},
+			deviceDetailedLabel: [
+				{ label: "安装位置", key: "installPosition" },
+				{ label: "SIM 卡号", key: "simPhoneNumber" },
+				{ label: "ICCID 号", key: "iccid" },
+				{ label: "版本号", key: "version" },
+				{ label: "服务到期", key: "" },
+				{ label: "报警类型", key: "alarmName" },
+				{ label: "信号时间", key: "reportTime" },
+				{ label: "信号强度", key: "reportTime" },
+				{ label: "上报地址", key: "" },
+				{ label: "安全负责人", key: "safetyDirector" },
+				{ label: "联系方式", key: "safetyDirectorMobile" },
+			],
 		}
 	},
+	computed: {},
 	mounted() {
-		const historyChart = echarts.init(document.querySelector("#chart_container"))
-		historyChart.setOption({
-			xAxis: {
-				type: "category",
-				data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-			},
-			yAxis: {
-				type: "value",
-			},
-			series: [
-				{
-					data: [150, 230, 224, 218, 135, 147, 260],
-					type: "line",
-				},
-			],
-		})
+		const { getDeviceInfoDetail, getDeviceCount, getTableData } = this
+		Promise.allSettled([getDeviceInfoDetail(), getDeviceCount(), getTableData()])
 	},
 	methods: {
 		sendCommand() {
 			this.dialog = true
 		},
+		getDeviceInfoDetail() {
+			return getDeviceInfoDetail(this.id).then(({ data }) => {
+				this.deviceInfoObj = {
+					...data,
+					...data.deviceStatusBO,
+					...data.deviceConfigEntity,
+					reportTime: data.deviceStatusBO ? moment(data.deviceStatusBO).format("YYYY-MM-DD HH:mm") : "",
+				}
+			})
+		},
+		getDeviceCount() {
+			return getDeviceDetailCount(this.id).then(({ data }) => {
+				const historyCountDataClone = cloneDeep(this.historyCountData)
+				historyCountDataClone.forEach(i => {
+					i.num = data[i.key] || "-"
+				})
+				this.historyCountData = historyCountDataClone
+			})
+		},
 		previewSetupPhoto() {},
-		getTableData(current = 1, size = 10) {},
+		getTableData(current = 1, size = 10) {
+			const params = {
+				current,
+				size,
+				deviceId: this.id,
+			}
+			return getDeviceDetailHistortAlarmList(params).then(({ data: { records, total, current, size } }) => {
+				this.tableData = records
+				this.paginationData = {
+					...this.paginationData,
+					total,
+					current,
+					size,
+				}
+			})
+		},
+		toOperat() {},
 		changePageHandle(page, pageSize) {
 			this.getTableData(page, pageSize)
 		},
@@ -323,6 +399,7 @@ export default {
 				}
 			}
 			.history-alarm-log {
+				padding-bottom: 4rem;
 				.ant-table {
 					margin: 2rem 0 0;
 				}

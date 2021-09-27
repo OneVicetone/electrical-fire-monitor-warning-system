@@ -35,6 +35,9 @@ const responseInterceptFunc = res => {
 		config: { url },
 		headers: { authorization },
 	} = res
+	if (res.headers["content-type"] === "application/xml") {
+		return data
+	}
 	if (status > 200) {
 		message.error(statusText)
 		throw new Error(data.message)
@@ -42,7 +45,7 @@ const responseInterceptFunc = res => {
 	if (data.code !== successCode) {
 		message.error(data.message)
 	}
-	if (data.code === 20001) {
+	if (data.code === 20001 || data.code === 20010) {
 		localStorage.clear()
 		window.location = "/"
 		throw new ReferenceError("token error")

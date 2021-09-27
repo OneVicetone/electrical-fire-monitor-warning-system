@@ -16,11 +16,18 @@ module.exports = {
 		clean: true,
 		publicPath: "/",
 	},
+	// module: {
+	// 	generator: {
+	// 		asset: {
+	// 			publicPath: 'src/assets/',
+	// 		}
+	// 	}
+	// },
 	resolve: {
 		alias,
-		// extensions: [".js", ".vue", ".json"],
-		// modules: ["node_modules"],
-		// plugins: [],
+		extensions: [".js", ".vue", ".json", '...'],
+		modules: ["node_modules"],
+		plugins: [],
 	},
 	optimization: {
 		moduleIds: "deterministic",
@@ -37,13 +44,13 @@ module.exports = {
 		},
 		minimizer: ["...", new CssMinimizerPlugin()],
 	},
-	externals: {
-		vue: "Vue",
-		vuex: "Vuex",
-		echarts: "echarts",
-		"vue-router": "VueRouter",
-		"ant-design-vue": "ant-design-vue",
-	},
+	// externals: {
+	// 	vue: "Vue",
+	// 	vuex: "Vuex",
+	// 	echarts: "echarts",
+	// 	"vue-router": "VueRouter",
+	// 	"ant-design-vue": "ant-design-vue",
+	// },
 	module: {
 		rules: [
 			{
@@ -72,16 +79,16 @@ module.exports = {
 				],
 			},
 			{
-				test: /\.(jpe?g|png|svg|gif)/i,
+				test: /\.(jpe?g|png|svg|gif)$/,
 				type: "asset",
 				generator: {
 					filename: "assets/[hash][ext][query]", // 局部指定输出位置
 				},
-				parser: {
-					dataUrlCondition: {
-						maxSize: 8 * 1024, // 限制于 8kb
-					},
-				},
+				// parser: {
+				// 	dataUrlCondition: {
+				// 		maxSize: 8 * 1024, // 限制于 8kb
+				// 	},
+				// },
 			},
 			// {
 			// 	test: /.(png|jpg|jpeg|svg|gif)$/i,

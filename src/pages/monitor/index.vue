@@ -124,6 +124,12 @@ export default {
 			return monitorAllAlarmType().then(({ data }) => {
 				const deviceStatusChart = echarts.init(document.querySelector("#device_status_chart"))
 				deviceStatusChart.setOption({
+					grid: {
+						left: 30,
+						top: 20,
+						right: 30,
+						bottom: 20,
+					},
 					xAxis: {
 						type: "category",
 						data: Object.keys(data) || [],
@@ -315,7 +321,7 @@ export default {
 			margin: 6.58rem 0 0;
 			#device_status_chart {
 				width: 100%;
-				height: 50%;
+				height: 14rem;
 			}
 		}
 	}

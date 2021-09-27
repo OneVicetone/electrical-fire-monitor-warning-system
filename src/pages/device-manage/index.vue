@@ -85,8 +85,8 @@ const { deviceTypeOptions, deviceIdOptions } = optionsData
 
 const searchFromInitial = {
 	sn: "",
-	deviceTypeId: 0,
-	deviceModelId: 0,
+	deviceTypeId: 99,
+	deviceModelId: 99,
 	iccid: "",
 }
 const deviceStatusRadioInitial = "0"
@@ -222,17 +222,6 @@ export default {
 		.table-search-form {
 			margin: 1.25rem 0 0;
 			position: relative;
-			.other-btns {
-				height: 40px;
-				display: flex;
-				align-items: center;
-				position: absolute;
-				right: 0;
-				top: 0;
-				> button {
-					margin: 0 1.17rem 0 0;
-				}
-			}
 		}
 		.device-list {
 			display: flex;

@@ -71,8 +71,16 @@ const setupDeviceApis = http => ({
 	getDevicesTypeList: ({ current, size, model }) =>
 		http.get("/api-device/deviceType/pageList", { current, size, model }),
 
-	addDeviceType: ({ supplier, model, protocol, network, productImgPath, deviceTypeId }) =>
-		http.get("/api-device/deviceType/add", { supplier, model, protocol, network, productImgPath, deviceTypeId }),
+	addDeviceType: ({ supplier, model, protocol, network, productImgPath, deviceTypeId, gateway }) =>
+		http.get("/api-device/deviceType/add", {
+			supplier,
+			model,
+			protocol,
+			network,
+			productImgPath,
+			deviceTypeId,
+			gateway,
+		}),
 
 	updateDeviceTypeById: ({ id, supplier, model, protocol, network, productImgPath, deviceTypeId }) =>
 		http.get("/api-device/deviceType/add", { id, supplier, model, protocol, network, productImgPath, deviceTypeId }),
@@ -80,24 +88,15 @@ const setupDeviceApis = http => ({
 	deleteDeviceType: id => http.get("/api-device/deviceType/remove", { id }),
 
 	getDeviceTypeDetail: id => http.get("/api-device/deviceType/detail", { id }),
-	
+
 	getDeviceInfoDetail: id => http.get(`/api-device/deviceInfo/detail/${id}`),
 
 	deviceCmd: ({
 		deviceId,
 		cmdType,
-		content: {
-			iz = '',
-			temp = '',
-			rv = '',
-			rc = '',
-			ccr = '',
-			realFreq = '',
-			beatsFreq = ''
-		}
+		content: { iz = "", temp = "", rv = "", rc = "", ccr = "", realFreq = "", beatsFreq = "" },
 	}) =>
-		http.post("/api-device/deviceCmd/send", 
-		{
+		http.post("/api-device/deviceCmd/send", {
 			deviceId,
 			cmdType,
 			content: {
@@ -107,12 +106,20 @@ const setupDeviceApis = http => ({
 				rc,
 				ccr,
 				realFreq,
-				beatsFreq
-			}
-		}
-	),
+				beatsFreq,
+			},
+		}),
+
 	commandPageList: ({ current, size, deviceId }) =>
 		http.get("/api-device/deviceCmd/pageList", { current, size, deviceId }),
+
+	getDeviceDetailCount: deviceId => http.get("/api-device/monitor/device/statisticCommon", { deviceId }),
+
+	getDeviceDetailHistortAlarmList: ({ current, size, deviceId }) =>
+		http.get("/api-alarm/history/device/pageList", { current, size, deviceId }),
+
+	getDeviceListForSystemSettiing: ({ current, size, groupId, deviceTypeId, deviceModelId, sn }) =>
+		http.get("/api-device/device/pageList", { current, size, groupId, deviceTypeId, deviceModelId, sn }),
 })
 
 export default setupDeviceApis

@@ -17,6 +17,8 @@ const apisPath = path.resolve(__dirname, "src/apis")
 const assetsPath = path.resolve(__dirname, "src/assets")
 const storePath = path.resolve(__dirname, "src/store")
 
+console.log(pagesPath)
+
 
 const alias = {
 	"@": srcPath,

@@ -24,14 +24,7 @@ const GET_MENU_LIST = "get_menu_list"
 const initialState = {
 	username: "",
 	password: "",
-	userInfo: {
-		loginName: "",
-		nickName: "",
-		roleId: "",
-		roleName: "",
-		groupId: "",
-		token: "",
-	},
+	userInfo: {},
 	menuList: [],
 	routes: [],
 	...(localStorage.getItem('vuex')?.account || {})
@@ -60,7 +53,7 @@ const accountModule = {
 							const { name: parentName } = allMenuList.find(j => j.id === parentId)
 							const parentAtRouteIdx = allLocalRoutes.findIndex(k => k.meta.title === parentName)
 							inLocalRoutes = allLocalRoutes[parentAtRouteIdx].children.find(i => i.meta.title === name)
-							routeArr[parentAtRouteIdx].children.push({ ...inLocalRoutes, children: [] })
+							inLocalRoutes && routeArr[parentAtRouteIdx].children.push({ ...inLocalRoutes, children: [] })
 						}
 						if (inLocalRoutes && Array.isArray(childList) && childList.length > 0) {
 							return func(childList)
@@ -80,7 +73,12 @@ const accountModule = {
 			const token = localStorage.getItem(TOKEN)
 			// TODO: authorization 需要jwt揭解密
 			// console.log(jwt)
-			state.userInfo.token = token
+			const strings = token.split(".")
+			const userInfo = JSON.parse(decodeURIComponent(escape(window.atob(strings[1].replace(/-/g, "+").replace(/_/g, "/")))))
+			state.userInfo = {
+				...userInfo,
+				token
+			}
 		},
 		[SET_MENU_LIST](state, payload) {
 			state.menuList = payload
