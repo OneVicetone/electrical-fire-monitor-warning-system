@@ -1,14 +1,15 @@
 <template>
     <div>
         <a-upload
-            :list-type="uploadInlineStyle"
-            class="uploader"
-            :action="address"
-            :file-list="fileList"
-            @change="handleChange"
+            name="avatar"
+            list-type="picture-card"
+            :show-upload-list="false"
+            :customRequest="handleUploadFile"
         >
-            <div v-if="limitLen">
-                <a-icon type="plus" />
+            <img v-if="uploadPic" :src="uploadPic" />
+            <div v-else>
+                <a-icon :type="loading ? 'loading' : 'plus'" />
+                <div class="ant-upload-text">上传图片</div>
             </div>
         </a-upload>
         <slot></slot>
@@ -16,24 +17,11 @@
 </template>
 
 <script>
+import { uploadFileMixin } from "mixins"
+
 export default {
     name:"Upload",
-    props: {
-        fileName: {
-            type: String,
-            default: 'file'
-        },
-        uploadInlineStyle: {
-            type: String,
-            default: 'picture-card'
-        },
-        address: {
-            type: String,
-            default: 'https://www.mocky.io/v2/5cc8019d300000980a055e76'
-        },
-        len: Number,
-        fileList: Array
-    },
+    mixins: [uploadFileMixin],
     data() {
         return {
         }
@@ -43,13 +31,18 @@ export default {
             return this.fileList.length < this.len;
         }
     },
+    mounted() {
+        this.getUploadUrl()
+    },
     methods: {
-        // beforeUpload(file) {
-        //     console.log(file)
-        // },
-        handleChange({ fileList }) {
-            console.log(fileList)
-            this.$emit('upload-change', fileList)
+        handleUploadFile(arg) {
+            console.log('上传文件', arg)
+			arg.file instanceof File &&
+				this.toUploadFile(arg.file).then(imgUrl => {
+                    this.loading  = false;
+                    console.log(imgUrl)
+                    this.uploadPic = imgUrl;
+				})
         },
     }
 }

@@ -35,7 +35,7 @@
 				<div slot="operate" slot-scope="text">
 					<a @click="resetPassword(text.id, text.name)">重制密码</a>
 					<a-divider type="vertical" />
-					<a>编辑</a>
+					<a @click="editCell(text)">编辑</a>
 					<a-divider type="vertical" />
 					<a @click="changeAccountStatus(text.enable, text.id)">{{ text.enable ? "禁用" : "启用" }}</a>
 				</div>
@@ -47,7 +47,9 @@
 				:changePageSizeHandle="changePageSizeHandle"
 			/>
 		</div>
-		<new-add-unit v-model="isShowDialog"></new-add-unit>
+		<new-add-unit v-model="isShowDialog"
+		:editForm="editForm"
+		@refresh-table="getTableData"></new-add-unit>
 	</div>
 </template>
 
@@ -93,6 +95,7 @@ export default {
 			},
 			treeData: [],
 			isShowDialog: false,
+			editForm: {}
 		}
 	},
 	mounted() {
@@ -127,7 +130,10 @@ export default {
 			this.isShowDialog = true
 		},
 		delete(id) {},
-		edit(id) {},
+		editCell(text) {
+			console.log(text)
+			this.editForm = { ...text };
+		},
 		search() {
 			const {
 				paginationData: { current, size },

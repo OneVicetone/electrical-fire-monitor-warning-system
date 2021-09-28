@@ -36,9 +36,6 @@
                     <div class="flex mt">
                         <span class="yahei nowrap">现场图片：</span>
                         <img v-if="able" alt="图片已损坏">
-                         <Upload v-else :len="6"
-                         :fileList="fileList"
-                         @upload-change="onUpload"></Upload>
                     </div>
                 </Nav-titles>
             </section>
@@ -59,7 +56,7 @@
 import Dialog from "components/Dialog.vue"
 import NavTitles from "components/NavTitles.vue"
 import SimpleTable from "components/SimpleTable.vue"
-import Upload from "components/Upload.vue"
+// import Upload from "components/Upload.vue"
 
 const nameForKey = {
 	temp: "温度",
@@ -72,7 +69,7 @@ const nameForKey = {
 
 export default {
     name:"DealWithDialog",
-    components: { Dialog, NavTitles, SimpleTable, Upload },
+    components: { Dialog, NavTitles, SimpleTable },
     props: {
         dialogVisible: {
             type: Boolean,

@@ -1,5 +1,5 @@
 <template>
-    <Dialog v-model="visibles" title="新增单位">
+    <Dialog v-model="visibles" title="新增单位" :form="unitForm">
         <Nav-titles class="unit-base-info" title="单位基本信息">
             <a-form-model
                 ref="unitInfo"
@@ -93,14 +93,12 @@
         <Nav-titles class="unit-pic" title="单位图片">
             <div class="uploads flex">
                 <div class="content-wd effect-picture">
-                    <!-- :before-upload="beforeUpload"
-                        @change="handleChange" -->
                     <a-upload
                         name="avatar"
                         list-type="picture-card"
                         class="avatar-uploader"
                         :show-upload-list="false"
-                        :customRequest="handleUploadFiles"
+                        :customRequest="(arg) => handleUploadFile(arg, 'effect')"
                     >
                         <img v-if="upload.effectPic" :src="upload.effectPic" />
 						<div v-else>
@@ -116,9 +114,9 @@
                         list-type="picture-card"
                         class="avatar-uploader"
                         :show-upload-list="false"
-                        :customRequest="handleUploadFile"
+                        :customRequest="(arg) => handleUploadFile(arg, 'design')"
                     >
-                        <img v-if="upload.designDiagram" :src="upload.designDiagram" />
+                        <img v-if="upload.designPic" :src="upload.designPic" />
 						<div v-else>
 							<a-icon :type="designLoading ? 'loading' : 'plus'" />
 							<div class="ant-upload-text">上传图片</div>
@@ -149,6 +147,9 @@ export default {
     name:"AddUnit",
     components: { Dialog, NavTitles, Upload, MapModal },
     mixins: [dialogControl, form, uploadFileMixin],
+    props: {
+        editForm: Object
+    },
     data() {
         return {
             unitTypeOption: [],
@@ -157,8 +158,8 @@ export default {
                 unitName: '',
                 upUnit: '',
                 unitType: '',
-                unitAddress: '222',
-                lng: "",
+                unitAddress: '',
+                lngs: "",
                 lat: "",
                 unitCount: '',
                 area: '',
@@ -183,7 +184,7 @@ export default {
             showMap: false,
             upload: {
                 effectPic: '',
-                designDiagram: ''
+                designPic: ''
             },
             effectLoading: false,
             designLoading: false
@@ -194,6 +195,40 @@ export default {
             if (v) {
                 this.getTreeGroup();
                 this.getOptions();
+                const {
+                    name = '',
+                    parentId = '',
+                    typeCode = '',
+                    address = '',
+                    addressLat = '',
+                    addressLon = '',
+                    employeeNum = '',
+                    floorSpace = '',
+                    principalUserName = '',
+                    loginName = '',
+                    mobile = '',
+                    effectPicPath = '',
+                    designPicPath = ''
+                } = this.editForm || {};
+                this.unitForm = {
+                    unitName: name,
+                    upUnit: parentId,
+                    unitType: typeCode,
+                    unitAddress: address,
+                    // lngs: "",
+                    // lat: "",
+                    unitCount: employeeNum,
+                    area: floorSpace,
+                }
+                this.safe = {
+                    safePrincipal: principalUserName,
+                    principalAccount: loginName,
+                    linkPhone: mobile
+                }
+                this.upload = {
+                    effectPic: effectPicPath,
+                    designPic: designPicPath
+                }
             }
         }
     },
@@ -224,27 +259,20 @@ export default {
             if (value === null || value === undefined || typeof value === 'number') value = '';
             return `${value.length}/${totalLen}`
         },
-        handleUploadFile(arg) {
-            console.log('上传文件', arg)
+        handleUploadFile(arg, type) {
+            console.log('上传文件', arg,type)
 			arg.file instanceof File &&
 				this.toUploadFile(arg.file).then(imgUrl => {
-					this.effectLoading = false
-					this.upload.effectPic = imgUrl
-				})
-        },
-        handleUploadFiles(arg) {
-            console.log('上传文件', arg)
-			arg.file instanceof File &&
-				this.toUploadFile(arg.file).then(imgUrl => {
-					this.effectLoading = false
-					this.upload.effectPic = imgUrl
+                    this[`${type}Loading`]  = false;
+                    console.log(imgUrl)
+                    this.upload[`${type}Pic`] = imgUrl;
 				})
         },
         onCoordinate({lng, lat}) {
             this.unitForm.unitAddress = `lng:${lng},lat:${lat}`;
-            this.unitForm.lng = lng;
+            this.unitForm.lngs = lng;
             this.unitForm.lat = lat;
-
+            console.log(this.unitForm)
         },
         alertMap() {
             this.showMap = true;
@@ -258,7 +286,7 @@ export default {
                         upUnit,
                         unitType,
                         unitAddress,
-                        lng,
+                        lngs,
                         lat,
                         unitCount,
                         area,
@@ -267,8 +295,13 @@ export default {
                         safePrincipal,
                         principalAccount,
                         linkPhone
+                    },
+                    upload: {
+                        effectPic,
+                        designPic
                     }
                 } = this;
+                console.log(lat, lngs)
                 // 参数
                 const params = {
                     name: unitName,
@@ -276,17 +309,19 @@ export default {
                     typeCode: unitType,
                     address: unitAddress,
                     addressLat: lat,
-                    addressLng: lng,
+                    addressLon: lngs,
                     employeeNum: unitCount,
                     floorSpace: area,
                     principalUserName: safePrincipal,
                     loginName: principalAccount,
                     mobile: linkPhone,
-                    effectPicPath: "未定",
-                    designPicPath: "未定"
-                    };
+                    effectPicPath: effectPic,
+                    designPicPath: designPic
+                };
                 const res = await createUnit(params);
                 console.log('表单填写', res)
+                this.$emit('input', false);
+                this.$emit('refresh-table');
             }
             this.recursionRef(validates, cb);
         },
@@ -350,6 +385,10 @@ export default {
         }
         .design-diagram {
             margin-left: 4.08rem
+        }
+        img {
+            width: 13.42rem;
+                height: 13.42rem;
         }
     }
 }
