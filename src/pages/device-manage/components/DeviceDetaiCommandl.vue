@@ -31,7 +31,7 @@
                     </a-select>
                     <img class="icons-wd ml83 pointer" src="assets/icons/refresh.png" alt="">
                 </div>
-                <CommandRecord :details="records"></CommandRecord>
+                <CommandRecord :details="records" :total="total"></CommandRecord>
             </NavTitles>
         </div>
     </Dialog>
@@ -66,7 +66,8 @@ export default {
                 {label: '上传频率：', model: 'uploadFrequency', desc: '（建议设置5-1440分钟）'},
                 {label: '心跳频率：', model: 'heartRate', desc: '（建议设置2-1440分钟）'},
             ],
-            records: []
+            records: [],
+            total: 0
         }
     },
     watch: {
@@ -79,7 +80,7 @@ export default {
 
         },
         selectChange() {},
-        getList({ current = 1, size = 10 } = {}) {
+        getList({ current = 1, size = 5 } = {}) {
             const {
                 $route: {
                     params: { id }
@@ -91,9 +92,10 @@ export default {
                 deviceId: id
             }
             commandPageList(params).then(({ data }) => {
-                const { records = [] } = data || {};
+                const { records = [], total = 0 } = data || {};
                 console.log('获取弹窗内list', records)
                 this.records = records;
+                this.total = total;
             });
         },
         async doSure() {

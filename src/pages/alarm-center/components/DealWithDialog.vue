@@ -35,7 +35,13 @@
                     <br />
                     <div class="flex mt">
                         <span class="yahei nowrap">现场图片：</span>
-                        <img v-if="able" alt="图片已损坏">
+                        <component
+                            v-for="item in uploadList"
+                            :key="item.id"
+                            :is="item.comp"
+                            :current="item.id"
+                            @is-done="uploadDone">
+                        </component>
                     </div>
                 </Nav-titles>
             </section>
@@ -56,7 +62,7 @@
 import Dialog from "components/Dialog.vue"
 import NavTitles from "components/NavTitles.vue"
 import SimpleTable from "components/SimpleTable.vue"
-// import Upload from "components/Upload.vue"
+import Upload from "components/Upload.vue"
 
 const nameForKey = {
 	temp: "温度",
@@ -69,7 +75,7 @@ const nameForKey = {
 
 export default {
     name:"DealWithDialog",
-    components: { Dialog, NavTitles, SimpleTable },
+    components: { Dialog, NavTitles, SimpleTable, Upload },
     props: {
         dialogVisible: {
             type: Boolean,
@@ -125,7 +131,11 @@ export default {
 				{ name: "功率(W)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 				{ name: "电量(度)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 			],
-            fileList: []
+            fileList: [],
+            uploadList: [
+                {id: 1, comp: 'Upload'}
+            ],
+            resultList: []
         }
     },
     computed: {
@@ -191,6 +201,12 @@ export default {
             }
             return _map[type][item] || '--'
 		},
+        uploadDone(url, num) {
+            this.resultList.push(url)
+            if (this.uploadList.length <= 6) {
+                this.uploadList.push({id: num, comp: 'Upload'});
+            }
+        },
         onUpload(e) {
             this.fileList = e;
         },
@@ -199,7 +215,9 @@ export default {
             const params = { 
                 alarmId: id,
                 confirmFlag: warnSure,
-                processType: dealWith
+                processType: dealWith,
+                sitePhotos: this.resultList.split(','),
+                remark: ''
             }
             this.$emit('on-sure', params);
         }

@@ -1,6 +1,7 @@
 <template>
     <div>
         <a-upload
+            class="uploader"
             name="avatar"
             list-type="picture-card"
             :show-upload-list="false"
@@ -9,7 +10,6 @@
             <img v-if="uploadPic" :src="uploadPic" />
             <div v-else>
                 <a-icon :type="loading ? 'loading' : 'plus'" />
-                <div class="ant-upload-text">上传图片</div>
             </div>
         </a-upload>
         <slot></slot>
@@ -22,13 +22,13 @@ import { uploadFileMixin } from "mixins"
 export default {
     name:"Upload",
     mixins: [uploadFileMixin],
+    props: {
+        current: Number
+    },
     data() {
         return {
-        }
-    },
-    computed: {
-        limitLen() {
-            return this.fileList.length < this.len;
+            uploadPic: '',
+            loading: false
         }
     },
     mounted() {
@@ -39,9 +39,11 @@ export default {
             console.log('上传文件', arg)
 			arg.file instanceof File &&
 				this.toUploadFile(arg.file).then(imgUrl => {
+                    const num = this.current + 1;
                     this.loading  = false;
                     console.log(imgUrl)
                     this.uploadPic = imgUrl;
+                    this.$emit('is-done', imgUrl, num);
 				})
         },
     }

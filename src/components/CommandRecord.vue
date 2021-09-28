@@ -15,6 +15,7 @@
                     <a-popover trigger="hover" placement="bottomRight">
                         <template slot="content">
                             <p v-for="(item, index) in doContent(status.sendContent)" :key="index">{{item}}</p>
+                            <p v-if="!status.sendContent">暂无数据</p>
                         </template>
                         <a-icon type="caret-down" />
                     </a-popover>
@@ -85,6 +86,7 @@ export default {
 .reset-timeline {
     height: 50rem;
     overflow-y: scroll;
+    padding-left: 0.2rem;
     /deep/ .ant-timeline-item-content {
         font-size: 1rem;
         font-family: Microsoft YaHei;
