@@ -76,7 +76,7 @@ import Pagination from "components/Pagination.vue"
 
 import optionsData from "utils/optionsData"
 import { SHIP, TRANSFER, IMPORT } from "utils/baseData"
-import { commonMixin } from "mixins"
+import { commonMixin, tableListMixin } from "mixins"
 import apis from "apis"
 
 const { getDeviceList, createDevice, changeDeviceInfo, exportDeviceList, getGroupTree } = apis
@@ -93,7 +93,7 @@ const deviceStatusRadioInitial = "0"
 
 export default {
 	name: "DeviceManage",
-	mixins: [commonMixin],
+	mixins: [commonMixin, tableListMixin],
 	components: { OrganizationList, DeviceCard, Pagination },
 	data() {
 		return {
@@ -106,7 +106,7 @@ export default {
 			],
 			deviceStatusRadio: deviceStatusRadioInitial,
 			searchForm: cloneDeep(searchFromInitial),
-			deviceTypeOptions,
+			deviceTypeOptions: [],
 			deviceIdOptions,
 			paginationData: {
 				total: 0,
@@ -138,12 +138,18 @@ export default {
 		}
 	},
 	mounted() {
+		const optionsTypes = ["deviceType"]
 		const {
 			getDeviceListData,
 			getGroupTreeData,
+			getOptionsListPromiseArr,
 			paginationData: { current, size },
 		} = this
-		Promise.allSettled([getDeviceListData(current, size), getGroupTreeData()])
+		Promise.allSettled([
+			getDeviceListData(current, size),
+			getGroupTreeData(),
+			...getOptionsListPromiseArr(optionsTypes),
+		])
 	},
 	methods: {
 		getDeviceListData(current = 1, size = 10) {
