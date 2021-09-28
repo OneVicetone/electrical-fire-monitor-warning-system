@@ -20,9 +20,45 @@ export default {
 			chartInstance: null,
 		}
 	},
+	updated() {
+		console.log(this.seriesData)
+	},
 	computed: {
 		chartOptions() {
 			const { xAxisData, seriesData } = this
+			const getSeriesItemByData = (data, color) => ({
+				data,
+				type: "line",
+				areaStyle: {
+					color: {
+						type: "linear",
+						x: 0,
+						y: 0,
+						x2: 0,
+						y2: 1,
+						colorStops: [
+							{
+								offset: 0,
+								color: "#0087FF",
+							},
+							{
+								offset: 1,
+								color: "rgba(0, 135, 255, 0)",
+							},
+						],
+						global: false,
+					},
+				},
+				// symbolOffset: ["-100%", "-50%"],
+			})
+			const series = []
+			if (Array.isArray(seriesData[0])) {
+				seriesData.forEach(i => {
+					series.push(getSeriesItemByData(i))
+				})
+			} else {
+				series.push(getSeriesItemByData(seriesData))
+			}
 			const marginTopAndBottom = 20
 			const marginLeftAndRight = 30
 			return {
@@ -59,34 +95,13 @@ export default {
 						},
 					},
 				},
-				series: [
-					{
-						data: seriesData,
-						type: "line",
-						areaStyle: {
-							color: {
-								type: "linear",
-								x: 0,
-								y: 0,
-								x2: 0,
-								y2: 1,
-								colorStops: [
-									{
-										offset: 0,
-										color: "#0087FF",
-									},
-									{
-										offset: 1,
-										color: "rgba(0, 135, 255, 0)",
-									},
-								],
-								global: false,
-							},
-						},
-						// symbolOffset: ["-100%", "-50%"],
-					},
-				],
+				series: series,
 			}
+		},
+	},
+	watch: {
+		seriesData() {
+			this.initChart()
 		},
 	},
 	mounted() {

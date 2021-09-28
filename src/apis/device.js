@@ -120,6 +120,9 @@ const setupDeviceApis = http => ({
 
 	getDeviceListForSystemSettiing: ({ current, size, groupId, deviceTypeId, deviceModelId, sn }) =>
 		http.get("/api-device/device/pageList", { current, size, groupId, deviceTypeId, deviceModelId, sn }),
+
+	getDeviceDetailHistoryChartData: ({ deviceId, startDate, endDate }) =>
+		http.get("/api-device/reportData/getByDateForModule", { deviceId, startDate, endDate }),
 })
 
 export default setupDeviceApis

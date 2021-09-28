@@ -101,7 +101,6 @@ export default {
 	},
 	computed: {
 		userInfo() {
-			console.log(this.$store)
 			const { loginName } = this.$store.state.account.userInfo
 			return { loginName }
 		},
