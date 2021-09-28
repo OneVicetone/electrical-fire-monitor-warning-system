@@ -93,19 +93,18 @@
         <Nav-titles class="unit-pic" title="单位图片">
             <div class="uploads flex">
                 <div class="content-wd effect-picture">
-                    <!-- :before-upload="beforeUpload"
-                        @change="handleChange" -->
                     <a-upload
                         name="avatar"
                         list-type="picture-card"
                         class="avatar-uploader"
                         :show-upload-list="false"
-                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                        :customRequest="handleUploadFiles"
                     >
-                        <!-- <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
-                        <div v-else>
-                            <a-icon :type="loading ? 'loading' : 'plus'" />
-                        </div> -->
+                        <img v-if="upload.effectPic" :src="upload.effectPic" />
+						<div v-else>
+							<a-icon :type="effectLoading ? 'loading' : 'plus'" />
+							<div class="ant-upload-text">上传图片</div>
+						</div>
                     </a-upload>
                     <div class="yahei-81899C t-center">公司处景观/效果图</div>
                 </div>
@@ -115,12 +114,13 @@
                         list-type="picture-card"
                         class="avatar-uploader"
                         :show-upload-list="false"
-                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                        :customRequest="handleUploadFile"
                     >
-                        <!-- <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
-                        <div v-else>
-                            <a-icon :type="loading ? 'loading' : 'plus'" />
-                        </div> -->
+                        <img v-if="upload.designDiagram" :src="upload.designDiagram" />
+						<div v-else>
+							<a-icon :type="designLoading ? 'loading' : 'plus'" />
+							<div class="ant-upload-text">上传图片</div>
+						</div>
                     </a-upload>
                     <div class="yahei-81899C ml-58">电气火灾系统设计图纸(800*560)</div>
                 </div>
@@ -140,13 +140,13 @@ import NavTitles from "components/NavTitles.vue"
 import Upload from "components/Upload.vue"
 import MapModal from "components/MapModal.vue"
 import apis from "apis"
-import { dialogControl, form } from "mixins"
+import { dialogControl, form, uploadFileMixin } from "mixins"
 
 const { createUnit, getSelectOptions, getGroupTree } = apis
 export default {
     name:"AddUnit",
     components: { Dialog, NavTitles, Upload, MapModal },
-    mixins: [dialogControl, form],
+    mixins: [dialogControl, form, uploadFileMixin],
     data() {
         return {
             unitTypeOption: [],
@@ -176,7 +176,13 @@ export default {
                 linkPhone: [{ required: true, message: '请输入安全负责人联系电话', trigger: 'blur' }],
             },
             fileList: [],
-            showMap: false
+            showMap: false,
+            upload: {
+                effectPic: '',
+                designDiagram: ''
+            },
+            effectLoading: false,
+            designLoading: false
         }
     },
     watch: {
@@ -186,9 +192,6 @@ export default {
                 this.getOptions();
             }
         }
-    },
-    mounted() {
-
     },
     methods: {
         getOptions() {
@@ -213,6 +216,22 @@ export default {
         computedLen(value, totalLen = 20) {
             if (value === null || value === undefined || typeof value === 'number') value = '';
             return `${value.length}/${totalLen}`
+        },
+        handleUploadFile(arg) {
+            console.log('上传文件', arg)
+			arg.file instanceof File &&
+				this.toUploadFile(arg.file).then(imgUrl => {
+					this.effectLoading = false
+					this.upload.effectPic = imgUrl
+				})
+        },
+        handleUploadFiles(arg) {
+            console.log('上传文件', arg)
+			arg.file instanceof File &&
+				this.toUploadFile(arg.file).then(imgUrl => {
+					this.effectLoading = false
+					this.upload.effectPic = imgUrl
+				})
         },
         alertMap() {
             this.showMap = true;
