@@ -93,7 +93,7 @@ export default {
 	top: 0;
 	background: url("assets/images/banner-center.png") no-repeat;
 	background-size: 100% 100%;
-	z-index: "";
+	z-index: 2;
 }
 .left-contant,
 .right-contant {
