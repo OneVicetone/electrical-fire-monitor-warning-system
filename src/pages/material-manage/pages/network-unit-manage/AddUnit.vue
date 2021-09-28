@@ -130,7 +130,7 @@
             <a-button type="primary" class="mr125" @click="formSure">确定</a-button>
             <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
         </section>
-        <MapModal v-model="showMap"></MapModal>
+        <MapModal v-model="showMap" @emit-coordinate="onCoordinate"></MapModal>
     </Dialog>
 </template>
 
@@ -156,6 +156,8 @@ export default {
                 upUnit: '',
                 unitType: '',
                 unitAddress: '222',
+                lng: "",
+                lat: "",
                 unitCount: '',
                 area: '',
             },
@@ -233,6 +235,12 @@ export default {
 					this.upload.effectPic = imgUrl
 				})
         },
+        onCoordinate({lng, lat}) {
+            this.unitForm.unitAddress = `lng:${lng},lat:${lat}`;
+            this.unitForm.lng = lng;
+            this.unitForm.lat = lat;
+
+        },
         alertMap() {
             this.showMap = true;
         },
@@ -245,6 +253,8 @@ export default {
                         upUnit,
                         unitType,
                         unitAddress,
+                        lng,
+                        lat,
                         unitCount,
                         area,
                     },
@@ -260,8 +270,8 @@ export default {
                     parentId: upUnit,
                     typeCode: unitType,
                     address: unitAddress,
-                    addressLat: 22.223323,
-                    addressLng: 118.332222,
+                    addressLat: lat,
+                    addressLng: lng,
                     employeeNum: unitCount,
                     floorSpace: area,
                     principalUserName: safePrincipal,
