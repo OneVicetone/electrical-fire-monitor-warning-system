@@ -45,9 +45,7 @@ header {
 	height: 1.83rem;
 	margin: 0 0 0 1.68rem;
 	// background: linear-gradient(90deg, #0096ff 0%, rgba(0, 150, 255, 0) 100%);
-	background: url("assets/images/title-bg.png") no-repeat;
-	background-position: 0px 10px;
-	background-size: 18rem;
+
 	position: relative;
 	&::after {
 		.bevel-pseudo-element();
@@ -64,10 +62,10 @@ header {
 		&:first-child::before {
 			content: "";
 			display: block;
-			width: 1.48rem;
-			height: 1.42rem;
+			width: 3rem;
+			height: 3rem;
 			position: absolute;
-			left: -1.68rem;
+			left: -3rem;
 			top: 50%;
 			transform: translateY(-50%);
 			background: url("assets/icons/content-title-icon.png") no-repeat;
@@ -75,6 +73,9 @@ header {
 		}
 	}
 	.string-title {
+		background: url("assets/images/title-bg.png") no-repeat;
+		background-position: 0px 10px;
+		background-size: 18rem;
 	}
 	.array-title {
 		display: flex;
