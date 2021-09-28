@@ -12,83 +12,37 @@
                         <div class="wd1633 yahei t-ellipsis">发送时间：{{status.sendTime}}</div>
                         <div class="wd1633 yahei t-ellipsis">应答时间：{{status.responseTime}}</div>
                     </div>
-                    <a-popover title="Title" trigger="hover" placement="bottomRight">
+                    <a-popover trigger="hover" placement="bottomRight">
                         <template slot="content">
-                            <p>Content</p>
-                            <p>Content</p>
-                        </template>
-                        <a-icon type="caret-down" />
-                    </a-popover>
-                </div>
-            </a-timeline-item>
-            <a-timeline-item>
-                <img slot="dot" src="assets/icons/error.png" class="icons" alt="">
-                <div class="flex-yCenter">
-                    <div class="mr317">
-                        <div>指令状态：发送成功</div>
-                        <div>指令内容：漏电阈值  20...</div>
-                        <div>发  送 人：王标</div>
-                        <div class="wd1633 yahei t-ellipsis">发送时间：2018-06-14 17：26：18</div>
-                        <div class="wd1633 yahei t-ellipsis">应答时间：2018-06-14 17：27：10</div>
-                    </div>
-                    <a-popover title="Title" trigger="hover" placement="bottomRight">
-                        <template slot="content">
-                            <p>Content</p>
-                            <p>Content</p>
-                        </template>
-                        <a-icon type="caret-down" />
-                    </a-popover>
-                </div>
-            </a-timeline-item>
-            <a-timeline-item>
-                <img slot="dot" src="assets/icons/waiting.png" class="icons" alt="">
-                <div class="flex-yCenter">
-                    <div class="mr317">
-                        <div>指令状态：发送成功</div>
-                        <div>指令内容：漏电阈值  20...</div>
-                        <div>发  送 人：王标</div>
-                        <div class="wd1633 yahei t-ellipsis">发送时间：2018-06-14 17：26：18</div>
-                        <div class="wd1633 yahei t-ellipsis">应答时间：2018-06-14 17：27：10</div>
-                    </div>
-                    <a-popover title="Title" trigger="hover" placement="bottomRight">
-                        <template slot="content">
-                            <p>Content</p>
-                            <p>Content</p>
-                        </template>
-                        <a-icon type="caret-down" />
-                    </a-popover>
-                </div>
-            </a-timeline-item>
-            <a-timeline-item>
-                <img slot="dot" src="assets/icons/waiting.png" class="icons" alt="">
-                <div class="flex-yCenter">
-                    <div class="mr317">
-                        <div>指令状态：发送成功</div>
-                        <div>指令内容：漏电阈值  20...</div>
-                        <div>发  送 人：王标</div>
-                        <div class="wd1633 yahei t-ellipsis">发送时间：2018-06-14 17：26：18</div>
-                        <div class="wd1633 yahei t-ellipsis">应答时间：2018-06-14 17：27：10</div>
-                    </div>
-                    <a-popover title="Title" trigger="hover" placement="bottomRight">
-                        <template slot="content">
-                            <p>Content</p>
-                            <p>Content</p>
+                            <p v-for="(item, index) in doContent(status.sendContent)" :key="index">{{item}}</p>
                         </template>
                         <a-icon type="caret-down" />
                     </a-popover>
                 </div>
             </a-timeline-item>
         </a-timeline>
-        <Pagination :showQuickJumper="false" :showSizeChanger="false"></Pagination>
+        <a-pagination
+			size="small"
+			v-model="paginationData.current"
+			:pageSize="paginationData.size"
+			:total="paginationData.total"
+			:show-total="(total, range) => `共${total}条 ${range[1]}页`"
+			:show-size-changer="false"
+			@showSizeChange="changePageSizeHandle"
+			@change="changePageHandle"
+			:showQuickJumper="false"
+		/>
     </div>
 </template>
 
 <script>
-import Pagination from "components/Pagination.vue"
+import waiting from "assets/icons/waiting.png"
+import bingo from "assets/icons/bingo.png"
+import errors from "assets/icons/error.png"
+import cancel from "assets/icons/cancel.png"
 
 export default {
     name:"CommandRecord",
-    components: { Pagination },
     props: {
         details: {
             type: Array,
@@ -97,28 +51,40 @@ export default {
     },
     data() {
         return {
-
+            paginationData: {
+                total: 200,
+				current: 50,
+				size: 10,
+            }
         }
     },
     computed: {
         list() {
             const status = {
-                '发送中': 'assets/icons/waiting.png',
-                '取消': 'assets/icons/error.png',
+                '1': waiting,
+                '2': bingo,
+                '3': errors,
+                '4': cancel,
             }
             return this.details.map(item => {
-                item.icon = status[item.sendStatus];
+                item.icon = status[item.status];
                 return item;
             })
         }
     },
-    created() {
-
-    },
+    methods: {
+        doContent(data) {
+            return data && data.split(';');
+        },
+        changePageSizeHandle() {},
+        changePageHandle() {},
+    }
 }
 </script>
 <style lang='less' scoped>
 .reset-timeline {
+    height: 50rem;
+    overflow-y: scroll;
     /deep/ .ant-timeline-item-content {
         font-size: 1rem;
         font-family: Microsoft YaHei;
@@ -152,5 +118,38 @@ export default {
     .wd1633 {
         width: 16.33rem;
     }
+    
+}
+/deep/ .ant-pagination-total-text {
+		font-size: 1rem;
+		font-family: Microsoft YaHei;
+		font-weight: 400;
+		color: #81899C;
+	}
+	/deep/ .ant-pagination-item-active {
+		width: 2.5rem;
+		height: 2.5rem;
+		min-width: none;
+		background: rgba(21, 35, 72, 0);
+		line-height: 2.5rem;
+		a {
+			padding: 0;
+		}
+	}
+</style>
+<style>
+.reset-timeline::-webkit-scrollbar {
+    width: 4px;    
+}
+.reset-timeline::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+}
+.reset-timeline::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
+
 }
 </style>
