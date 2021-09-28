@@ -80,8 +80,7 @@
 			v-model="isShowDialog"
 			:treeData="treeData"
 			:formCell="formCell"
-			@on-fresh-data="getTableData"
-		></new-add-unit>
+			@on-fresh-data="getTableData"></new-add-unit>
 	</div>
 </template>
 
