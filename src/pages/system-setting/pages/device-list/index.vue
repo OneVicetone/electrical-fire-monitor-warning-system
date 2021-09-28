@@ -9,7 +9,23 @@
 					<a-input v-model="searchForm.name" placeholder="请输入设备编码/名称" size="small" />
 				</a-form-model-item>
 				<a-form-model-item>
-					<a-input v-model="searchForm.principalUserName" placeholder="请输入安全负责人名称" size="small" />
+					<a-select
+						v-model="searchForm.deviceTypeId"
+						:options="deviceTypeOptions"
+						placeholder="请选择设备类型"
+						size="small"
+					/>
+				</a-form-model-item>
+				<a-form-model-item>
+					<a-select
+						v-model="searchForm.deviceModelId"
+						:options="deviceIdOptions"
+						placeholder="请选择设备型号"
+						size="small"
+					/>
+				</a-form-model-item>
+				<a-form-model-item>
+					<a-input v-model="searchForm.iccid" placeholder="请输入ICCID号" size="small" />
 				</a-form-model-item>
 				<a-form-model-item>
 					<a-button type="primary" size="small" @click="search">搜索</a-button>
@@ -17,7 +33,7 @@
 				</a-form-model-item>
 				<a-form-model-item> </a-form-model-item>
 				<div class="other-btns">
-					<a-button type="primary" size="small" @click="add"><a-icon type="plus" />新增单位</a-button>
+					<a-button type="primary" size="small" @click="add"><a-icon type="plus" />新增设备</a-button>
 					<a-popover trigger="click" placement="bottomRight">
 						<a-list slot="content" size="small" :data-source="batchOperationOptions">
 							<a-list-item slot="renderItem" slot-scope="item" @click="item.operate.call($router)">
@@ -69,28 +85,32 @@
 </template>
 
 <script>
-import md5 from "md5"
-
 import OrganizationList from "components/OrganizationList.vue"
 import Pagination from "components/Pagination.vue"
 import newAddUnit from "./newAddUnit.vue"
 
-import { commonMixin } from "mixins"
 import apis from "apis"
+import { commonMixin, tableListMixin } from "mixins"
+import optionsData from "utils/optionsData"
 
 const { getDeviceListForSystemSettiing, getGroupTree } = apis
+const { deviceTypeOptions, deviceIdOptions } = optionsData
 
 export default {
 	name: "DeviceList",
-	mixins: [commonMixin],
+	mixins: [commonMixin, tableListMixin],
 	components: { OrganizationList, Pagination, newAddUnit },
 	data() {
 		return {
 			parentId: null,
 			searchForm: {
+				deviceTypeId: "",
+				deviceModelId: "",
 				name: "",
 				principalUserName: "",
 			},
+			deviceTypeOptions: [],
+			deviceIdOptions,
 			columns: [
 				{ title: "序号", scopedSlots: { customRender: "idx" } },
 				{ title: "联网单位", dataIndex: "name" },
@@ -114,8 +134,9 @@ export default {
 		}
 	},
 	mounted() {
-		const { getGroupTreeData, getTableData } = this
-		Promise.allSettled([getGroupTreeData(), getTableData()])
+		const optionsTypes = ["deviceType"]
+		const { getGroupTreeData, getTableData, getOptionsListPromiseArr } = this
+		Promise.allSettled([getGroupTreeData(), getTableData(), ...getOptionsListPromiseArr(optionsTypes)])
 	},
 	methods: {
 		getTableData(current = 1, size = 10) {
@@ -124,7 +145,6 @@ export default {
 				size,
 				...(this.parentId && { parentId: this.parentId }),
 				...this.searchForm,
-				// TODO: 上级单位id
 			}
 			getDeviceListForSystemSettiing(params).then(({ data: { records, total, current, size } }) => {
 				this.tableData = records
@@ -147,7 +167,7 @@ export default {
 		delete(id) {},
 		editCell(text) {
 			console.log(text)
-			this.formCell = text;
+			this.formCell = text
 			this.isShowDialog = true
 		},
 		search() {
@@ -161,39 +181,6 @@ export default {
 		},
 		changePageSizeHandle(current, size) {
 			this.getTableData(current, size)
-		},
-		resetPassword(userId, name) {
-			const initialPassword = "Bykj8080"
-			this.$confirm({
-				content: `确定要重置用户账号:[${name}]密码吗？
-							重制后初始密码为: ${initialPassword}`,
-				onOk() {
-					const params = {
-						userId,
-						password: "",
-						newPassword: md5(initialPassword),
-					}
-					return new Promise(resolve => resolve(changePassword(params)))
-				},
-			})
-		},
-		changeAccountStatus(status, id) {
-			const {
-				paginationData: { current, size },
-			} = this
-			const func = () => {
-				new Promise(resolve => resolve(this.getTableData(current, size)))
-			}
-			this.$confirm({
-				content: `确认${status ? "禁用" : "启用"}此用户?`,
-				onOk() {
-					if (status) {
-						return disableByUserId(id).then(func)
-					} else {
-						return enableByUserId(id).then(func)
-					}
-				},
-			})
 		},
 		handleSelectTreeNode(key) {
 			this.parentId = key

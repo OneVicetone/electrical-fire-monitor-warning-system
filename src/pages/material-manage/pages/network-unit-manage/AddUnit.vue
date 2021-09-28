@@ -93,6 +93,8 @@
         <Nav-titles class="unit-pic" title="单位图片">
             <div class="uploads flex">
                 <div class="content-wd effect-picture">
+                    <!-- :before-upload="beforeUpload"
+                        @change="handleChange" -->
                     <a-upload
                         name="avatar"
                         list-type="picture-card"
@@ -194,6 +196,9 @@ export default {
                 this.getOptions();
             }
         }
+    },
+    mounted() {
+        this.getUploadUrl()
     },
     methods: {
         getOptions() {

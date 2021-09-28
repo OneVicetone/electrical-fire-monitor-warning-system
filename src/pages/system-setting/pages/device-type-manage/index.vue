@@ -5,7 +5,7 @@
 				<a-input v-model="searchForm.model" placeholder="请输入设备型号" size="small" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-button type="primary" size="small">搜索</a-button>
+				<a-button type="primary" size="small" @click="search">搜索</a-button>
 			</a-form-model-item>
 			<a-form-model-item>
 				<a-button type="primary" size="small" @click="addAndEdit('add')"><a-icon type="plus" />新增型号</a-button>
@@ -49,13 +49,13 @@ import Dialog from "components/Dialog.vue"
 import Pagination from "components/Pagination.vue"
 
 import apis from "apis"
-import { commonMixin } from "mixins"
+import { commonMixin, tableListMixin } from "mixins"
 
 const { getDevicesTypeList, deleteDeviceType } = apis
 
 export default {
 	name: "DeviceTypeManage",
-	mixins: [commonMixin],
+	mixins: [commonMixin, tableListMixin],
 	components: { Dialog, Pagination },
 	data() {
 		return {

@@ -58,7 +58,7 @@ const allOptionsData = {
 for (let key in allOptionsData) {
 	const defaultSelectItem = {
 		label: optionsPlaceholder[key],
-		value: 99,
+		value: "",
 	}
 	allOptionsData[key].unshift(defaultSelectItem)
 }
