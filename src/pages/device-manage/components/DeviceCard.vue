@@ -7,6 +7,7 @@
 			</div>
 			<div>
 				<a-switch
+					class="device-open-switch"
 					v-if="deviceInfoObj.workStatus !== 0"
 					:defaultChecked="deviceInfoObj.workStatus === 1"
 					checked-children="开"
@@ -158,6 +159,9 @@ export default {
 		> i[aria-label] {
 			color: #fff;
 			cursor: pointer;
+		}
+		.device-open-switch {
+			margin: 0 1rem 0 0;
 		}
 	}
 	> section {

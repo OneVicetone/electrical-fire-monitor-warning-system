@@ -73,7 +73,7 @@
 							</a-form-model-item>
 						</a-form-model>
 					</div>
-					<LineChart :xAxisData="chartData.xAxisData" :seriesData="chartData.seriesData" />
+					<LineChart :xAxisData="chartData.xAxisData" :seriesData="nowChartData" />
 				</div>
 				<div class="history-alarm-log">
 					<ContentTitle title="历史报警记录" />
@@ -129,7 +129,8 @@ import DeviceDetaiCommandl from "../../components/DeviceDetaiCommandl.vue"
 import apis from "apis"
 import { commonMixin } from "mixins"
 
-const { getDeviceInfoDetail, getDeviceDetailCount, getDeviceDetailHistortAlarmList } = apis
+const { getDeviceInfoDetail, getDeviceDetailCount, getDeviceDetailHistortAlarmList, getDeviceDetailHistoryChartData } =
+	apis
 
 export default {
 	name: "DeviceInfo",
@@ -157,15 +158,15 @@ export default {
 				{ title: "本设备入网天数(天)", num: "-", key: "netDayDiff", afterHasDivider: false },
 			],
 			filterForm: {
-				chartRadioValue: "1",
-				chartTime: moment(),
+				chartRadioValue: "electricity",
+				chartTime: [moment(), moment()],
 			},
 			chartRadioOptions: [
-				{ label: "电流", value: "1" },
-				{ label: "温度", value: "2" },
-				{ label: "电压", value: "3" },
-				{ label: "功率", value: "4" },
-				{ label: "电能", value: "5" },
+				{ label: "电流", value: "electricity" },
+				{ label: "温度", value: "temp" },
+				{ label: "电压", value: "voltage" },
+				{ label: "功率", value: "power" },
+				{ label: "电能", value: "electricEnergy" },
 			],
 			columns: [
 				{ title: "序号", scopedSlots: { customRender: "idx" } },
@@ -186,10 +187,7 @@ export default {
 				size: 10,
 			},
 			dialog: false,
-			chartData: {
-				xAxisData: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-				seriesData: [10, 52, 200, 334, 390, 330, 220],
-			},
+			chartData: {},
 			deviceInfoObj: {},
 			deviceDetailedLabel: [
 				{ label: "安装位置", key: "installPosition" },
@@ -206,10 +204,24 @@ export default {
 			],
 		}
 	},
-	computed: {},
+	computed: {
+		nowChartData() {
+			const {
+				chartData,
+				filterForm: { chartRadioValue },
+			} = this
+			return chartData[chartRadioValue] ? Object.values(chartData[chartRadioValue]).map(i => i) : []
+		},
+	},
+	watch: {
+		["filterForm.chartRadioValue"]: {
+			deep: true,
+			handler(val) {},
+		},
+	},
 	mounted() {
-		const { getDeviceInfoDetail, getDeviceCount, getTableData } = this
-		Promise.allSettled([getDeviceInfoDetail(), getDeviceCount(), getTableData()])
+		const { getDeviceInfoDetail, getDeviceCount, getTableData, getChartData } = this
+		Promise.allSettled([getDeviceInfoDetail(), getDeviceCount(), getTableData(), getChartData()])
 	},
 	methods: {
 		sendCommand() {
@@ -249,6 +261,22 @@ export default {
 					current,
 					size,
 				}
+			})
+		},
+		getChartData() {
+			const {
+				id,
+				filterForm: { chartTime },
+			} = this
+			const params = {
+				deviceId: id,
+				// startDate: chartTime[0].format("YYYY-MM-DD"),
+				// endDate: chartTime[1].format("YYYY-MM-DD"),
+				startDate: '2021-09-22',
+				endDate: '2021-09-26',
+			}
+			return getDeviceDetailHistoryChartData(params).then(({ data }) => {
+				this.chartData = data
 			})
 		},
 		toOperat() {},
