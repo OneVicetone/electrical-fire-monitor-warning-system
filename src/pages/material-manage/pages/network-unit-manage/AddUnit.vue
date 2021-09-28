@@ -19,22 +19,14 @@
                     />
                 </a-form-model-item>
                 <a-form-model-item label="上级单位" prop="upUnit">
-                    <a-select v-model="unitForm.upUnit" placeholder="请选择上级单位">
-                        <a-select-option value="shanghai">
-                        Zone one
-                        </a-select-option>
-                        <a-select-option value="beijing">
-                        Zone two
-                        </a-select-option>
-                    </a-select>
+                    <a-cascader :options="groupOptions"
+                        :fieldNames="{ label: 'title', value: 'key', children: 'children' }"
+                        placeholder="请选择上级单位" @change="treeChange" />
                 </a-form-model-item>
                 <a-form-model-item label="单位类型" prop="unitType">
                     <a-select v-model="unitForm.unitType" placeholder="请选择单位类型">
-                        <a-select-option value="shanghai">
-                        Zone one
-                        </a-select-option>
-                        <a-select-option value="beijing">
-                        Zone two
+                        <a-select-option v-for="item in unitTypeOption" :key="item.value" :value="item.value">
+                            {{item.name}}
                         </a-select-option>
                     </a-select>
                 </a-form-model-item>
@@ -42,14 +34,13 @@
                     <a-input
                         v-model="unitForm.unitAddress"
                         class="ipt-disabled__color"
-                        disabled
                         placeholder="请选择单位地址">
-                        <a-icon slot="suffix" type="bulb" />
+                        <a-icon slot="suffix" type="bulb" @click="alertMap" />
                     </a-input>
                 </a-form-model-item>
             </a-form-model>
             <a-form-model class="form-right" layout="inline" :model="unitForm" :labelCol="{ style: 'width: 72px;float: left;' }"
-                :wrapper-col="{ span: 16 }">
+                :wrapper-col="{ style: 'width: 22rem;' }">
                 <a-form-model-item label="单位人数" class="mr0">
                     <a-input v-model="unitForm.unitCount" placeholder="请输入单位大概人数" />
                 </a-form-model-item>
@@ -102,19 +93,19 @@
         <Nav-titles class="unit-pic" title="单位图片">
             <div class="uploads flex">
                 <div class="content-wd effect-picture">
+                    <!-- :before-upload="beforeUpload"
+                        @change="handleChange" -->
                     <a-upload
                         name="avatar"
                         list-type="picture-card"
                         class="avatar-uploader"
                         :show-upload-list="false"
                         action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                        :before-upload="beforeUpload"
-                        @change="handleChange"
                     >
-                        <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+                        <!-- <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
                         <div v-else>
                             <a-icon :type="loading ? 'loading' : 'plus'" />
-                        </div>
+                        </div> -->
                     </a-upload>
                     <div class="yahei-81899C t-center">公司处景观/效果图</div>
                 </div>
@@ -125,13 +116,11 @@
                         class="avatar-uploader"
                         :show-upload-list="false"
                         action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                        :before-upload="beforeUpload"
-                        @change="handleChange"
                     >
-                        <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+                        <!-- <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
                         <div v-else>
                             <a-icon :type="loading ? 'loading' : 'plus'" />
-                        </div>
+                        </div> -->
                     </a-upload>
                     <div class="yahei-81899C ml-58">电气火灾系统设计图纸(800*560)</div>
                 </div>
@@ -141,6 +130,7 @@
             <a-button type="primary" class="mr125" @click="formSure">确定</a-button>
             <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
         </section>
+        <MapModal v-model="showMap"></MapModal>
     </Dialog>
 </template>
 
@@ -148,16 +138,19 @@
 import Dialog from "components/Dialog.vue"
 import NavTitles from "components/NavTitles.vue"
 import Upload from "components/Upload.vue"
+import MapModal from "components/MapModal.vue"
 import apis from "apis"
 import { dialogControl, form } from "mixins"
 
-const { createUnit } = apis
+const { createUnit, getSelectOptions, getGroupTree } = apis
 export default {
     name:"AddUnit",
-    components: { Dialog, NavTitles, Upload },
+    components: { Dialog, NavTitles, Upload, MapModal },
     mixins: [dialogControl, form],
     data() {
         return {
+            unitTypeOption: [],
+            groupOptions: [],
             unitForm: {
                 unitName: '',
                 upUnit: '',
@@ -182,16 +175,47 @@ export default {
                 principalAccount: [{ required: true, message: '请输入安全负责人登录账户名', trigger: 'blur' }],
                 linkPhone: [{ required: true, message: '请输入安全负责人联系电话', trigger: 'blur' }],
             },
-            fileList: []
+            fileList: [],
+            showMap: false
+        }
+    },
+    watch: {
+        visibles(v) {
+            if (v) {
+                this.getTreeGroup();
+                this.getOptions();
+            }
         }
     },
     mounted() {
 
     },
     methods: {
+        getOptions() {
+            getSelectOptions('groupType').then(option => {
+                const data = option.data;
+                this.unitTypeOption = data.map(item => ({
+                    value: item.code,
+                    name: item.name
+                }))
+            })
+        },
+        getTreeGroup() {
+            getGroupTree().then(result => {
+                const data = result.data;
+                this.groupOptions = data;
+            })
+        },
+        treeChange(value) {
+            const [firstKey] = value;
+            this.unitForm.upUnit = firstKey;
+        },
         computedLen(value, totalLen = 20) {
             if (value === null || value === undefined || typeof value === 'number') value = '';
             return `${value.length}/${totalLen}`
+        },
+        alertMap() {
+            this.showMap = true;
         },
         formSure() {
             const validates = [this.$refs.unitInfo, this.$refs.safe];

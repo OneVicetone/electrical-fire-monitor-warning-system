@@ -2,7 +2,7 @@
 	<a-modal
 		v-model="visible"
 		:footer="null"
-		:width="getBasePx() * 83.12"
+		:width="modalWidth"
 		class="dialog-container"
 		:centered="centered"
 		@cancel="closeDialog"
@@ -43,12 +43,19 @@ export default {
 		forms: {
 			type: Object,
 			default: () => ({}),
+		},
+		coefficient: {
+			type: Number,
+			default: 1
 		}
 	},
 	computed: {
 		visible: {
 			get: function() { return this.show },
 			set: () => {}
+		},
+		modalWidth() {
+			return this.getBasePx() * 83.12 * this.coefficient;
 		}
 	},
 	watch: {
