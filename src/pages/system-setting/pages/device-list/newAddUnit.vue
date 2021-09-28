@@ -252,7 +252,7 @@ export default {
                 font-size: 1.17rem;
                 font-family: Microsoft YaHei;
                 font-weight: 400;
-                color: #FB5E4F;
+                // color: #FB5E4F;
             }
         }
     }
@@ -270,7 +270,7 @@ export default {
                     font-size: 1.17rem;
                     font-family: Microsoft YaHei;
                     font-weight: 400;
-                    color: #FB5E4F;
+                    // color: #FB5E4F;
                 }
             }
         }
