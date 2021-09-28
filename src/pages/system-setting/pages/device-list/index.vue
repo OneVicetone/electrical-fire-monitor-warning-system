@@ -33,7 +33,7 @@
 				</a-form-model-item>
 				<a-form-model-item> </a-form-model-item>
 				<div class="other-btns">
-					<a-button type="primary" size="small" @click="add"><a-icon type="plus" />新增单位</a-button>
+					<a-button type="primary" size="small" @click="add"><a-icon type="plus" />新增设备</a-button>
 					<a-popover trigger="click" placement="bottomRight">
 						<a-list slot="content" size="small" :data-source="batchOperationOptions">
 							<a-list-item slot="renderItem" slot-scope="item" @click="item.operate.call($router)">
@@ -86,8 +86,6 @@
 </template>
 
 <script>
-import md5 from "md5"
-
 import OrganizationList from "components/OrganizationList.vue"
 import Pagination from "components/Pagination.vue"
 import newAddUnit from "./newAddUnit.vue"
@@ -107,8 +105,8 @@ export default {
 		return {
 			parentId: null,
 			searchForm: {
-				deviceTypeId: 99,
-				deviceModelId: 99,
+				deviceTypeId: "",
+				deviceModelId: "",
 				name: "",
 				principalUserName: "",
 			},
@@ -184,39 +182,6 @@ export default {
 		},
 		changePageSizeHandle(current, size) {
 			this.getTableData(current, size)
-		},
-		resetPassword(userId, name) {
-			const initialPassword = "Bykj8080"
-			this.$confirm({
-				content: `确定要重置用户账号:[${name}]密码吗？
-							重制后初始密码为: ${initialPassword}`,
-				onOk() {
-					const params = {
-						userId,
-						password: "",
-						newPassword: md5(initialPassword),
-					}
-					return new Promise(resolve => resolve(changePassword(params)))
-				},
-			})
-		},
-		changeAccountStatus(status, id) {
-			const {
-				paginationData: { current, size },
-			} = this
-			const func = () => {
-				new Promise(resolve => resolve(this.getTableData(current, size)))
-			}
-			this.$confirm({
-				content: `确认${status ? "禁用" : "启用"}此用户?`,
-				onOk() {
-					if (status) {
-						return disableByUserId(id).then(func)
-					} else {
-						return enableByUserId(id).then(func)
-					}
-				},
-			})
 		},
 		handleSelectTreeNode(key) {
 			this.parentId = key

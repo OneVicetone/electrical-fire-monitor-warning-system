@@ -85,8 +85,8 @@ const { deviceTypeOptions, deviceIdOptions } = optionsData
 
 const searchFromInitial = {
 	sn: "",
-	deviceTypeId: 99,
-	deviceModelId: 99,
+	deviceTypeId: "",
+	deviceModelId: "",
 	iccid: "",
 }
 const deviceStatusRadioInitial = "0"

@@ -16,7 +16,7 @@ export const tableListMixin = {
 				getSelectOptions(i).then(({ data }) => {
 					const optionsKey = `${i}Options`
 					this[optionsKey] = [
-						{ label: optionsPlaceholder[optionsKey], value: 99, remark: "" },
+						{ label: optionsPlaceholder[optionsKey], value: "", remark: "" },
 						...data.map(({ code, name, remark }) => ({
 							remark,
 							label: name,
