@@ -195,6 +195,9 @@ export default {
             }
         }
     },
+    mounted() {
+        this.getUploadUrl()
+    },
     methods: {
         getOptions() {
             getSelectOptions('groupType').then(option => {
