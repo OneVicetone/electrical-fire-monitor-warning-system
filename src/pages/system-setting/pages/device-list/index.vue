@@ -9,7 +9,23 @@
 					<a-input v-model="searchForm.name" placeholder="请输入设备编码/名称" size="small" />
 				</a-form-model-item>
 				<a-form-model-item>
-					<a-input v-model="searchForm.principalUserName" placeholder="请输入安全负责人名称" size="small" />
+					<a-select
+						v-model="searchForm.deviceTypeId"
+						:options="deviceTypeOptions"
+						placeholder="请选择设备类型"
+						size="small"
+					/>
+				</a-form-model-item>
+				<a-form-model-item>
+					<a-select
+						v-model="searchForm.deviceModelId"
+						:options="deviceIdOptions"
+						placeholder="请选择设备型号"
+						size="small"
+					/>
+				</a-form-model-item>
+				<a-form-model-item>
+					<a-input v-model="searchForm.iccid" placeholder="请输入ICCID号" size="small" />
 				</a-form-model-item>
 				<a-form-model-item>
 					<a-button type="primary" size="small" @click="search">搜索</a-button>
@@ -70,22 +86,28 @@ import md5 from "md5"
 import OrganizationList from "components/OrganizationList.vue"
 import Pagination from "components/Pagination.vue"
 
-import { commonMixin } from "mixins"
 import apis from "apis"
+import { commonMixin, tableListMixin } from "mixins"
+import optionsData from "utils/optionsData"
 
 const { getDeviceListForSystemSettiing, getGroupTree } = apis
+const { deviceTypeOptions, deviceIdOptions } = optionsData
 
 export default {
 	name: "DeviceList",
-	mixins: [commonMixin],
+	mixins: [commonMixin, tableListMixin],
 	components: { OrganizationList, Pagination },
 	data() {
 		return {
 			parentId: null,
 			searchForm: {
+				deviceTypeId: 99,
+				deviceModelId: 99,
 				name: "",
 				principalUserName: "",
 			},
+			deviceTypeOptions: [],
+			deviceIdOptions,
 			columns: [
 				{ title: "序号", scopedSlots: { customRender: "idx" } },
 				{ title: "联网单位", dataIndex: "name" },
@@ -107,8 +129,9 @@ export default {
 		}
 	},
 	mounted() {
-		const { getGroupTreeData, getTableData } = this
-		Promise.allSettled([getGroupTreeData(), getTableData()])
+		const optionsTypes = ["deviceType"]
+		const { getGroupTreeData, getTableData, getOptionsListPromiseArr } = this
+		Promise.allSettled([getGroupTreeData(), getTableData(), ...getOptionsListPromiseArr(optionsTypes)])
 	},
 	methods: {
 		getTableData(current = 1, size = 10) {

@@ -25,7 +25,7 @@
 					<a-select
 						v-model="searchForm.deviceModelId"
 						:options="deviceIdOptions"
-						placeholder="请选择设备编号"
+						placeholder="请选择设备型号"
 						size="small"
 					/>
 				</a-form-model-item>
