@@ -6,9 +6,9 @@
                 <img slot="dot" :src="status.icon" class="icons" alt="">
                 <div class="flex-yCenter">
                     <div class="mr317">
-                        <div>指令状态：{{status.sendStatus}}</div>
-                        <div>指令内容：{{status.sendContent}}</div>
-                        <div>发  送 人：{{status.sendUser}}</div>
+                        <div class="wd1633 yahei t-ellipsis">指令状态：{{status.sendStatus}}</div>
+                        <div class="wd1633 yahei t-ellipsis">指令内容：{{status.sendContent}}</div>
+                        <div class="wd1633 yahei t-ellipsis">发  送 人：{{status.sendUser}}</div>
                         <div class="wd1633 yahei t-ellipsis">发送时间：{{status.sendTime}}</div>
                         <div class="wd1633 yahei t-ellipsis">应答时间：{{status.responseTime}}</div>
                     </div>
@@ -48,15 +48,18 @@ export default {
         details: {
             type: Array,
             default: () => []
+        },
+        paginationData: {
+            type: Object,
+            default: () => ({
+                total: 50,
+				current: 1,
+				size: 5,
+            })
         }
     },
     data() {
         return {
-            paginationData: {
-                total: 50,
-				current: 1,
-				size: 5,
-            }
         }
     },
     computed: {
@@ -77,8 +80,14 @@ export default {
         doContent(data) {
             return data && data.split(';');
         },
-        changePageSizeHandle() {},
-        changePageHandle() {},
+        changePageSizeHandle(val) {
+            console.log('size',val)
+            this.$emit('handleSize', val);
+        },
+        changePageHandle(val) {
+            console.log(val)
+            this.$emit('handlePage', val);
+        },
     }
 }
 </script>
@@ -122,7 +131,7 @@ export default {
         margin-right: 3.17rem;
     }
     .wd1633 {
-        width: 16.33rem;
+        width: 20.33rem;
     }
     
 }

@@ -2,7 +2,7 @@
     <div>
         <a-upload class="uploader" list-type="picture-card" :customRequest="handleUploadFile" :remove="imgDel"
               :file-list="fileList" @preview="handlePreview">
-              <div v-if="fileList.length < 6">
+              <div v-if="fileList.length < len">
                 <a-icon type="plus" />
             </div>
         </a-upload>
@@ -19,6 +19,12 @@ import { uploadFileMixin } from "mixins"
 export default {
     name:"Upload",
     mixins: [uploadFileMixin],
+    props: {
+        len: {
+            type: Number,
+            default: 6
+        }
+    },
     data() {
         return {
             uploadPic: '',

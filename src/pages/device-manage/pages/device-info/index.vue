@@ -124,7 +124,7 @@ import LabelAndValue from "components/LabelAndValue.vue"
 import Pagination from "components/Pagination.vue"
 import SimpleTable from "components/SimpleTable.vue"
 import LineChart from "components/LineChart.vue"
-import DeviceDetaiCommandl from "../../components/DeviceDetaiCommandl.vue"
+import DeviceDetaiCommandl from "components/DeviceDetaiCommandl.vue"
 
 import apis from "apis"
 import { commonMixin } from "mixins"

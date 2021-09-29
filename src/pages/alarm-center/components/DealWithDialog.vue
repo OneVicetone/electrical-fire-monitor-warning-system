@@ -31,7 +31,7 @@
                     <a-radio-group class="radio-wd" v-model="dealWith" :options="methodOpt" :disabled="!able" />
                     <br />
                     <span class="yahei">指令下发：</span>
-                    <a class="yahei underline" href="javascript:void(0)">下发指令></a>
+                    <a class="yahei underline" href="javascript:void(0)" @click="sendDrec">下发指令></a>
                     <br />
                     <div class="flex mt">
                         <span class="yahei nowrap">现场图片：</span>
@@ -49,6 +49,7 @@
             <a-button type="primary" class="mr125" @click="sure">确定</a-button>
             <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
         </section>
+        <DeviceDetaiCommandl v-model="deviceDetaiCommandl" source="alarm" :againDevice="showList.deviceId"></DeviceDetaiCommandl>
     </Dialog>
 </template>
 
@@ -57,6 +58,7 @@ import Dialog from "components/Dialog.vue"
 import NavTitles from "components/NavTitles.vue"
 import SimpleTable from "components/SimpleTable.vue"
 import Upload from "components/Upload.vue"
+import DeviceDetaiCommandl from "components/DeviceDetaiCommandl.vue"
 
 const nameForKey = {
 	temp: "温度",
@@ -69,7 +71,7 @@ const nameForKey = {
 
 export default {
     name:"DealWithDialog",
-    components: { Dialog, NavTitles, SimpleTable, Upload },
+    components: { Dialog, NavTitles, SimpleTable, Upload, DeviceDetaiCommandl },
     props: {
         dialogVisible: {
             type: Boolean,
@@ -127,6 +129,7 @@ export default {
 			],
             uploadList: [{id: 1, comp: 'Upload'}],
             resultList: [],
+            deviceDetaiCommandl: false
         }
     },
     computed: {
@@ -138,11 +141,11 @@ export default {
             return this.alarmData;
         },
         equipment() {
-            const { deviceAlias = '--', deviceSn = '--', groupName = '--', address = '--',  installPosition = '--'} = this.showList;
+            const { deviceAlias = '--', deviceSn = '--', groupName = '--', recoverTime = '--', address = '--',  installPosition = '--'} = this.showList;
             return {
                 address,
 				detail: '65℃',
-				reset: '',
+				reset: recoverTime,
 				equips: `${deviceAlias} ${deviceSn}`,
 				unit: groupName || '--',
 				place: installPosition || '--'
@@ -197,9 +200,6 @@ export default {
         uploadDone(list) {
             this.resultList = list.map(img => img.url);
         },
-        onUpload(e) {
-            this.fileList = e;
-        },
         sure() {
             console.log(this.resultList)
             const { showList: { id }, warnSure, dealWith, resultList } = this;
@@ -211,6 +211,9 @@ export default {
                 remark: ''
             }
             this.$emit('on-sure', params);
+        },
+        sendDrec() {
+            this.deviceDetaiCommandl = true;
         }
     }
 }
