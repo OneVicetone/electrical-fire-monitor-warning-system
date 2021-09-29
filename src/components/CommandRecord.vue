@@ -53,9 +53,9 @@ export default {
     data() {
         return {
             paginationData: {
-                total: 200,
-				current: 50,
-				size: 10,
+                total: 50,
+				current: 1,
+				size: 5,
             }
         }
     },
@@ -87,6 +87,7 @@ export default {
     height: 50rem;
     overflow-y: scroll;
     padding-left: 0.2rem;
+    padding-top: .2rem;
     /deep/ .ant-timeline-item-content {
         font-size: 1rem;
         font-family: Microsoft YaHei;
@@ -104,6 +105,9 @@ export default {
         &.ant-timeline-item-head {
             background-color: #090D18;
         }
+    }
+    /deep/ .ant-timeline-item-tail {
+        border-left: 1px solid #3F4A77;
     }
     /deep/ .ant-timeline-item {
         padding-bottom: 2.33rem;

@@ -47,9 +47,10 @@
 				:changePageSizeHandle="changePageSizeHandle"
 			/>
 		</div>
-		<new-add-unit v-model="isShowDialog"
-		:editForm="editForm"
-		@refresh-table="getTableData"></new-add-unit>
+		<new-add-unit
+			v-model="isShowDialog"
+			:editForm="editForm"
+			@refresh-table="getTableData"></new-add-unit>
 	</div>
 </template>
 
@@ -133,6 +134,7 @@ export default {
 		editCell(text) {
 			console.log(text)
 			this.editForm = { ...text };
+			this.isShowDialog = true;
 		},
 		search() {
 			const {

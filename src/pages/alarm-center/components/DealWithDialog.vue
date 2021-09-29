@@ -35,13 +35,7 @@
                     <br />
                     <div class="flex mt">
                         <span class="yahei nowrap">现场图片：</span>
-                        <component
-                            v-for="item in uploadList"
-                            :key="item.id"
-                            :is="item.comp"
-                            :current="item.id"
-                            @is-done="uploadDone">
-                        </component>
+                        <Upload ref="upload" @is-done="uploadDone"></Upload>
                     </div>
                 </Nav-titles>
             </section>
@@ -131,11 +125,8 @@ export default {
 				{ name: "功率(W)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 				{ name: "电量(度)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 			],
-            fileList: [],
-            uploadList: [
-                {id: 1, comp: 'Upload'}
-            ],
-            resultList: []
+            uploadList: [{id: 1, comp: 'Upload'}],
+            resultList: [],
         }
     },
     computed: {
@@ -179,6 +170,8 @@ export default {
                 console.log('---------', confirmFlag, processType)
                 this.warnSure = `${confirmFlag}`;
                 this.dealWith = `${processType}`;
+                // 清空上传记录
+                this.$refs.upload.fileList = []
             }
         }
     },
@@ -201,22 +194,20 @@ export default {
             }
             return _map[type][item] || '--'
 		},
-        uploadDone(url, num) {
-            this.resultList.push(url)
-            if (this.uploadList.length <= 6) {
-                this.uploadList.push({id: num, comp: 'Upload'});
-            }
+        uploadDone(list) {
+            this.resultList = list.map(img => img.url);
         },
         onUpload(e) {
             this.fileList = e;
         },
         sure() {
-            const { showList: { id }, warnSure, dealWith } = this;
+            console.log(this.resultList)
+            const { showList: { id }, warnSure, dealWith, resultList } = this;
             const params = { 
                 alarmId: id,
                 confirmFlag: warnSure,
                 processType: dealWith,
-                sitePhotos: this.resultList.split(','),
+                sitePhotos: resultList.join(','),
                 remark: ''
             }
             this.$emit('on-sure', params);
