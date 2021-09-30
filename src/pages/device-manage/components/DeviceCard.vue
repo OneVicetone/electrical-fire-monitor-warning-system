@@ -2,7 +2,7 @@
 	<div class="device-card">
 		<header>
 			<div class="device-name">
-				<img src="assets/icons/device-icon.png" alt="设备图标" />
+				<img src="@/assets/icons/device-icon.png" alt="设备图标" />
 				<span class="device-name">{{ deviceInfoObj.deviceTypeName }}</span>
 			</div>
 			<div>

@@ -21,7 +21,7 @@
 				</div>
 				<div class="system-design-drawings">
 					<ContentTitle title="电气火灾系统设计图纸" />
-					<img class="enlarge-icon" src="assets/icons/enlarge-img-icon.png" alt="enlarge-icon" @click="enlargeImg" />
+					<img class="enlarge-icon" src="@/assets/icons/enlarge-img-icon.png" alt="enlarge-icon" @click="enlargeImg" />
 					<img class="drawings-img" :src="designPicPath" alt="drawings-img" />
 				</div>
 			</div>

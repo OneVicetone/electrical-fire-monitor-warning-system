@@ -13,7 +13,7 @@
 								<i>在线</i>
 							</p>
 							<p class="device-address">
-								<img src="assets/icons/company.png" alt="" />
+								<img src="@/assets/icons/company.png" alt="" />
 								<span>{{ deviceInfoObj.groupName | filterNull }}</span>
 								<span>{{ deviceInfoObj.installPosition | filterNull }}</span>
 							</p>
@@ -21,11 +21,11 @@
 					</div>
 					<div class="operate">
 						<div @click="sendCommand">
-							<img src="assets/icons/send-command.png" alt="" />
+							<img src="@/assets/icons/send-command.png" alt="" />
 							<span>发送指令</span>
 						</div>
 						<div @click="previewSetupPhoto">
-							<img src="assets/icons/setup-photo.png" alt="" />
+							<img src="@/assets/icons/setup-photo.png" alt="" />
 							<span>安装照片</span>
 						</div>
 					</div>
@@ -41,7 +41,7 @@
 			</div>
 			<div class="device-info-right">
 				<div class="history-data-count">
-					<img src="assets/icons/alarm-count.png" alt="alarm-coun" />
+					<img src="@/assets/icons/alarm-count.png" alt="alarm-coun" />
 					<NumCount
 						v-for="item of historyCountData"
 						:key="item.title"

@@ -34,7 +34,7 @@
                             消音&复位
                         </a-select-option>
                     </a-select>
-                    <img class="icons-wd ml83 pointer" src="assets/icons/refresh.png" alt="">
+                    <img class="icons-wd ml83 pointer" src="@/assets/icons/refresh.png" alt="">
                 </div>
                 <CommandRecord
                     :details="records"

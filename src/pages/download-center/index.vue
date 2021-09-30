@@ -31,7 +31,7 @@
 				:changePageSizeHandle="changePageSizeHandle"
 			>
 				<div class="table-footer">
-					<img src="assets/icons/prompt-icon.png" />
+					<img src="@/assets/icons/prompt-icon.png" />
 					<span>该下载数据文件只保存近30天记录</span>
 				</div>
 			</Pagination>
