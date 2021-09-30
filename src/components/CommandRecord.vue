@@ -37,10 +37,10 @@
 </template>
 
 <script>
-import waiting from "assets/icons/waiting.png"
-import bingo from "assets/icons/bingo.png"
-import errors from "assets/icons/error.png"
-import cancel from "assets/icons/cancel.png"
+import waiting from "@/assets/icons/waiting.png"
+import bingo from "@/assets/icons/bingo.png"
+import errors from "@/assets/icons/error.png"
+import cancel from "@/assets/icons/cancel.png"
 
 export default {
     name:"CommandRecord",

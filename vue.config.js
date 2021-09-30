@@ -1,8 +1,5 @@
-import { defineConfig } from "vite"
-import path from "path"
-import { createVuePlugin } from "vite-plugin-vue2"
+const path = require("path")
 
-// const alias = require(path.resolve(__dirname, "vite-config/alias.js"))
 const theme = require(path.resolve(__dirname, "vite-config/theme.js"))
 const proxy = require(path.resolve(__dirname, "vite-config/proxy.js"))
 
@@ -17,9 +14,6 @@ const apisPath = path.resolve(__dirname, "src/apis")
 const assetsPath = path.resolve(__dirname, "src/assets")
 const storePath = path.resolve(__dirname, "src/store")
 
-console.log(pagesPath)
-
-
 const alias = {
 	"@": srcPath,
 	layouts: layoutsPath,
@@ -29,31 +23,37 @@ const alias = {
 	pages: pagesPath,
 	mixins: minixsPath,
 	apis: apisPath,
-	"~assets": assetsPath,
+	assets: assetsPath,
 	store: storePath,
 }
 
-// https://vitejs.dev/config/
-export default defineConfig({
-	plugins: [
-		createVuePlugin({
-			jsx: true,
-		}),
-	],
-	resolve: {
-		alias,
+module.exports = {
+	configureWebpack: {
+		resolve: {
+			alias,
+		},
 	},
-	server: {
-		proxy,
-	},
+	// chainWebpack: config => {
+	// 	config.resolve.alias
+	// 		.set("@", srcPath)
+	// 		.set("layouts", layoutsPath)
+	// 		.set("utils", utilsPath)
+	// 		.set("styles", stylesPath)
+	// 		.set("components", componentsPath)
+	// 		.set("pages", pagesPath)
+	// 		.set("mixins", minixsPath)
+	// 		.set("apis", apisPath)
+	// 		.set("assets", assetsPath)
+	// 		.set("store", storePath)
+	// },
 	css: {
-		preprocessorOptions: {
+		loaderOptions: {
 			less: {
-				loader: "less-loader",
-				javascriptEnabled: true,
-				modifyVars: theme,
+				lessOptions: {
+					modifyVars: theme,
+					javascriptEnabled: true,
+				},
 			},
 		},
 	},
-	hmr: { overlay: false },
-})
+}

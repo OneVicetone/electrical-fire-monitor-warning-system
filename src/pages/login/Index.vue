@@ -1,7 +1,7 @@
 <template>
 	<div class="login-container">
 		<div class="login-form-container">
-			<img src="assets/images/logo-has-text.png" alt="logo" />
+			<img src="@/assets/images/logo-has-text.png" alt="logo" />
 			<div>
 				<a-input class="username-input" v-model="username" palceholder="请输入用户账号" />
 				<a-input class="password-input" type="password" v-model="password" palceholder="请输入用户密码" />
@@ -90,7 +90,7 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	background: url("assets/images/login-bg.png") no-repeat;
+	background: url("~assets/images/login-bg.png") no-repeat;
 	background-size: 100% 100%;
 	.login-form-container {
 		width: 45.17rem;
@@ -98,7 +98,7 @@ export default {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		background: url("assets/images/login-form-bg.png") no-repeat;
+		background: url("~assets/images/login-form-bg.png") no-repeat;
 		background-size: 100% 100%;
 		> img {
 			margin: 1.5rem 0 0;

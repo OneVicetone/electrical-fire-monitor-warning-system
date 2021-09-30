@@ -98,7 +98,7 @@ export default {
 	.ant-modal-content {
 		min-height: 60vh;
 		position: relative;
-		background: url("assets/images/dialog-border.png") no-repeat;
+		background: url("~assets/images/dialog-border.png") no-repeat;
 		background-position: -0.5rem 0;
 		background-color: #090d18;
 		border: 0.17rem #0096ff solid;
@@ -140,7 +140,7 @@ export default {
 				left: -1.68rem;
 				top: 50%;
 				transform: translateY(-50%);
-				background: url("assets/icons/company.png") no-repeat;
+				background: url("~assets/icons/company.png") no-repeat;
 				background-size: 100%;
 			}
 		}

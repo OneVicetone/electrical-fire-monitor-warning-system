@@ -71,7 +71,7 @@ export default {
 	height: 17.33rem;
 	padding: 1.5rem 1.75rem;
 	position: fixed;
-	background: url("assets/images/marker-info-bg.png") no-repeat;
+	background: url("~assets/images/marker-info-bg.png") no-repeat;
 	background-size: 100%;
 	background-color: transparent;
 	opacity: 0.5;

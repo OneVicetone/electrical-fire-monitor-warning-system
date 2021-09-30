@@ -11,7 +11,7 @@
 			</div>
 		</div>
 		<div class="project-logo">
-			<img src="assets/images/logo.png" alt="电放心" />
+			<img src="@/assets/images/logo.png" alt="电放心" />
 			<span class="logo-title">电放心 ･ </span>
 			<span class="system-name">电气火灾预警监控平台</span>
 		</div>
@@ -91,7 +91,7 @@ export default {
 	justify-content: center;
 	position: fixed;
 	top: 0;
-	background: url("assets/images/banner-center.png") no-repeat;
+	background: url("~assets/images/banner-center.png") no-repeat;
 	background-size: 100% 100%;
 	z-index: 2;
 }

@@ -164,7 +164,7 @@ export default {
 			.img {
 				width: 6.5rem;
 				height: 6.5rem;
-				background: url("assets/images/device-default.png") no-repeat;
+				background: url("~assets/images/device-default.png") no-repeat;
 				background-color: #122849;
 				background-size: 70%;
 				background-position: 50% 50%;

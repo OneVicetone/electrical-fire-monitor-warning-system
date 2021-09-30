@@ -68,12 +68,12 @@ header {
 			left: -3rem;
 			top: 50%;
 			transform: translateY(-50%);
-			background: url("assets/icons/content-title-icon.png") no-repeat;
+			background: url("~assets/icons/content-title-icon.png") no-repeat;
 			background-size: 100%;
 		}
 	}
 	.string-title {
-		background: url("assets/images/title-bg.png") no-repeat;
+		background: url("~assets/images/title-bg.png") no-repeat;
 		background-position: 0px 10px;
 		background-size: 18rem;
 	}
@@ -89,7 +89,7 @@ header {
 		}
 		.title-item.active {
 			color: #fff;
-			background: url("assets/images/title-bg.png") no-repeat;
+			background: url("~assets/images/title-bg.png") no-repeat;
 			background-position: 0px 10px;
 			background-size: 18rem;
 		}
