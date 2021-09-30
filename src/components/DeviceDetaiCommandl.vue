@@ -1,9 +1,9 @@
 <template>
-    <Dialog class="dialog-custom" v-model="visibles" title="发送指令" :forms="formData">
+    <Dialog class="dialog-custom" v-model="visibles" :coefficient="1.2" title="发送指令" :forms="formData">
         <Tabs v-model="tabModel"></Tabs>
         <div class="comp-content flex-between">
             <div class="comp-content__form">
-                <a-form-model :model="formData" :label-col="{ span: 4 }" :wrapper-col="{ style: 'width: 19.08rem' }">
+                <a-form-model v-if="showComp" :model="formData" :label-col="{ span: 4 }" :wrapper-col="{ style: 'width: 19.08rem' }">
                     <a-form-model-item v-for="(item, index) in threshold" :key="index" :label="item.label">
                         <div class="nowrap">
                             <a-input v-model="formData[item.model]" />
@@ -11,27 +11,35 @@
                         </div>
                     </a-form-model-item>
                 </a-form-model>
+                <a-radio-group v-else v-model="radioGroup">
+                    <a-radio :value="1">消音</a-radio>
+                    <a-radio :value="2">复位</a-radio>
+                </a-radio-group>
                 <section class="btns paddings">
-                    <a-button type="primary" class="mr125" @click="doSure">确定</a-button>
+                    <a-button type="primary" v-if="showComp" class="mr125" @click="doSure">确定</a-button>
+                    <a-button type="primary" v-else class="mr125" @click="sendDev">发送指令</a-button>
                     <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
                 </section>
             </div>
             <NavTitles class="vs-custom" title="指令记录">
                 <div slot="header" class="header">
                     <a-select class="ml375" default-value="lucy" style="width: 9.67rem" @change="selectChange">
-                        <a-select-option value="jack">
+                        <a-select-option value="1">
                             指令类型
                         </a-select-option>
-                        <a-select-option value="lucy">
+                        <a-select-option value="2">
                             数据阈值
                         </a-select-option>
-                        <a-select-option value="Yiminghe">
+                        <a-select-option value="3">
                             消音&复位
                         </a-select-option>
                     </a-select>
                     <img class="icons-wd ml83 pointer" src="assets/icons/refresh.png" alt="">
                 </div>
-                <CommandRecord :details="records"></CommandRecord>
+                <CommandRecord
+                    :details="records"
+                    :paginationData="pagination"
+                    @handlePage="onPage"></CommandRecord>
             </NavTitles>
         </div>
     </Dialog>
@@ -53,6 +61,13 @@ export default {
         Dialog, Tabs, NavTitles, CommandRecord
     },
     mixins: [dialogControl],
+    props: {
+        againDevice: [Number, String],
+        source: {
+            type: String,
+            default: ''
+        }
+    },
     data() {
         return {
             tabModel: '1',
@@ -66,12 +81,25 @@ export default {
                 {label: '上传频率：', model: 'uploadFrequency', desc: '（建议设置5-1440分钟）'},
                 {label: '心跳频率：', model: 'heartRate', desc: '（建议设置2-1440分钟）'},
             ],
-            records: []
+            records: [],
+            total: 0,
+            radioGroup: 1,
+            pagination: {
+                total: 0,
+				current: 1,
+				size: 5,
+            }
         }
     },
     watch: {
        visibles(v) {
+           this.tabModel = '1';
             v && this.getList()
+        }
+    },
+    computed: {
+        showComp() {
+            return this.tabModel === '1';
         }
     },
     methods: {
@@ -79,21 +107,24 @@ export default {
 
         },
         selectChange() {},
-        getList({ current = 1, size = 10 } = {}) {
+        getList({ current = 1, size = 5 } = {}) {
             const {
                 $route: {
                     params: { id }
-                }
+                },
+                againDevice,
+                source
             } = this;
             const params = {
                 current,
                 size,
-                deviceId: id
+                deviceId: source === 'alarm' ? againDevice : id
             }
             commandPageList(params).then(({ data }) => {
-                const { records = [] } = data || {};
+                const { records = [], total = 0 } = data || {};
                 console.log('获取弹窗内list', records)
                 this.records = records;
+                this.pagination.total = total;
             });
         },
         async doSure() {
@@ -110,10 +141,12 @@ export default {
                 },
                 $route: {
                     params: { id }
-                }
+                },
+                againDevice,
+                source
             } = this;
             const params = {
-				deviceId: id,
+				deviceId:  source === 'alarm' ? againDevice : id,
 				cmdType: tabModel,
 				content: {
 					iz: leakage,
@@ -128,6 +161,12 @@ export default {
             const result = await deviceCmd(params);
             console.log('指令结果', result)
         },
+        sendDev() {
+
+        },
+        onPage(val) {
+            this.getList({current: val, size:5})
+        }
     }
 }
 </script>
@@ -157,6 +196,7 @@ export default {
     .vs-custom {
         // 待修改
         width: 31rem;
+        white-space: nowrap;
         /deep/ .little-nav__title {
             margin-top: 0;
         }

@@ -25,8 +25,8 @@ const setupAlarmApis = http => ({
 			endDate,
 		}),
 	getAlarmDetail: id => http.get(`/api-alarm/alarm/detail/${id}`),
-	processAlarm: ({ alarmId, confirmFlag, processType, remark = '' }) =>
-		http.post("/api-alarm/alarm/process", { alarmId, confirmFlag, processType, remark }),
+	processAlarm: ({ alarmId, confirmFlag, processType, sitePhotos, remark = '' }) =>
+		http.post("/api-alarm/alarm/process", { alarmId, confirmFlag, processType, sitePhotos, remark }),
 	realTimeData: ({ deviceId }) => http.get("/api-device/deviceMgr/realTimeData",{ deviceId }),
 })
 

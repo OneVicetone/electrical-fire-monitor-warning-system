@@ -31,11 +31,11 @@
                     <a-radio-group class="radio-wd" v-model="dealWith" :options="methodOpt" :disabled="!able" />
                     <br />
                     <span class="yahei">指令下发：</span>
-                    <a class="yahei underline" href="javascript:void(0)">下发指令></a>
+                    <a class="yahei underline" href="javascript:void(0)" @click="sendDrec">下发指令></a>
                     <br />
                     <div class="flex mt">
                         <span class="yahei nowrap">现场图片：</span>
-                        <img v-if="able" alt="图片已损坏">
+                        <Upload ref="upload" @is-done="uploadDone"></Upload>
                     </div>
                 </Nav-titles>
             </section>
@@ -49,6 +49,7 @@
             <a-button type="primary" class="mr125" @click="sure">确定</a-button>
             <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
         </section>
+        <DeviceDetaiCommandl v-model="deviceDetaiCommandl" source="alarm" :againDevice="showList.deviceId"></DeviceDetaiCommandl>
     </Dialog>
 </template>
 
@@ -56,7 +57,8 @@
 import Dialog from "components/Dialog.vue"
 import NavTitles from "components/NavTitles.vue"
 import SimpleTable from "components/SimpleTable.vue"
-// import Upload from "components/Upload.vue"
+import Upload from "components/Upload.vue"
+import DeviceDetaiCommandl from "components/DeviceDetaiCommandl.vue"
 
 const nameForKey = {
 	temp: "温度",
@@ -69,7 +71,7 @@ const nameForKey = {
 
 export default {
     name:"DealWithDialog",
-    components: { Dialog, NavTitles, SimpleTable },
+    components: { Dialog, NavTitles, SimpleTable, Upload, DeviceDetaiCommandl },
     props: {
         dialogVisible: {
             type: Boolean,
@@ -125,7 +127,9 @@ export default {
 				{ name: "功率(W)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 				{ name: "电量(度)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 			],
-            fileList: []
+            uploadList: [{id: 1, comp: 'Upload'}],
+            resultList: [],
+            deviceDetaiCommandl: false
         }
     },
     computed: {
@@ -137,11 +141,11 @@ export default {
             return this.alarmData;
         },
         equipment() {
-            const { deviceAlias = '--', deviceSn = '--', groupName = '--', address = '--',  installPosition = '--'} = this.showList;
+            const { deviceAlias = '--', deviceSn = '--', groupName = '--', recoverTime = '--', address = '--',  installPosition = '--'} = this.showList;
             return {
                 address,
 				detail: '65℃',
-				reset: '',
+				reset: recoverTime,
 				equips: `${deviceAlias} ${deviceSn}`,
 				unit: groupName || '--',
 				place: installPosition || '--'
@@ -169,6 +173,8 @@ export default {
                 console.log('---------', confirmFlag, processType)
                 this.warnSure = `${confirmFlag}`;
                 this.dealWith = `${processType}`;
+                // 清空上传记录
+                this.$refs.upload.fileList = []
             }
         }
     },
@@ -191,17 +197,23 @@ export default {
             }
             return _map[type][item] || '--'
 		},
-        onUpload(e) {
-            this.fileList = e;
+        uploadDone(list) {
+            this.resultList = list.map(img => img.url);
         },
         sure() {
-            const { showList: { id }, warnSure, dealWith } = this;
+            console.log(this.resultList)
+            const { showList: { id }, warnSure, dealWith, resultList } = this;
             const params = { 
                 alarmId: id,
                 confirmFlag: warnSure,
-                processType: dealWith
+                processType: dealWith,
+                sitePhotos: resultList.join(','),
+                remark: ''
             }
             this.$emit('on-sure', params);
+        },
+        sendDrec() {
+            this.deviceDetaiCommandl = true;
         }
     }
 }

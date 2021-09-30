@@ -1,17 +1,14 @@
 <template>
     <div>
-        <a-upload
-            name="avatar"
-            list-type="picture-card"
-            :show-upload-list="false"
-            :customRequest="handleUploadFile"
-        >
-            <img v-if="uploadPic" :src="uploadPic" />
-            <div v-else>
-                <a-icon :type="loading ? 'loading' : 'plus'" />
-                <div class="ant-upload-text">上传图片</div>
+        <a-upload class="uploader" list-type="picture-card" :customRequest="handleUploadFile" :remove="imgDel"
+              :file-list="fileList" @preview="handlePreview">
+              <div v-if="fileList.length < len">
+                <a-icon type="plus" />
             </div>
         </a-upload>
+        <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+            <img alt="example" style="width: 50rem;height: 50rem" :src="previewImage" />
+        </a-modal>
         <slot></slot>
     </div>
 </template>
@@ -22,35 +19,65 @@ import { uploadFileMixin } from "mixins"
 export default {
     name:"Upload",
     mixins: [uploadFileMixin],
-    data() {
-        return {
+    props: {
+        len: {
+            type: Number,
+            default: 6
         }
     },
-    computed: {
-        limitLen() {
-            return this.fileList.length < this.len;
+    data() {
+        return {
+            uploadPic: '',
+            loading: false,
+            fileList: [],
+            previewVisible: false,
+            previewImage:''
         }
     },
     mounted() {
         this.getUploadUrl()
     },
     methods: {
+        imgDel(file) {
+            const findIndex = this.fileList.findIndex( ({ uid }) => uid === file.uid)
+            this.fileList.splice(findIndex, 1);
+            this.$emit('is-done', this.fileList);
+        },
         handleUploadFile(arg) {
-            console.log('上传文件', arg)
 			arg.file instanceof File &&
 				this.toUploadFile(arg.file).then(imgUrl => {
-                    this.loading  = false;
-                    console.log(imgUrl)
                     this.uploadPic = imgUrl;
+                    this.fileList.push({
+                        uid: arg.file.uid,
+                        name: arg.file.name,
+                        status: 'done', // 根据请求判断
+                        url: imgUrl,
+                    })
+                    this.$emit('is-done', this.fileList);
 				})
+        },
+        handleCancel() {
+            this.previewVisible = false;
+        },
+        // 打开模态框（图片预览）
+        async handlePreview(file) {
+            console.log(file);
+            this.previewImage = this.uploadPic;
+            this.previewVisible = true;
         },
     }
 }
 </script>
 <style lang='less' scoped>
-/deep/ .uploader > .ant-upload {
-  width: 6.67rem;
-  height: 6.67rem;
+/deep/ .uploader {
+    .ant-upload {
+        width: 6.67rem;
+        height: 6.67rem;
+    }
+    img {
+        width: calc(6.67rem - 16px);
+        height: calc(6.67rem - 16px);
+    }
 }
 
 /deep/ .ant-upload-list-picture-card-container {
