@@ -20,8 +20,9 @@
                 </a-form-model-item>
                 <a-form-model-item label="上级单位" prop="upUnit">
                     <a-cascader :options="groupOptions"
+                         change-on-select v-model="unitForm.upUnit"
                         :fieldNames="{ label: 'title', value: 'key', children: 'children' }"
-                        placeholder="请选择上级单位" @change="treeChange" />
+                        placeholder="请选择上级单位"/>
                 </a-form-model-item>
                 <a-form-model-item label="单位类型" prop="unitType">
                     <a-select v-model="unitForm.unitType" placeholder="请选择单位类型">
@@ -212,7 +213,7 @@ export default {
                 } = this.editForm || {};
                 this.unitForm = {
                     unitName: name,
-                    upUnit: parentId,
+                    upUnit: this.treeShow(this.groupOptions, parentId),
                     unitType: typeCode,
                     unitAddress: address,
                     // lngs: "",
@@ -236,6 +237,15 @@ export default {
         this.getUploadUrl()
     },
     methods: {
+        treeShow(list, id) {
+            for(let i =0; i<list.length; i++){
+                const item = list[i];
+                if(item.key === id) return [id];
+                if(!(item.children && item.children.length)) continue;
+                const res = this.treeShow(item.children, id);
+                if(res)return [item.key, ...res];
+            }
+        },
         getOptions() {
             getSelectOptions('groupType').then(option => {
                 const data = option.data;
@@ -250,10 +260,6 @@ export default {
                 const data = result.data;
                 this.groupOptions = data;
             })
-        },
-        treeChange(value) {
-            const [firstKey] = value;
-            this.unitForm.upUnit = firstKey;
         },
         computedLen(value, totalLen = 20) {
             if (value === null || value === undefined || typeof value === 'number') value = '';
@@ -305,7 +311,7 @@ export default {
                 // 参数
                 const params = {
                     name: unitName,
-                    parentId: upUnit,
+                    parentId: upUnit[upUnit.length - 1],
                     typeCode: unitType,
                     address: unitAddress,
                     addressLat: lat,

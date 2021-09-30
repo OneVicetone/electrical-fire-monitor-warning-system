@@ -32,8 +32,9 @@
                 </a-form-model-item>
                 <a-form-model-item label="关联分组" prop="linkGroup">
                     <a-cascader :options="groupOptions"
+                        change-on-select v-model="unitForm.linkGroup"
                         :fieldNames="{ label: 'title', value: 'key', children: 'children' }"
-                        placeholder="请选择设备分组" @change="treeChange" />
+                        placeholder="请选择设备分组"/>
                 </a-form-model-item>
                 <a-form-model class="form-right" layout="inline" :model="unitForm" :labelCol="{ style: 'width: 72px;float: left;' }"
                     :wrapper-col="{ style: 'width: 22rem' }">
@@ -144,7 +145,7 @@ export default {
         visibles(v) {
             if (v) {
                 this.getOptions();
-                // this.getTreeGroup();
+                const { treeShow, groupOptions } = this;
                 const {
                     sn = '',
                     deviceTypeId = '',
@@ -167,7 +168,7 @@ export default {
                     // addressLon: 108.3333,
                     deviceName: alias,
                     iccid,
-                    linkGroup: groupId,
+                    linkGroup: treeShow(groupOptions, groupId),
                     safePrincipal: safetyDirector,
                     linkPhone: safetyDirectorMobile,
                 }
@@ -179,12 +180,15 @@ export default {
             if (value === null || value === undefined || typeof value === 'number') value = '';
             return `${value.length}/${totalLen}`
         },
-        // getTreeGroup() {
-        //     getGroupTree().then(result => {
-        //         const data = result.data;
-        //         this.groupOptions = data;
-        //     })
-        // },
+        treeShow(list, id) {
+            for(let i =0; i<list.length; i++){
+                const item = list[i];
+                if(item.key === id) return [id];
+                if(!(item.children && item.children.length)) continue;
+                const res = this.treeShow(item.children, id);
+                if(res)return [item.key, ...res];
+            }
+        },
         getOptions() {
             getSelectOptions('deviceType').then(option => {
                 const data = option.data;
@@ -195,6 +199,7 @@ export default {
             })
         },
         treeChange(value) {
+            console.log(value)
             const [ firstNode ] = value;
             this.unitForm.linkGroup = firstNode;
         },
@@ -229,7 +234,7 @@ export default {
                     addressLon: 108.3333,
                     alias: deviceName,
                     iccid,
-                    groupId: +linkGroup,
+                    groupId: linkGroup[linkGroup.length-1],
                     safetyDirector: safePrincipal,
                     safetyDirectorMobile: linkPhone,
                     };
