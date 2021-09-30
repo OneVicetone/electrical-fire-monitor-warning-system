@@ -32,7 +32,7 @@
 				</div>
 				<div class="device-status">
 					<ContentTitle title="设备实时状态" />
-					<!-- <SimpleTable /> -->
+					<SimpleTable :columns="simpleTableColumns" :tableData="simpleTableData" />
 				</div>
 				<div class="device-detailed-info">
 					<ContentTitle title="设备详细信息" />
@@ -128,9 +128,15 @@ import DeviceDetaiCommandl from "components/DeviceDetaiCommandl.vue"
 
 import apis from "apis"
 import { commonMixin } from "mixins"
+import { nameForKey } from "utils/baseData"
 
-const { getDeviceInfoDetail, getDeviceDetailCount, getDeviceDetailHistortAlarmList, getDeviceDetailHistoryChartData } =
-	apis
+const {
+	getDeviceInfoDetail,
+	getDeviceDetailCount,
+	getDeviceDetailHistortAlarmList,
+	getDeviceDetailHistoryChartData,
+	realTimeData,
+} = apis
 
 export default {
 	name: "DeviceInfo",
@@ -202,6 +208,21 @@ export default {
 				{ label: "安全负责人", key: "safetyDirector" },
 				{ label: "联系方式", key: "safetyDirectorMobile" },
 			],
+			simpleTableColumns: [
+				{ title: "名称", key: "name" },
+				{ title: "1/A", key: "1a" },
+				{ title: "2/B", key: "2b" },
+				{ title: "3/C", key: "3c" },
+				{ title: "4/N", key: "4n" },
+			],
+			simpleTableData: [
+				{ name: "漏电(mA)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "温度(c)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "电压(V)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "电流(A)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "功率(W)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "电量(度)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+			],
 		}
 	},
 	computed: {
@@ -214,8 +235,14 @@ export default {
 		},
 	},
 	mounted() {
-		const { getDeviceInfoDetail, getDeviceCount, getTableData, getChartData } = this
-		Promise.allSettled([getDeviceInfoDetail(), getDeviceCount(), getTableData(), getChartData()])
+		const { getDeviceInfoDetail, getDeviceCount, getTableData, getChartData, getDeviceStatusTableData } = this
+		Promise.allSettled([
+			getDeviceInfoDetail(),
+			getDeviceCount(),
+			getTableData(),
+			getChartData(),
+			getDeviceStatusTableData(),
+		])
 	},
 	methods: {
 		sendCommand() {
@@ -280,6 +307,21 @@ export default {
 		changePageSizeHandle(current, size) {
 			this.getTableData(current, size)
 		},
+		getDeviceStatusTableData() {
+			return realTimeData({ deviceId: this.id }).then(({ data }) => {
+				const simpleTableDataResult = this.simpleTableData.map(i => {
+					Object.keys(i).forEach((j, idx) => {
+						const num = idx - 1
+						if (num >= 0) {
+							const key = Object.keys(nameForKey)[Object.values(nameForKey).findIndex(k => i.name.includes(k))]
+							if (data[num]) i[j] = data[num][key]
+						}
+					})
+					return i
+				})
+				this.simpleTableData = simpleTableDataResult
+			})
+		},
 	},
 }
 </script>
@@ -299,6 +341,9 @@ export default {
 		.device-info-right > div {
 			background-color: #131a2d;
 			margin-bottom: 1.25rem;
+			> header {
+				margin-bottom: 2rem;
+			}
 		}
 		.device-info-left {
 			width: 31.67rem;
@@ -388,6 +433,8 @@ export default {
 			}
 			.device-status {
 				height: 24rem;
+				padding-right: 1.42rem;
+				padding-left: 1.08rem;
 			}
 			.device-detailed-info {
 				height: 30.5rem;

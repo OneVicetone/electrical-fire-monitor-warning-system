@@ -37,7 +37,7 @@ export default {
 .label-and-value-container {
     display: flex;
     font-size: 1rem;
-    padding: 2.25rem 1.83rem;
+    padding: 0  1.83rem 2.25rem;
     > div {
         line-height: 12px;
     }

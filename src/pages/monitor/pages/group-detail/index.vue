@@ -27,7 +27,7 @@
 			</div>
 
 			<div class="center-content">
-				<div class="group-count">
+				<div class="group-count" :style="`background: url(${groupDetailObj.effectPicPath}) no-repeat`">
 					<div class="group-title">{{ groupDetailObj.name }}</div>
 					<div class="group-detail-count-list">
 						<div :class="item.key" v-for="item of groupDetailCount" :key="item.name">
@@ -181,6 +181,7 @@ export default {
 				const option = {
 					tooltip: {
 						trigger: "item",
+						position: [10, 80],
 					},
 					legend: {
 						top: "5%",
@@ -365,6 +366,9 @@ export default {
 				flex-direction: column;
 				align-items: center;
 				position: relative;
+				// background: url('assets/images/login-bg.png') no-repeat;
+				background-size: 100%;
+				background-position: 100%;
 				.group-title {
 					font-size: 1.83rem;
 					position: relative;

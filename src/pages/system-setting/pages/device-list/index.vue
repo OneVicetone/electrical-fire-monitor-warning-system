@@ -50,19 +50,21 @@
 				<div slot="idx" slot-scope="text, record, index">
 					{{ index + 1 }}
 				</div>
-				<div slot="enable" slot-scope="text">
-					{{ text.enable | filterAccountEnableStatus }}
+
+				<div slot="deliverGoodsTime" slot-scope="text">
+					{{ text.deliverGoodsTime | filterTimeToYYYYMMDDHHmmss }}
 				</div>
-				<div slot="createTime" slot-scope="text">
-					{{ text.createTime | filterTimeToYYYYMMDD }}
+				<div slot="beginDate" slot-scope="text">
+					{{ text.beginDate | filterTimeToYYYYMMDD }}
+				</div>
+				<div slot="endDate" slot-scope="text">
+					{{ text.endDate | filterTimeToYYYYMMDD }}
 				</div>
 				<div slot="updateTime" slot-scope="text">
-					{{ text.updateTime | filterTimeToYYYYMMDD }}
+					{{ text.updateTime | filterTimeToYYYYMMDDHHmmss }}
 				</div>
 				<div slot="operate" slot-scope="text">
 					<a @click="editCell(text)">编辑</a>
-					<a-divider type="vertical" />
-					<a>监控</a>
 					<a-divider type="vertical" />
 					<a>监控</a>
 					<a-divider type="vertical" />
@@ -80,7 +82,8 @@
 			v-model="isShowDialog"
 			:treeData="treeData"
 			:formCell="formCell"
-			@on-fresh-data="getTableData"></new-add-unit>
+			@on-fresh-data="getTableData"
+		></new-add-unit>
 	</div>
 </template>
 
@@ -113,11 +116,16 @@ export default {
 			deviceIdOptions,
 			columns: [
 				{ title: "序号", scopedSlots: { customRender: "idx" } },
-				{ title: "联网单位", dataIndex: "name" },
-				{ title: "安全负责人", dataIndex: "principalUserName" },
-				{ title: "安全负责人电话", dataIndex: "mobile" },
-				{ title: "账户状态", scopedSlots: { customRender: "enable" } },
-				{ title: "创建时间", scopedSlots: { customRender: "createTime" } },
+				{ title: "设备ID", dataIndex: "sn" },
+				{ title: "所属单位", dataIndex: "groupName" },
+				{ title: "设备类型", dataIndex: "deviceTypeModel" },
+				{ title: "设备型号", dataIndex: "id" },
+				{ title: "ICCID", dataIndex: "iccid" },
+				{ title: "设备状态", dataIndex: "showStatus" },
+				{ title: "安装位置", dataIndex: "installPosition" },
+				{ title: "发货时间", scopedSlots: { customRender: "deliverGoodsTime" } },
+				{ title: "服务期起", scopedSlots: { customRender: "beginDate" } },
+				{ title: "服务期止", scopedSlots: { customRender: "endDate" } },
 				{ title: "修改时间", scopedSlots: { customRender: "updateTime" } },
 				{ title: "修改时间", dataIndex: "", key: "", scopedSlots: { customRender: "operate" } },
 			],

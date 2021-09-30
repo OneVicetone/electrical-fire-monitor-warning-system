@@ -13,9 +13,19 @@ const SHIP = 'ship' // 发货
 const TRANSFER = 'transfer' // 转组
 const IMPORT = 'import' // 导入
 
+const simpleTableNameForKey = {
+	temp: "温度",
+	electricLeakage: "漏电",
+	electricity: "电流",
+	voltage: "电压",
+	power: "功率",
+	electricEnergy: "电量",
+}
+
 export {
 	batchKeytoName,
 	SHIP,
 	TRANSFER,
-	IMPORT
+	IMPORT,
+	simpleTableNameForKey as nameForKey
 }
