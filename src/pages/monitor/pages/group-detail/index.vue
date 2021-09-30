@@ -68,7 +68,6 @@ const {
 	getGroupDetailHistoryAlarmList,
 	getGroupDetailDeviceList,
 	groupDetailUpdateImg,
-	groupDetailDevicePeriod,
 } = apis
 
 export default {
@@ -95,6 +94,7 @@ export default {
 			],
 			groupDetailObj: {},
 			designPicPath: "",
+			chartRadioValue: "",
 			chartData: {
 				xAxisData: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
 				seriesData: [10, 52, 200, 334, 390, 330, 220],
@@ -125,6 +125,9 @@ export default {
 			})
 		},
 		getChartData(type = "electricity") {
+			const func = ({ data }) => {
+				this.chartData = data
+			}
 			if (type === "electricity") {
 				return getGroupDetailHistoryElectricityList().then()
 			}
@@ -134,9 +137,6 @@ export default {
 			if (type === "device") {
 				return getGroupDetailDeviceList().then()
 			}
-		},
-		getDevicePeriodData() {
-			return groupDetailDevicePeriod(this.id).then(({ data }) => (this.devicePeriodData = data))
 		},
 		enlargeImg() {},
 		changeTitleContent(key) {

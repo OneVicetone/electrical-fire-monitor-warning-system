@@ -11,6 +11,8 @@ const setupAccoutApis = http => ({
 	getUserMenuList: () => http.get("/api-user/menu/web/list", {}),
 
 	getUploadUrl: () => http.get("/api-user/common/ossSign"),
+
+	getUserNotifyNum: () => http.get("/api-alarm/statistics/countTotal"),
 })
 
 export default setupAccoutApis

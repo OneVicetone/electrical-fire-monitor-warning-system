@@ -213,12 +213,6 @@ export default {
 			return chartData[chartRadioValue] ? Object.values(chartData[chartRadioValue]).map(i => i) : []
 		},
 	},
-	watch: {
-		["filterForm.chartRadioValue"]: {
-			deep: true,
-			handler(val) {},
-		},
-	},
 	mounted() {
 		const { getDeviceInfoDetail, getDeviceCount, getTableData, getChartData } = this
 		Promise.allSettled([getDeviceInfoDetail(), getDeviceCount(), getTableData(), getChartData()])
