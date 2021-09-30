@@ -20,9 +20,6 @@ export default {
 			chartInstance: null,
 		}
 	},
-	updated() {
-		console.log(this.seriesData)
-	},
 	computed: {
 		chartOptions() {
 			const { xAxisData, seriesData } = this
@@ -109,9 +106,11 @@ export default {
 	},
 	methods: {
 		initChart() {
-			const chart = echarts.init(document.querySelector("#line_chart_container"))
-			this.chartInstance = chart
-			chart.setOption(this.chartOptions)
+			if (!this.chartInstance) {
+				const chart = echarts.init(document.querySelector("#bar_chart_container"))
+				this.chartInstance = chart
+			}
+			this.chartInstance.setOption(this.chartOptions)
 		},
 	},
 }

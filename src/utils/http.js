@@ -45,7 +45,7 @@ const responseInterceptFunc = res => {
 	if (data.code !== successCode) {
 		message.error(data.message)
 	}
-	if (data.code === 20001 || data.code === 20010) {
+	if (data.code === 20001 || data.code === 20010 || data.code === 20004) {
 		localStorage.clear()
 		window.location = "/"
 		throw new ReferenceError("token error")

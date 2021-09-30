@@ -29,7 +29,8 @@
 			</div>
 			<div class="alarm-type-count">
 				<ContentTitle title="报警类型统计" />
-				<div id="device_status_chart"></div>
+				<!-- <div id="device_status_chart"></div> -->
+				<BarChart :dataObj="alarmTypeCountData" />
 			</div>
 		</div>
 		<MarkerInfo v-model="showMarkerInfo" :markerInfoObj="markerInfo" :position="position" />
@@ -43,6 +44,7 @@ import * as echarts from "echarts"
 import Map from "components/Map.vue"
 import ContentTitle from "components/ContentTitle.vue"
 import MarkerInfo from "./components/MarkerInfo.vue"
+import BarChart from "components/BarChart.vue"
 
 import apis from "apis"
 
@@ -57,7 +59,7 @@ const {
 
 export default {
 	name: "Monitor",
-	components: { Map, ContentTitle, MarkerInfo },
+	components: { Map, ContentTitle, MarkerInfo, BarChart },
 	data() {
 		return {
 			mapInstance: null,
@@ -97,6 +99,7 @@ export default {
 				left: 0,
 				top: 0,
 			},
+			alarmTypeCountData: {},
 		}
 	},
 	computed: {
@@ -121,30 +124,7 @@ export default {
 			})
 		},
 		getAllAlarmType() {
-			return monitorAllAlarmType().then(({ data }) => {
-				const deviceStatusChart = echarts.init(document.querySelector("#device_status_chart"))
-				deviceStatusChart.setOption({
-					grid: {
-						left: 30,
-						top: 20,
-						right: 30,
-						bottom: 20,
-					},
-					xAxis: {
-						type: "category",
-						data: Object.keys(data) || [],
-					},
-					yAxis: {
-						type: "value",
-					},
-					series: [
-						{
-							data: Object.values(data) || [],
-							type: "bar",
-						},
-					],
-				})
-			})
+			return monitorAllAlarmType().then(({ data }) => (this.alarmTypeCountData = data))
 		},
 		getGroupOptions(val = "groupType") {
 			return getSelectOptions(val).then(({ data }) => {

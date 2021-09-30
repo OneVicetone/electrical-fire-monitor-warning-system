@@ -26,7 +26,7 @@ export default {
 	methods: {
 		changeSelectIdx(idx) {
 			this.selectIdx = idx
-			this.emit("changeTitleContent", idx.key)
+			this.$emit("changeTitleContent", idx.key)
 		},
 	},
 }

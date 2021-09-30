@@ -27,6 +27,15 @@
 			</div>
 
 			<div class="center-content">
+				<div class="group-count">
+					<div class="group-title">{{ groupDetailObj.name }}</div>
+					<div class="group-detail-count-list">
+						<div :class="item.key" v-for="item of groupDetailCount" :key="item.name">
+							<p>{{ item.num }}</p>
+							<p>{{ item.name }}</p>
+						</div>
+					</div>
+				</div>
 				<div class="history-chart">
 					<ContentTitle :title="historyChartTitle" @changeTitleContent="changeTitleContent" />
 					<LineChart :xAxisData="chartData.xAxisData" :seriesData="chartData.seriesData" />
@@ -40,7 +49,7 @@
 				</div>
 				<div class="alarm-type-count">
 					<ContentTitle title="报警类型统计" />
-					<div id="alarm_type_count_chart"></div>
+					<BarChart :dataObj="alarmTypeCountData" />
 				</div>
 				<div class="service-type-count">
 					<ContentTitle title="服务类型统计" />
@@ -52,11 +61,12 @@
 
 <script>
 import { cloneDeep } from "lodash"
-// import * as echarts from "echarts"
+import * as echarts from "echarts"
 
 import Breadcrumb from "components/Breadcrumb.vue"
 import ContentTitle from "components/ContentTitle.vue"
 import LineChart from "components/LineChart.vue"
+import BarChart from "components/BarChart.vue"
 
 import apis from "apis"
 const {
@@ -68,11 +78,12 @@ const {
 	getGroupDetailHistoryAlarmList,
 	getGroupDetailDeviceList,
 	groupDetailUpdateImg,
+	groupDetailDevicePeriod,
 } = apis
 
 export default {
 	name: "GroupDetail",
-	components: { Breadcrumb, ContentTitle, LineChart },
+	components: { Breadcrumb, ContentTitle, LineChart, BarChart },
 	props: {
 		id: String,
 	},
@@ -95,21 +106,32 @@ export default {
 			groupDetailObj: {},
 			designPicPath: "",
 			chartRadioValue: "",
-			chartData: {
-				xAxisData: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-				seriesData: [10, 52, 200, 334, 390, 330, 220],
-			},
+			chartData: {},
 			devicePeriodData: {
 				totalNum: 0,
 				normalNum: 0,
 				expiredNum: 0,
 				dueNum: 0,
 			},
+			alarmTypeCountData: {},
+			groupDetailCount: [
+				{ name: "正常设备", num: 0, key: "normalNum" },
+				{ name: "报警设备", num: 0, key: "alarmNum" },
+				{ name: "故障设备", num: 0, key: "faultNum" },
+				{ name: "离线设备", num: 0, key: "offLineNum" },
+			],
 		}
 	},
 	mounted() {
-		const { getGroupDetailData } = this
-		Promise.allSettled([getGroupDetailData()])
+		const { getGroupDetailData, getDevicePeriodData, getAlarmTypeCountData, getChartData, getGroupDeviceCountData } =
+			this
+		Promise.allSettled([
+			getGroupDetailData(),
+			getDevicePeriodData(),
+			getAlarmTypeCountData(),
+			getChartData(),
+			getGroupDeviceCountData(),
+		])
 		// this.setChart()
 	},
 	methods: {
@@ -125,18 +147,86 @@ export default {
 			})
 		},
 		getChartData(type = "electricity") {
+			const params = {
+				current: 1,
+				size: 100,
+				groupId: this.id,
+			}
 			const func = ({ data }) => {
 				this.chartData = data
 			}
 			if (type === "electricity") {
-				return getGroupDetailHistoryElectricityList().then()
+				return getGroupDetailHistoryElectricityList(params).then(func)
 			}
 			if (type === "alarm") {
-				return getGroupDetailHistoryAlarmList().then()
+				return getGroupDetailHistoryAlarmList(params).then(func)
 			}
 			if (type === "device") {
-				return getGroupDetailDeviceList().then()
+				return getGroupDetailDeviceList(params).then(func)
 			}
+		},
+		getDevicePeriodData() {
+			return groupDetailDevicePeriod(this.id).then(({ data }) => {
+				const nameMap = {
+					totalNum: "总数量",
+					normalNum: "正常设备数量",
+					offLineNum: "离线设备数量",
+					alarmNum: "报警设备数量",
+					faultNum: "故障设备数量",
+				}
+				const seriesData = Object.keys(data).map(i => ({
+					value: data[i],
+					name: nameMap[i],
+				}))
+				const option = {
+					tooltip: {
+						trigger: "item",
+					},
+					legend: {
+						top: "5%",
+						left: "center",
+					},
+					series: [
+						{
+							name: "Access From",
+							type: "pie",
+							radius: ["40%", "70%"],
+							avoidLabelOverlap: false,
+							label: {
+								show: false,
+								position: "center",
+							},
+							emphasis: {
+								label: {
+									show: true,
+									fontSize: "40",
+									fontWeight: "bold",
+								},
+							},
+							labelLine: {
+								show: false,
+							},
+							data: seriesData,
+						},
+					],
+				}
+				const chart = echarts.init(document.querySelector("#device_service_time_count_chart"))
+				chart.setOption(option)
+			})
+		},
+		getAlarmTypeCountData() {
+			return getGroupDetailAlarmTypeCount(this.id).then(({ data }) => {
+				this.alarmTypeCountData = data
+			})
+		},
+		getGroupDeviceCountData() {
+			return getGroupDetailDeviceStatusCount(this.id).then(({ data }) => {
+				const groupDetailCountCopy = cloneDeep(this.groupDetailCount)
+				groupDetailCountCopy.forEach(i => {
+					i.num = data[i.key] || 0
+				})
+				this.groupDetailCount = groupDetailCountCopy
+			})
 		},
 		enlargeImg() {},
 		changeTitleContent(key) {
@@ -252,16 +342,109 @@ export default {
 		}
 		.center-content {
 			width: 100%;
-			height: 25.83rem;
+			// height: 25.83rem;
 			margin: 0 1.25rem;
-			padding: 1.42rem 0 0 1.67rem;
-			background-color: #131a2d;
-			align-self: flex-end;
+			> div {
+				padding: 1.42rem 1.67rem;
+				background-color: #131a2d;
+			}
+			.common-before-after {
+				content: "";
+				display: block;
+				position: absolute;
+				width: 3.33rem;
+				height: 3.33rem;
+				background: url("assets/icons/group-detail-arrow-icon.png") no-repeat;
+				background-position: 100%;
+				background-size: 100%;
+				top: -4px;
+			}
+			.group-count {
+				height: 45.33rem;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				position: relative;
+				.group-title {
+					font-size: 1.83rem;
+					position: relative;
+					&::before {
+						.common-before-after();
+						left: -4rem;
+					}
+					&::after {
+						.common-before-after();
+						transform: rotate(180deg);
+						right: -4rem;
+					}
+				}
+				.group-detail-count-list {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					position: absolute;
+					bottom: 2.5rem;
+					> div {
+						width: 9.83rem;
+						height: 6.33rem;
+						margin: 0 0.625rem;
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						background-size: 100% !important;
+						background-position: 100% !important;
+						> p {
+							margin: 0;
+							position: absolute;
+							&:first-child {
+								top: 0.8rem;
+								font-size: 2.14rem;
+							}
+							&:last-child {
+								font-size: 1.03rem;
+								bottom: 0;
+							}
+						}
+					}
+					.normalNum {
+						background: url("assets/images/group-detail-count-bg-blue.png") no-repeat;
+						> p:first-child {
+							color: #0096ff;
+						}
+					}
+					.alarmNum {
+						background: url("assets/images/group-detail-count-bg-red.png") no-repeat;
+						> p:first-child {
+							color: #ff2525;
+						}
+					}
+					.offLineNum {
+						background: url("assets/images/group-detail-count-bg-gray.png") no-repeat;
+						> p:first-child {
+							color: #5a93d6;
+						}
+					}
+					.faultNum {
+						background: url("assets/images/group-detail-count-bg-yellow.png") no-repeat;
+						> p:first-child {
+							color: #ffa900;
+						}
+					}
+				}
+			}
+			.history-chart {
+				height: 25.83rem;
+				margin-top: 1.25rem;
+			}
+			// align-self: flex-end;
 		}
 		.right-content {
 			.device-service-time-count {
 				height: 16.75rem;
 				padding: @content-default-padding;
+				#device_service_time_count_chart {
+					height: 10rem;
+				}
 			}
 			.alarm-type-count {
 				height: 27.33rem;

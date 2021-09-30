@@ -266,8 +266,8 @@ export default {
 				deviceId: id,
 				// startDate: chartTime[0].format("YYYY-MM-DD"),
 				// endDate: chartTime[1].format("YYYY-MM-DD"),
-				startDate: '2021-09-22',
-				endDate: '2021-09-26',
+				startDate: "2021-09-22",
+				endDate: "2021-09-26",
 			}
 			return getDeviceDetailHistoryChartData(params).then(({ data }) => {
 				this.chartData = data
