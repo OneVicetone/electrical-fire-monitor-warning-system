@@ -49,7 +49,10 @@
             <a-button type="primary" class="mr125" @click="sure">确定</a-button>
             <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
         </section>
-        <DeviceDetaiCommandl v-model="deviceDetaiCommandl" source="alarm" :againDevice="showList.deviceId"></DeviceDetaiCommandl>
+        <DeviceDetaiCommandl v-model="deviceDetaiCommandl"
+            source="alarm" :againDevice="showList.deviceId"
+            @on-res="deviceRes"
+        ></DeviceDetaiCommandl>
     </Dialog>
 </template>
 
@@ -59,6 +62,8 @@ import NavTitles from "components/NavTitles.vue"
 import SimpleTable from "components/SimpleTable.vue"
 import Upload from "components/Upload.vue"
 import DeviceDetaiCommandl from "components/DeviceDetaiCommandl.vue"
+import warnIcon from "assets/icons/warn-icon.png"
+import dangerIcon from "assets/icons/danger-icon.png"
 
 const nameForKey = {
 	temp: "温度",
@@ -174,7 +179,9 @@ export default {
                 this.warnSure = `${confirmFlag}`;
                 this.dealWith = `${processType}`;
                 // 清空上传记录
-                this.$refs.upload.fileList = []
+                this.$nextTick(() => {
+                    this.$refs.upload.fileList = [];
+                })
             }
         }
     },
@@ -183,8 +190,8 @@ export default {
             const _map = {
                 alarmLevel: { 1: '预警', 2: '高危' },
                 alarmIcons: {
-                    1: '/src/assets/icons/warn-icon.png',
-                    2: '/src/assets/icons/danger-icon.png'
+                    1: warnIcon,
+                    2: dangerIcon
                 },
                 deviceInfo: {
                     detail: '报警详情',
@@ -214,6 +221,10 @@ export default {
         },
         sendDrec() {
             this.deviceDetaiCommandl = true;
+        },
+        deviceRes() {
+            this.$emit('input', false);
+            this.$emit('refresh-alarm-list')
         }
     }
 }

@@ -5,21 +5,48 @@
         :maskClosable="false" :footer="null" :width="widths">
         <!-- <div id="r-result">请输入:<input type="text" id="suggestId" size="20" value="百度" style="width:150px;" /></div>
 	<div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div> -->
-      <Map
+      <!-- <Map
         :customStyle="{width: '100%', height: '33.33rem'}"
         :centerPoint="mapCenterPoint"
+        @setMapInstance="setMapInstance" /> -->
+
+
+        <div class="addHospital">
+      <div class="map">
+          <a-input-search
+      placeholder="input search text"
+      enter-button="Search"
+      size="large"
+      v-model="mapName"
+      @search="mapNameChange"
+    />
+        <!-- <el-input placeholder="请输入搜索地址" v-model="mapName" class="input-with-select">
+          <el-button slot="append" icon="el-icon-search" @click="mapNameChange"></el-button>
+        </el-input> -->
+        <div style="padding:10px 0;" v-if="mapPointName">当前选中：{{mapPointName}}</div>
+        <div id="container" style="height: 400px; width: 100%" ref="allmap"></div>
+        <!-- <Map
+        :customStyle="{width: '100%', height: '33.33rem'}"
         @setMapInstance="setMapInstance" />
+        <div class="map-btn"> -->
+          <!-- <el-button type="primary" @click="dialogMap = false">确认</el-button> -->
+        </div>
+      </div>
+  </div>
     </a-modal>
 </template>
 
 <script>
-import Map from "components/Map.vue"
+// import Map from "components/Map.vue"
 import { getBasePx } from "utils/initial"
 import { dialogControl } from "mixins"
 
+
+let map = null,
+  geoc = null;
 export default {
     name:"MapModal",
-    components: { Map },
+    // components: { Map },
     mixins: [dialogControl],
     props: {
         // 放大系数
@@ -35,7 +62,16 @@ export default {
             getAddress: {
                 lng: 0,
                 lat: 0
-            }
+            },
+
+
+
+            dialogMap: false,
+      mapName: "",
+      mapPointName: "",
+      loading:true,
+      mapGetshow: true,
+      dialogName: ""
         }
     },
     computed: {
@@ -47,7 +83,7 @@ export default {
         visibles(v) {
             if (v) {
                 this.$nextTick(() => {
-                    this.iptFunc()
+                    this.mapBuild()
                 })
             }
         }
@@ -58,10 +94,10 @@ export default {
                 return document.getElementById(id);
             }
             let that = this;
-            console.log(this.mapInstance)
-            // var map = this.mapInstance.Map("l-map");
+            console.log(new BMapGL)
+            // var map = new BMapGL.Map("l-map");
             // map.centerAndZoom("北京",12);                   // 初始化地图,设置城市和地图级别。
-            var map = this.mapInstance;
+            var map = new BMapGL;
             // var ac = new BMapGL.Autocomplete(    //建立一个自动完成的对象
             //     {"input" : "suggestId"
             //     ,"location" : map
@@ -99,9 +135,9 @@ export default {
             //     function myFun(){
             //         var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
             //         map.centerAndZoom(pp, 18);
-            //         map.addOverlay(this.mapInstance.Marker(pp));    //添加标注
+            //         map.addOverlay(new BMapGL.Marker(pp));    //添加标注
             //     }
-            //     var local = this.mapInstance.LocalSearch(map, { //智能搜索
+            //     var local = new BMapGL.LocalSearch(map, { //智能搜索
             //     onSearchComplete: myFun
             //     });
             //     local.search(myValue);
@@ -116,9 +152,104 @@ export default {
             })
 
         },
-        setMapInstance(instance) {
-			this.mapInstance = instance
-		},
+        // setMapInstance(instance) {
+		// 	new BMapGL = instance
+		// },
+        mapNameChange() {
+      let that = this,
+        point,
+        marker = null;
+      let local = new BMapGL.LocalSearch(map, {
+        renderOptions: { map: map },
+        onSearchComplete: res => {
+          if (local.getResults() != undefined) {
+            map.clearOverlays(); //清除地图上所有覆盖物
+            if (local.getResults().getPoi(0)) {
+              point = local.getResults().getPoi(0).point; //获取第一个智能搜索的结果
+              map.centerAndZoom(point, 10);
+              marker = new BMapGL.Marker(point); // 创建标注
+              map.addOverlay(marker); // 将标注添加到地图中
+              marker.enableDragging(); // 可拖拽
+              geoc.getLocation(point, function(rs) {
+                var addComp = rs.addressComponents;
+                console.log(addComp);
+                that.mapPointName =
+                  addComp.province +
+                  ", " +
+                  addComp.city +
+                  ", " +
+                  addComp.district +
+                  ", " +
+                  addComp.street +
+                  ", " +
+                  addComp.streetNumber;
+                  
+              });
+            } else {
+              alert("未匹配到地点!可拖动地图上的红色图标到精确位置");
+            }
+          } else {
+            alert("未找到搜索结果");
+          }
+        }
+      });
+      local.search(this.mapName);
+    },
+    //地图显示
+    mapBuild() {
+      let that = this;
+      this.dialogMap = !this.dialogMap;
+      setTimeout(function() {
+        if (that.mapGetshow) {
+          map = new BMapGL.Map("container");
+          geoc = new BMapGL.Geocoder();
+          let point = new BMapGL.Point(116.3964, 39.9093);
+          map.centerAndZoom(point, 10);
+          map.enableScrollWheelZoom();
+          var geolocation = new BMapGL.Geolocation();
+          //定位
+          geolocation.getCurrentPosition(
+            r => {
+              console.log(r);
+              var mk = new BMapGL.Marker(r.point);
+              map.addOverlay(mk);
+              map.panTo(r.point);
+              geoc.getLocation(r.point, function(rs) {
+                var addComp = rs.addressComponents;
+                console.log(addComp);
+                that.mapPointName =
+                  addComp.province +
+                  addComp.city +
+                  addComp.district +
+                  addComp.street +
+                  addComp.streetNumber;
+                  that.loading = false;
+                that.mapGetshow = false;
+              });
+            },
+            { enableHighAccuracy: true }
+          );
+          //鼠标点击
+          map.addEventListener("click", function(e) {
+            console.log(e);
+            var pt = e.point;
+            var marker = new BMapGL.Marker(pt); // 创建标注
+            map.clearOverlays();
+            map.addOverlay(marker);
+            geoc.getLocation(pt, function(rs) {
+              var addComp = rs.addressComponents;
+              console.log(addComp);
+              that.mapPointName =
+                addComp.province +
+                addComp.city +
+                addComp.district +
+                addComp.street +
+                addComp.streetNumber;
+            });
+          });
+        }
+      }, 1000);
+    }
     }
 }
 </script>

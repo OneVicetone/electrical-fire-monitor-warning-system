@@ -12,8 +12,8 @@
                     </a-form-model-item>
                 </a-form-model>
                 <a-radio-group v-else v-model="radioGroup">
-                    <a-radio :value="1">消音</a-radio>
-                    <a-radio :value="2">复位</a-radio>
+                    <a-radio value="quiet">消音</a-radio>
+                    <a-radio value="reset">复位</a-radio>
                 </a-radio-group>
                 <section class="btns paddings">
                     <a-button type="primary" v-if="showComp" class="mr125" @click="doSure">确定</a-button>
@@ -23,18 +23,12 @@
             </div>
             <NavTitles class="vs-custom" title="指令记录">
                 <div slot="header" class="header">
-                    <a-select class="ml375" default-value="lucy" style="width: 9.67rem" @change="selectChange">
-                        <a-select-option value="1">
-                            指令类型
-                        </a-select-option>
-                        <a-select-option value="2">
-                            数据阈值
-                        </a-select-option>
-                        <a-select-option value="3">
-                            消音&复位
+                    <a-select class="ml375" style="width: 9.67rem" v-model="drevNotes" @change="notesChange">
+                        <a-select-option v-for="item in selectOpt" :key="item.value" :value="item.value">
+                            {{item.name}}
                         </a-select-option>
                     </a-select>
-                    <img class="icons-wd ml83 pointer" src="assets/icons/refresh.png" alt="">
+                    <img class="icons-wd ml83 pointer" src="assets/icons/refresh.png" @click="getList" alt="">
                 </div>
                 <CommandRecord
                     :details="records"
@@ -81,6 +75,13 @@ export default {
                 {label: '上传频率：', model: 'uploadFrequency', desc: '（建议设置5-1440分钟）'},
                 {label: '心跳频率：', model: 'heartRate', desc: '（建议设置2-1440分钟）'},
             ],
+            drevNotes: '1',
+            selectOpt: [
+                { name: '数据阈值', value: '1' },
+                { name: '消音&复位', value: '2' },
+                { name: '合闸开闸', value: '3' },
+                { name: '路由绑定', value: '4' },
+            ],
             records: [],
             total: 0,
             radioGroup: 1,
@@ -103,22 +104,20 @@ export default {
         }
     },
     methods: {
-        onChanges(key) {
-
-        },
-        selectChange() {},
         getList({ current = 1, size = 5 } = {}) {
             const {
                 $route: {
                     params: { id }
                 },
+                drevNotes,
                 againDevice,
                 source
             } = this;
             const params = {
                 current,
                 size,
-                deviceId: source === 'alarm' ? againDevice : id
+                deviceId: source === 'alarm' ? againDevice : id,
+                cmdType: drevNotes
             }
             commandPageList(params).then(({ data }) => {
                 const { records = [], total = 0 } = data || {};
@@ -126,6 +125,9 @@ export default {
                 this.records = records;
                 this.pagination.total = total;
             });
+        },
+        notesChange() {
+            this.getList();
         },
         async doSure() {
             const {
@@ -160,6 +162,8 @@ export default {
 			}
             const result = await deviceCmd(params);
             console.log('指令结果', result)
+            this.$emit('on-res');
+            this.$emit('input', false);
         },
         sendDev() {
 

@@ -91,7 +91,6 @@
 			:changePageHandle="changePageHandle"
 			:changePageSizeHandle="changePageSizeHandle"
 		/>
-		{{ remarks }}
 		<DealWithDialog
 			v-model="showAlert"
 			:able="isAble"
@@ -99,6 +98,7 @@
 			:alarmData="alarmHandleData"
 			:handAlarmList="handAlarm"
 			@on-sure="dialogSure"
+			@refresh-alarm-list="search"
 		>
 		</DealWithDialog>
 	</div>
@@ -231,7 +231,6 @@ export default {
 		async dialogSure(params) {
 			const result = await processAlarm(params)
 			console.log("确定", result)
-			// 需要给提示
 			this.getTableData()
 			this.showAlert = false
 		},

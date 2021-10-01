@@ -109,7 +109,7 @@
 				</div>
 			</div>
 		</div>
-		<DeviceDetaiCommandl v-model="dialog"></DeviceDetaiCommandl>
+		<DeviceDetaiCommandl v-model="dialog" @on-res="allRequest"></DeviceDetaiCommandl>
 	</div>
 </template>
 
@@ -214,12 +214,15 @@ export default {
 		},
 	},
 	mounted() {
-		const { getDeviceInfoDetail, getDeviceCount, getTableData, getChartData } = this
-		Promise.allSettled([getDeviceInfoDetail(), getDeviceCount(), getTableData(), getChartData()])
+		this.allRequest();
 	},
 	methods: {
+		allRequest() {
+			const { getDeviceInfoDetail, getDeviceCount, getTableData, getChartData } = this;
+			Promise.allSettled([getDeviceInfoDetail(), getDeviceCount(), getTableData(), getChartData()]);
+		},
 		sendCommand() {
-			this.dialog = true
+			this.dialog = true;
 		},
 		getDeviceInfoDetail() {
 			return getDeviceInfoDetail(this.id).then(({ data }) => {

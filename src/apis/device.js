@@ -110,8 +110,8 @@ const setupDeviceApis = http => ({
 			},
 		}),
 
-	commandPageList: ({ current, size, deviceId }) =>
-		http.get("/api-device/deviceCmd/pageList", { current, size, deviceId }),
+	commandPageList: ({ current, size, deviceId, cmdType }) =>
+		http.get("/api-device/deviceCmd/pageList", { current, size, deviceId, cmdType }),
 
 	getDeviceDetailCount: deviceId => http.get("/api-device/monitor/device/statisticCommon", { deviceId }),
 
