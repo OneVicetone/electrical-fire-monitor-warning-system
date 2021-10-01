@@ -1,7 +1,7 @@
 const path = require("path")
+console.log(process.env.node_env)
 
 const theme = require(path.resolve(__dirname, "vite-config/theme.js"))
-const proxy = require(path.resolve(__dirname, "vite-config/proxy.js"))
 
 const srcPath = path.resolve(__dirname, "src")
 const layoutsPath = path.resolve(__dirname, "src/layouts")
@@ -33,19 +33,6 @@ module.exports = {
 			alias,
 		},
 	},
-	// chainWebpack: config => {
-	// 	config.resolve.alias
-	// 		.set("@", srcPath)
-	// 		.set("layouts", layoutsPath)
-	// 		.set("utils", utilsPath)
-	// 		.set("styles", stylesPath)
-	// 		.set("components", componentsPath)
-	// 		.set("pages", pagesPath)
-	// 		.set("mixins", minixsPath)
-	// 		.set("apis", apisPath)
-	// 		.set("assets", assetsPath)
-	// 		.set("store", storePath)
-	// },
 	css: {
 		loaderOptions: {
 			less: {

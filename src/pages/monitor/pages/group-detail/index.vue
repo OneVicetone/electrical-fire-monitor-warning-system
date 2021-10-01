@@ -53,6 +53,7 @@
 				</div>
 				<div class="service-type-count">
 					<ContentTitle title="服务类型统计" />
+					<img src="@/assets/images/group-detail-mock.png" />
 				</div>
 			</div>
 		</section>
@@ -457,6 +458,11 @@ export default {
 			.service-type-count {
 				height: 25.83rem;
 				padding: @content-default-padding;
+				> img {
+					width: 28.5rem;
+					height: 20rem;
+					margin-top: 2rem;
+				}
 			}
 		}
 	}

@@ -339,7 +339,7 @@ export default {
 			background-color: #131a2d;
 			margin-bottom: 1.25rem;
 			> header {
-				margin-bottom: 2rem;
+				margin: 2rem;
 			}
 		}
 		.device-info-left {
