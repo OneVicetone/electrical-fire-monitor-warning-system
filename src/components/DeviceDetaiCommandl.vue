@@ -28,7 +28,7 @@
                             {{item.name}}
                         </a-select-option>
                     </a-select>
-                    <img class="icons-wd ml83 pointer" src="assets/icons/refresh.png" @click="getList" alt="">
+                    <img class="icons-wd ml83 pointer" src="@/assets/icons/refresh.png" @click="getList" alt="">
                 </div>
                 <CommandRecord
                     :details="records"

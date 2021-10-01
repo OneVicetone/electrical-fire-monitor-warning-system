@@ -62,8 +62,8 @@ import NavTitles from "components/NavTitles.vue"
 import SimpleTable from "components/SimpleTable.vue"
 import Upload from "components/Upload.vue"
 import DeviceDetaiCommandl from "components/DeviceDetaiCommandl.vue"
-import warnIcon from "assets/icons/warn-icon.png"
-import dangerIcon from "assets/icons/danger-icon.png"
+import warnIcon from "@/assets/icons/warn-icon.png"
+import dangerIcon from "@/assets/icons/danger-icon.png"
 
 const nameForKey = {
 	temp: "温度",
