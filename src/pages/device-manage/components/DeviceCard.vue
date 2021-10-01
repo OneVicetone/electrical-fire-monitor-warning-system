@@ -2,7 +2,7 @@
 	<div class="device-card">
 		<header>
 			<div class="device-name">
-				<img src="assets/icons/device-icon.png" alt="设备图标" />
+				<img src="@/assets/icons/device-icon.png" alt="设备图标" />
 				<span class="device-name">{{ deviceInfoObj.deviceTypeName }}</span>
 			</div>
 			<div>
@@ -46,15 +46,7 @@
 import SimpleTable from "components/SimpleTable.vue"
 
 import { commonMixin } from "mixins"
-
-const nameForKey = {
-	temp: "温度",
-	electricLeakage: "漏电",
-	electricity: "电流",
-	voltage: "电压",
-	power: "功率",
-	electricEnergy: "电量",
-}
+import { nameForKey } from "utils/baseData"
 
 export default {
 	name: "DeviceCard",
@@ -116,7 +108,7 @@ export default {
 					const num = idx - 1
 					if (num >= 0) {
 						const key = Object.keys(nameForKey)[Object.values(nameForKey).findIndex(k => i.name.includes(k))]
-						i[j] = this.deviceInfoObj.channelDataMap[num][key]
+						if (this.deviceInfoObj.channelDataMap[num]) i[j] = this.deviceInfoObj.channelDataMap[num][key]
 					}
 				})
 				return i
@@ -172,7 +164,7 @@ export default {
 			.img {
 				width: 6.5rem;
 				height: 6.5rem;
-				background: url("assets/images/device-default.png") no-repeat;
+				background: url("~assets/images/device-default.png") no-repeat;
 				background-color: #122849;
 				background-size: 70%;
 				background-position: 50% 50%;

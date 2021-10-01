@@ -1,7 +1,7 @@
 <template>
 	<div class="alarm-center-container">
 		<div class="alarm-count">
-			<img src="assets/icons/alarm-count.png" alt="alarm-coun" />
+			<img src="@/assets/icons/alarm-count.png" alt="alarm-coun" />
 			<NumCount
 				v-for="item of alarmCountData"
 				:key="item.title"

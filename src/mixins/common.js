@@ -30,6 +30,9 @@ export const commonMixin = {
 		filterTimeToYYYYMMDD(val) {
 			return val ? moment(val).format("YYYY-MM-DD") : "-"
 		},
+		filterTimeToYYYYMMDDHHmmss(val) {
+			return val ? moment(val).format("YYYY-MM-DD HH:mm:ss") : "-"
+		},
 		filterAlarmStatus(val) {
 			switch (val) {
 				case 1:

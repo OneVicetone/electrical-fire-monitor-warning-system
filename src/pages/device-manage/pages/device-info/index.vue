@@ -13,7 +13,7 @@
 								<i>在线</i>
 							</p>
 							<p class="device-address">
-								<img src="assets/icons/company.png" alt="" />
+								<img src="@/assets/icons/company.png" alt="" />
 								<span>{{ deviceInfoObj.groupName | filterNull }}</span>
 								<span>{{ deviceInfoObj.installPosition | filterNull }}</span>
 							</p>
@@ -21,18 +21,18 @@
 					</div>
 					<div class="operate">
 						<div @click="sendCommand">
-							<img src="assets/icons/send-command.png" alt="" />
+							<img src="@/assets/icons/send-command.png" alt="" />
 							<span>发送指令</span>
 						</div>
 						<div @click="previewSetupPhoto">
-							<img src="assets/icons/setup-photo.png" alt="" />
+							<img src="@/assets/icons/setup-photo.png" alt="" />
 							<span>安装照片</span>
 						</div>
 					</div>
 				</div>
 				<div class="device-status">
 					<ContentTitle title="设备实时状态" />
-					<!-- <SimpleTable /> -->
+					<SimpleTable :columns="simpleTableColumns" :tableData="simpleTableData" />
 				</div>
 				<div class="device-detailed-info">
 					<ContentTitle title="设备详细信息" />
@@ -41,7 +41,7 @@
 			</div>
 			<div class="device-info-right">
 				<div class="history-data-count">
-					<img src="assets/icons/alarm-count.png" alt="alarm-coun" />
+					<img src="@/assets/icons/alarm-count.png" alt="alarm-coun" />
 					<NumCount
 						v-for="item of historyCountData"
 						:key="item.title"
@@ -128,9 +128,15 @@ import DeviceDetaiCommandl from "components/DeviceDetaiCommandl.vue"
 
 import apis from "apis"
 import { commonMixin } from "mixins"
+import { nameForKey } from "utils/baseData"
 
-const { getDeviceInfoDetail, getDeviceDetailCount, getDeviceDetailHistortAlarmList, getDeviceDetailHistoryChartData } =
-	apis
+const {
+	getDeviceInfoDetail,
+	getDeviceDetailCount,
+	getDeviceDetailHistortAlarmList,
+	getDeviceDetailHistoryChartData,
+	realTimeData,
+} = apis
 
 export default {
 	name: "DeviceInfo",
@@ -202,6 +208,21 @@ export default {
 				{ label: "安全负责人", key: "safetyDirector" },
 				{ label: "联系方式", key: "safetyDirectorMobile" },
 			],
+			simpleTableColumns: [
+				{ title: "名称", key: "name" },
+				{ title: "1/A", key: "1a" },
+				{ title: "2/B", key: "2b" },
+				{ title: "3/C", key: "3c" },
+				{ title: "4/N", key: "4n" },
+			],
+			simpleTableData: [
+				{ name: "漏电(mA)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "温度(c)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "电压(V)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "电流(A)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "功率(W)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "电量(度)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+			],
 		}
 	},
 	computed: {
@@ -269,8 +290,8 @@ export default {
 				deviceId: id,
 				// startDate: chartTime[0].format("YYYY-MM-DD"),
 				// endDate: chartTime[1].format("YYYY-MM-DD"),
-				startDate: '2021-09-22',
-				endDate: '2021-09-26',
+				startDate: "2021-09-22",
+				endDate: "2021-09-26",
 			}
 			return getDeviceDetailHistoryChartData(params).then(({ data }) => {
 				this.chartData = data
@@ -282,6 +303,21 @@ export default {
 		},
 		changePageSizeHandle(current, size) {
 			this.getTableData(current, size)
+		},
+		getDeviceStatusTableData() {
+			return realTimeData({ deviceId: this.id }).then(({ data }) => {
+				const simpleTableDataResult = this.simpleTableData.map(i => {
+					Object.keys(i).forEach((j, idx) => {
+						const num = idx - 1
+						if (num >= 0) {
+							const key = Object.keys(nameForKey)[Object.values(nameForKey).findIndex(k => i.name.includes(k))]
+							if (data[num]) i[j] = data[num][key]
+						}
+					})
+					return i
+				})
+				this.simpleTableData = simpleTableDataResult
+			})
 		},
 	},
 }
@@ -302,6 +338,9 @@ export default {
 		.device-info-right > div {
 			background-color: #131a2d;
 			margin-bottom: 1.25rem;
+			> header {
+				margin-bottom: 2rem;
+			}
 		}
 		.device-info-left {
 			width: 31.67rem;
@@ -391,6 +430,8 @@ export default {
 			}
 			.device-status {
 				height: 24rem;
+				padding-right: 1.42rem;
+				padding-left: 1.08rem;
 			}
 			.device-detailed-info {
 				height: 30.5rem;
