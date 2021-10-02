@@ -297,7 +297,9 @@ export default {
 				this.chartData = data
 			})
 		},
-		toOperat() {},
+		toOperat(data, type) {
+			
+		},
 		changePageHandle(page, pageSize) {
 			this.getTableData(page, pageSize)
 		},
@@ -339,7 +341,7 @@ export default {
 			background-color: #131a2d;
 			margin-bottom: 1.25rem;
 			> header {
-				margin: 2rem;
+				margin-bottom: 2rem;
 			}
 		}
 		.device-info-left {
