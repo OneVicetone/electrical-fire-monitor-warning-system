@@ -10,7 +10,7 @@
 					</a-form-model-item>
 					<a-form-model-item label="2、上传填写后的数据文件：">
 						<a-upload>
-							<a-button ghost icon="upload">Click to Upload </a-button>
+							<a-button ghost icon="upload">上传文件</a-button>
 						</a-upload>
 					</a-form-model-item>
 					<a-form-model-item v-if="operation_type === IMPORT" label="3、请选择数据范围：">

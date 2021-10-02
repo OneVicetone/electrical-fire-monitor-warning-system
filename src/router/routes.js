@@ -23,6 +23,7 @@ const BatchOperation = () => import("pages/device-manage/pages/batch-operation/i
 
 const PhoneLogin = () => import("pages/phone-pages/login/index.vue")
 const PhoneAlarmList = () => import("pages/phone-pages/alarm-list/index.vue")
+const PhoneAlarmInfo = () => import("pages/phone-pages/alarm-info/index.vue")
 
 const baseRoutes = [
 	{
@@ -47,6 +48,15 @@ const baseRoutes = [
 		component: PhoneAlarmList,
 		meta: {
 			title: "报警列表",
+		},
+	},
+	{
+		path: "/phone-alarm-info/:id",
+		name: "PhoneAlarmInfo",
+		component: PhoneAlarmInfo,
+		props: true,
+		meta: {
+			title: "报警详情",
 		},
 	},
 	{
