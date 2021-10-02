@@ -1,18 +1,18 @@
-const setupAccoutApis = http => ({
-	login: form => http.formPost("/api-user/auth/login", form),
+const setupAccoutApis = (http, BASE_URL) => ({
+	login: form => http.formPost(`${BASE_URL}/api-user/auth/login`, form),
 
-	loginout: token => http.post("/api-user/auth/loginOff", { token }),
+	loginout: token => http.post(`${BASE_URL}/api-user/auth/loginOff`, { token }),
 
-	getLoginCode: () => http.get("/api-user/auth/loginCode", {}),
+	getLoginCode: () => http.get(`${BASE_URL}/api-user/auth/loginCode`, {}),
 
 	changePassword: ({ userId, password, newPassword }) =>
-		http.put("/api-user/auth/updatePassword", { userId, password, newPassword }),
+		http.put(`${BASE_URL}/api-user/auth/updatePassword`, { userId, password, newPassword }),
 
-	getUserMenuList: () => http.get("/api-user/menu/web/list", {}),
+	getUserMenuList: () => http.get(`${BASE_URL}/api-user/menu/web/list`, {}),
 
-	getUploadUrl: () => http.get("/api-user/common/ossSign"),
+	getUploadUrl: () => http.get(`${BASE_URL}/api-user/common/ossSign`),
 
-	getUserNotifyNum: () => http.get("/api-alarm/statistics/countTotal"),
+	getUserNotifyNum: () => http.get(`${BASE_URL}/api-alarm/statistics/countTotal`),
 })
 
 export default setupAccoutApis

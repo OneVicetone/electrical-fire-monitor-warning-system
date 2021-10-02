@@ -1,12 +1,12 @@
-const setupCommonApis = http => ({
-	getSelectOptions: type => http.get(`/api-common/common/parameter/${type}/list`),
+const setupCommonApis = (http, BASE_URL) => ({
+	getSelectOptions: type => http.get(`${BASE_URL}/api-common/common/parameter/${type}/list`),
 
-	getMapKey: module => http.get("/api-common/common/baiduAk", { module }),
+	getMapKey: module => http.get(`${BASE_URL}/api-common/common/baiduAk`, { module }),
 
 	getDownloadList: ({ current, size, downName }) =>
-		http.get("/api-common/download/pageList", { current, size, downName }),
+		http.get(`${BASE_URL}/api-common/download/pageList`, { current, size, downName }),
 		
-	getDownloadCountById: id => http.get("/api-common/download/downloadCount", { id }),
+	getDownloadCountById: id => http.get(`${BASE_URL}/api-common/download/downloadCount`, { id }),
 
 	uploadFile: ({ url, data }) => http.formPost(url, data),
 })

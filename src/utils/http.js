@@ -18,7 +18,6 @@ const getRequestHeader = (type = "json") => {
 const successCode = 1
 
 const axiosInstance = axios.create({
-	baseURL: process?.env?.BASE_URL ? process.env.BASE_URL : "/",
 	timeout: 3000,
 	headers: getRequestHeader(),
 })

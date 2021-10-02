@@ -1,5 +1,4 @@
 const path = require("path")
-console.log(process.env.node_env)
 
 const theme = require(path.resolve(__dirname, "vite-config/theme.js"))
 

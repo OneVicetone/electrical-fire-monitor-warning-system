@@ -1,6 +1,6 @@
-const setupUnitApis = http => ({
+const setupUnitApis = (http, BASE_URL) => ({
 	getUnitList: ({ current, size, name, principalUserName, parentId }) =>
-		http.get("/api-user/group/pageList", { current, size, name, principalUserName, parentId }),
+		http.get(`${BASE_URL}/api-user/group/pageList`, { current, size, name, principalUserName, parentId }),
 	createUnit: ({
 		name,
 		parentId,
@@ -16,7 +16,7 @@ const setupUnitApis = http => ({
 		effectPicPath,
 		designPicPath,
 	}) =>
-		http.post("/api-user/group/insert", {
+		http.post(`${BASE_URL}/api-user/group/insert`, {
 			name,
 			parentId,
 			typeCode,
@@ -31,10 +31,10 @@ const setupUnitApis = http => ({
 			effectPicPath,
 			designPicPath,
 		}),
-	disableByUserId: userId => http.get("/api-user/auth/disable", { userId }),
-	enableByUserId: userId => http.get("/api-user/auth/disable", { userId }),
-	getUnitDetailById: id => http.get(`/api-user/group/detail/${id}`, {}),
-    getGroupTree: () => http.get('/api-user/group/tree', {})
+	disableByUserId: userId => http.get(`${BASE_URL}/api-user/auth/disable`, { userId }),
+	enableByUserId: userId => http.get(`${BASE_URL}/api-user/auth/disable`, { userId }),
+	getUnitDetailById: id => http.get(`${BASE_URL}/api-user/group/detail/${id}`, {}),
+	getGroupTree: () => http.get(`${BASE_URL}/api-user/group/tree`, {}),
 })
 
 export default setupUnitApis
