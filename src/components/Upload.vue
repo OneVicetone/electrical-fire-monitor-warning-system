@@ -81,7 +81,7 @@ export default {
 }
 
 /deep/ .ant-upload-list-picture-card-container {
-   width: 6.67rem;
+    width: 6.67rem;
     height: 6.67rem;
 }
 

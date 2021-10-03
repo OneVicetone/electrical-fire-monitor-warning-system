@@ -110,6 +110,15 @@
 			</div>
 		</div>
 		<DeviceDetaiCommandl v-model="dialog" @on-res="allRequest"></DeviceDetaiCommandl>
+		<DealWithDialog
+			v-model="alarmAlert"
+			:able="isAble"
+			:opinions="remarks"
+			:alarmData="alarmHandleData"
+			:handAlarmList="handAlarm"
+			@on-sure="dialogSure"
+			@refresh-alarm-list="allRequest">
+		</DealWithDialog>
 	</div>
 </template>
 
@@ -125,6 +134,7 @@ import Pagination from "components/Pagination.vue"
 import SimpleTable from "components/SimpleTable.vue"
 import LineChart from "components/LineChart.vue"
 import DeviceDetaiCommandl from "components/DeviceDetaiCommandl.vue"
+import DealWithDialog from "components/businessComp/DealWithDialog.vue"
 
 import apis from "apis"
 import { commonMixin } from "mixins"
@@ -136,6 +146,8 @@ const {
 	getDeviceDetailHistortAlarmList,
 	getDeviceDetailHistoryChartData,
 	realTimeData,
+	getAlarmDetail,
+	processAlarm
 } = apis
 
 export default {
@@ -150,6 +162,7 @@ export default {
 		SimpleTable,
 		DeviceDetaiCommandl,
 		LineChart,
+		DealWithDialog
 	},
 	props: {
 		id: String,
@@ -223,6 +236,10 @@ export default {
 				{ name: "功率(W)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 				{ name: "电量(度)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 			],
+			alarmAlert: false,
+			isAble: false,
+			alarmHandleData: {},
+			handAlarm: {}
 		}
 	},
 	computed: {
@@ -233,6 +250,9 @@ export default {
 			} = this
 			return chartData[chartRadioValue] ? Object.values(chartData[chartRadioValue]).map(i => i) : []
 		},
+		remarks() {
+			return this.alarmHandleData.processBOList && this.alarmHandleData.processBOList[0].remark
+		}
 	},
 	mounted() {
 		this.allRequest();
@@ -297,8 +317,20 @@ export default {
 				this.chartData = data
 			})
 		},
-		toOperat(data, type) {
-			
+		async toOperat(data, type) {
+			const { deviceId, id, alarmTime, createTime } = data
+			this.isAble = type === "process"
+			const { data: alarmDetail } = await getAlarmDetail(id)
+			this.alarmHandleData = alarmDetail
+			const { data: tableList } = await realTimeData({ deviceId })
+			this.handAlarm = tableList || {}
+			this.alarmAlert = true;
+		},
+		async dialogSure(params) {
+			const result = await processAlarm(params)
+			console.log("确定", result)
+			this.allRequest()
+			this.showAlert = false
 		},
 		changePageHandle(page, pageSize) {
 			this.getTableData(page, pageSize)
