@@ -4,7 +4,15 @@
 			<h1>您好,</h1>
 			<h2>欢迎使用电放心电气火灾监控系统</h2>
 		</header>
-		<section></section>
+		<section>
+			<a-input placeholder="请输入登录账户" v-model="username">
+				<a-icon slot="prefix" type="user" />
+			</a-input>
+			<a-input placeholder="请输入密码" v-model="password" type="password">
+				<a-icon slot="prefix" type="lock" />
+			</a-input>
+			<a-button type="primary" block :loading="isLogining" @click="toLogin">登录</a-button>
+		</section>
 		<footer>
 			<p>24小时客服热线：0755-36567158</p>
 			<p>©深圳市标越科技有限公司</p>
@@ -14,17 +22,56 @@
 </template>
 
 <script>
+import md5 from "md5"
+import { createNamespacedHelpers } from "vuex"
+
 import { initHtmlBasePx } from "utils/initial"
+import { LOGIN, GET_MENU_LIST } from "store/account"
+
+const { mapActions } = createNamespacedHelpers("account")
 
 export default {
 	name: "PhoneLogin",
+	data() {
+		return {
+			username: "ww",
+			password: "BYkj8080",
+			// username: "",
+			// password: "",
+			source: 1,
+			isLogining: false,
+		}
+	},
 	beforeCreate() {
 		initHtmlBasePx(62.5)
+	},
+	methods: {
+		...mapActions({
+			login: LOGIN,
+			getMenuList: GET_MENU_LIST,
+		}),
+		async toLogin() {
+			this.isLogining = true
+			try {
+				const { username, password, source, $router, login, getMenuList } = this
+				const formData = new FormData()
+				formData.append("username", username)
+				formData.append("password", md5(password))
+				formData.append("source", source)
+				await login(formData)
+				// setRoutes(this.routes)
+				// addRoutes(this.routes)
+				$router.replace("/phone-alarm-list")
+			} catch (err) {
+				this.isLogining = false
+				console.error(err)
+			}
+		},
 	},
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .phone-login-container {
 	width: 100vw;
 	height: 100vh;
@@ -44,6 +91,31 @@ export default {
 		}
 	}
 	> section {
+		.ant-input {
+			background-color: #fff;
+			border: none;
+			border-bottom: 1px solid;
+			border-color: #e5e5e5;
+			border-radius: 0;
+			color: #131a2d;
+			&::focus {
+				border: none;
+				outline: none;
+				box-shadow: none;
+			}
+			&::hover {
+				border: none;
+			}
+		}
+		.ant-input-affix-wrapper {
+			margin-bottom: 9.08rem;
+		}
+		.ant-input-affix-wrapper:hover .ant-input:not(.ant-input-disabled) {
+			border-color: #e5e5e5;
+		}
+		.ant-btn {
+			height: 8.33rem;
+		}
 	}
 	> footer {
 		width: calc(100% - 3.33rem * 2);

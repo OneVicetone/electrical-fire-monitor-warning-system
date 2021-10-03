@@ -30,13 +30,11 @@ export default {
 	mixins: [commonMixin],
 	data() {
 		return {
-			username: "ww",
-			password: "BYkj8080",
-
+			// username: "ww",
+			// password: "BYkj8080",
+			username: "",
+			password: "",
 			source: 1,
-			// username: localStorage.getItem(USERNAME) || "",
-			// password: "",
-			// source: 1,
 			saveLocalUserName: false,
 			isLogining: false,
 		}
@@ -63,7 +61,7 @@ export default {
 				await login(formData)
 				setRoutes(this.routes)
 				addRoutes(this.routes)
-				$router.push("/monitor")
+				$router.replace("/monitor")
 			} catch (err) {
 				this.isLogining = false
 				console.error(err)

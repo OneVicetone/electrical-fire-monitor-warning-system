@@ -231,6 +231,9 @@ export default {
 					height: 12.5rem;
 					border-color: #0096ff;
 				}
+				.ant-upload-list {
+					flex: 1;
+				}
 				.ant-upload-list-picture-card-container,
 				.ant-upload-list-item {
 					width: 12.5rem;
