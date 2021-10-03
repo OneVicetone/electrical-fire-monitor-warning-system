@@ -108,7 +108,7 @@
 import moment from "moment"
 import Pagination from "components/Pagination.vue"
 import NumCount from "components/NumCount.vue"
-import DealWithDialog from "./components/DealWithDialog.vue"
+import DealWithDialog from "components/businessComp/DealWithDialog.vue"
 import allOptionsData from "utils/optionsData"
 
 import apis from "apis"
@@ -226,7 +226,7 @@ export default {
 			this.alarmHandleData = alarmDetail
 			const { data: tableList } = await realTimeData({ deviceId })
 			this.handAlarm = tableList || {}
-			this.showAlert = true
+			this.showAlert = true;
 		},
 		async dialogSure(params) {
 			const result = await processAlarm(params)

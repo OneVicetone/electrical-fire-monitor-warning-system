@@ -35,7 +35,10 @@
                     <br />
                     <div class="flex mt">
                         <span class="yahei nowrap">现场图片：</span>
-                        <Upload ref="upload" @is-done="uploadDone"></Upload>
+                        <Upload v-if="able" ref="upload" @is-done="uploadDone"></Upload>
+                        <div v-else class="show-img" >
+                            <img v-for="(item, index) in imgList" :key="index" :src="item" alt="">
+                        </div>
                     </div>
                 </Nav-titles>
             </section>
@@ -168,6 +171,9 @@ export default {
 				})
 				return i
 			})
+        },
+        imgList() {
+            return this.showList && this.showList.processBOList[0].sitePhotos.split(',');
         }
     },
     watch: {
@@ -263,6 +269,15 @@ export default {
                 }
             }
 		}
+        .show-img {
+            img{
+                width: 6.67rem;
+                height: 6.67rem;
+                &:not(:first-child) {
+                    margin-left: 8px;
+                }
+            }
+        }
         .mt {
             margin-top: 2.58rem;
         }

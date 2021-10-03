@@ -8,7 +8,7 @@
 		<div class="value-list" :style="`color: ${valueColor};`">
 			<p v-for="item of labels" :key="item.label">
 				{{ item.key && values[item.key] ? values[item.key] : "-" }}
-				<a-button v-if="item.key === 'installPosition'" ghost size="small">查看</a-button>
+				<a-button v-if="item.key === 'installPosition'" ghost size="small" @click="onView">查看</a-button>
 			</p>
 		</div>
 	</div>
@@ -34,6 +34,11 @@ export default {
 			default: "#dcdcdc",
 		},
 	},
+	methods: {
+		onView() {
+			console.log('待看')
+		}
+	}
 }
 </script>
 
