@@ -70,7 +70,7 @@ import Breadcrumb from "components/Breadcrumb.vue"
 import ContentTitle from "components/ContentTitle.vue"
 import LineChart from "components/LineChart.vue"
 import BarChart from "components/BarChart.vue"
-import SeePic from "components/businessComp/seePic.vue"
+import SeePic from "components/businessComp/SeePic.vue"
 
 import apis from "apis"
 const {
