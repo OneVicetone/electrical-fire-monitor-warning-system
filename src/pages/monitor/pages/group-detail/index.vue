@@ -57,6 +57,8 @@
 				</div>
 			</div>
 		</section>
+		<seePic v-model="seePicLog" :url="designPicPath">
+		</seePic>
 	</div>
 </template>
 
@@ -68,6 +70,7 @@ import Breadcrumb from "components/Breadcrumb.vue"
 import ContentTitle from "components/ContentTitle.vue"
 import LineChart from "components/LineChart.vue"
 import BarChart from "components/BarChart.vue"
+import SeePic from "components/businessComp/seePic.vue"
 
 import apis from "apis"
 const {
@@ -84,7 +87,7 @@ const {
 
 export default {
 	name: "GroupDetail",
-	components: { Breadcrumb, ContentTitle, LineChart, BarChart },
+	components: { Breadcrumb, ContentTitle, LineChart, BarChart, SeePic },
 	props: {
 		id: String,
 	},
@@ -121,6 +124,7 @@ export default {
 				{ name: "故障设备", num: 0, key: "faultNum" },
 				{ name: "离线设备", num: 0, key: "offLineNum" },
 			],
+			seePicLog: false
 		}
 	},
 	mounted() {
@@ -230,7 +234,9 @@ export default {
 				this.groupDetailCount = groupDetailCountCopy
 			})
 		},
-		enlargeImg() {},
+		enlargeImg() {
+			this.seePicLog = true
+		},
 		changeTitleContent(key) {
 			this.getChartData(key)
 		},

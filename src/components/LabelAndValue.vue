@@ -11,12 +11,20 @@
 				<a-button v-if="item.key === 'installPosition'" ghost size="small" @click="onView">查看</a-button>
 			</p>
 		</div>
+		<AccordPic
+			v-model="picLog" :havePic="picList"
+			@on-delete-img="delImg" @add-pic="addPic">
+			<div class="positions">安装位置：{{values.installPosition}}</div>
+		</AccordPic>
 	</div>
 </template>
 
 <script>
+import AccordPic from "components/businessComp/AccordPic.vue"
+
 export default {
 	name: "LabelAndValue",
+	components: { AccordPic },
 	props: {
 		labels: {
 			type: Array,
@@ -33,10 +41,24 @@ export default {
 			type: String,
 			default: "#dcdcdc",
 		},
+		picList: Array
+	},
+	data() {
+		return {
+			picLog: false
+		}
 	},
 	methods: {
 		onView() {
 			console.log('待看')
+			this.picLog = true;
+			// this.$emit('on-view-pic')
+		},
+		delImg(url) {
+			this.$emit('delete-img-source', url)
+		},
+		addPic(url) {
+			this.$emit('add-img-source', url)
 		}
 	}
 }

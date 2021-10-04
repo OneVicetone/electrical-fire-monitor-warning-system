@@ -123,6 +123,18 @@ const setupDeviceApis = (http, BASE_URL) => ({
 
 	getDeviceDetailHistoryChartData: ({ deviceId, startDate, endDate }) =>
 		http.get(`${BASE_URL}/api-device/reportData/getByDateForModule`, { deviceId, startDate, endDate }),
+
+	addPositionImg: ({
+		deviceId,
+		url
+	}) =>
+		http.formPost(`${BASE_URL}/api-device/install/positionImg/add`, { deviceId, url }),
+
+	deletePositionImg: ({
+		deviceId,
+		url
+	}) =>
+		http.formPost(`${BASE_URL}/api-device/install/positionImg/delete`, { deviceId, url }),
 })
 
 export default setupDeviceApis
