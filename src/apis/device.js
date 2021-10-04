@@ -123,6 +123,8 @@ const setupDeviceApis = (http, BASE_URL) => ({
 
 	getDeviceDetailHistoryChartData: ({ deviceId, startDate, endDate }) =>
 		http.get(`${BASE_URL}/api-device/reportData/getByDateForModule`, { deviceId, startDate, endDate }),
+
+	getDeviceTypeOptionsData: typeId => http.get(`${BASE_URL}/api-device/deviceType/parameter/list`, { typeId }),
 })
 
 export default setupDeviceApis

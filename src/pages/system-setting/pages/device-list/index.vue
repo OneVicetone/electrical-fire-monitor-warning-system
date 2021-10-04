@@ -31,7 +31,7 @@
 					<a-button type="primary" size="small" @click="search">搜索</a-button>
 					<a-button type="primary" size="small">重置</a-button>
 				</a-form-model-item>
-				<a-form-model-item> </a-form-model-item>
+				
 				<div class="other-btns">
 					<a-button type="primary" size="small" @click="add"><a-icon type="plus" />新增设备</a-button>
 					<a-popover trigger="click" placement="bottomRight">
@@ -97,7 +97,7 @@ import { commonMixin, tableListMixin } from "mixins"
 import optionsData from "utils/optionsData"
 
 const { getDeviceListForSystemSettiing, getGroupTree } = apis
-const { deviceTypeOptions, deviceIdOptions } = optionsData
+const { deviceIdOptions } = optionsData
 
 export default {
 	name: "DeviceList",

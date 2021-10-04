@@ -63,10 +63,10 @@
 								</a-radio-group>
 							</a-form-model-item>
 							<a-form-model-item>
-								<!-- <a-range-picker v-model="filterForm.chartTime" /> -->
+								<a-range-picker format="YYYY-MM-DD" @change="getTimePickerDate" />
 							</a-form-model-item>
 							<a-form-model-item>
-								<a-button type="primary" size="small">查询</a-button>
+								<a-button type="primary" size="small" @click="getChartData">查询</a-button>
 							</a-form-model-item>
 							<a-form-model-item>
 								<a-button type="primary" ghost size="small">导出</a-button>
@@ -117,7 +117,8 @@
 			:alarmData="alarmHandleData"
 			:handAlarmList="handAlarm"
 			@on-sure="dialogSure"
-			@refresh-alarm-list="allRequest">
+			@refresh-alarm-list="allRequest"
+		>
 		</DealWithDialog>
 	</div>
 </template>
@@ -147,7 +148,7 @@ const {
 	getDeviceDetailHistoryChartData,
 	realTimeData,
 	getAlarmDetail,
-	processAlarm
+	processAlarm,
 } = apis
 
 export default {
@@ -162,7 +163,7 @@ export default {
 		SimpleTable,
 		DeviceDetaiCommandl,
 		LineChart,
-		DealWithDialog
+		DealWithDialog,
 	},
 	props: {
 		id: String,
@@ -178,7 +179,8 @@ export default {
 			],
 			filterForm: {
 				chartRadioValue: "electricity",
-				chartTime: [moment(), moment()],
+				startDate: moment().subtract(3, "days"),
+				endDate: moment(),
 			},
 			chartRadioOptions: [
 				{ label: "电流", value: "electricity" },
@@ -239,7 +241,7 @@ export default {
 			alarmAlert: false,
 			isAble: false,
 			alarmHandleData: {},
-			handAlarm: {}
+			handAlarm: {},
 		}
 	},
 	computed: {
@@ -252,18 +254,18 @@ export default {
 		},
 		remarks() {
 			return this.alarmHandleData.processBOList && this.alarmHandleData.processBOList[0].remark
-		}
+		},
 	},
 	mounted() {
-		this.allRequest();
+		this.allRequest()
 	},
 	methods: {
 		allRequest() {
-			const { getDeviceInfoDetail, getDeviceCount, getTableData, getChartData } = this;
-			Promise.allSettled([getDeviceInfoDetail(), getDeviceCount(), getTableData(), getChartData()]);
+			const { getDeviceInfoDetail, getDeviceCount, getTableData, getChartData } = this
+			Promise.allSettled([getDeviceInfoDetail(), getDeviceCount(), getTableData(), getChartData()])
 		},
 		sendCommand() {
-			this.dialog = true;
+			this.dialog = true
 		},
 		getDeviceInfoDetail() {
 			return getDeviceInfoDetail(this.id).then(({ data }) => {
@@ -304,14 +306,12 @@ export default {
 		getChartData() {
 			const {
 				id,
-				filterForm: { chartTime },
+				filterForm: { startDate, endDate },
 			} = this
 			const params = {
 				deviceId: id,
-				// startDate: chartTime[0].format("YYYY-MM-DD"),
-				// endDate: chartTime[1].format("YYYY-MM-DD"),
-				startDate: "2021-09-22",
-				endDate: "2021-09-26",
+				startDate: startDate.format("YYYY-MM-DD"),
+				endDate: endDate.format("YYYY-MM-DD"),
 			}
 			return getDeviceDetailHistoryChartData(params).then(({ data }) => {
 				this.chartData = data
@@ -324,7 +324,7 @@ export default {
 			this.alarmHandleData = alarmDetail
 			const { data: tableList } = await realTimeData({ deviceId })
 			this.handAlarm = tableList || {}
-			this.alarmAlert = true;
+			this.alarmAlert = true
 		},
 		async dialogSure(params) {
 			const result = await processAlarm(params)
@@ -352,6 +352,11 @@ export default {
 				})
 				this.simpleTableData = simpleTableDataResult
 			})
+		},
+		getTimePickerDate(dates) {
+			const [startDate, endDate] = dates
+			this.filterForm.startDate = startDate
+			this.filterForm.endDate = endDate
 		},
 	},
 }

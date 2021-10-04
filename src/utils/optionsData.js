@@ -5,7 +5,7 @@ const optionsPlaceholder = {
 	deviceIdOptions: "请选择设备编号",
 	handleStatusOptions: "请选择报警处理状态",
 	deviceTypeOptions: "请选择设备类型",
-	deviceIdOptions: "请选择设备编号",
+	deviceIdOptions: "请选择设备型号",
 	networkTypeOptions: "请选择联网方式",
 	needGatewayOptions: "请选择是否需要网关",
 	protocolTypeOptions: "请选择设备协议"

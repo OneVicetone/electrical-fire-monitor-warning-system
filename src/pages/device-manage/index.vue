@@ -47,7 +47,7 @@
 						</a-list>
 						<a-button type="primary" size="small">批量操作<a-icon type="down" /></a-button>
 					</a-popover>
-					<a-button type="primary" size="small" @click="exportDeviceList">导出</a-button>
+					<a-button type="primary" size="small" @click="exportData">导出</a-button>
 				</div>
 			</a-form-model>
 			<div class="device-list">
@@ -74,14 +74,12 @@ import OrganizationList from "components/OrganizationList.vue"
 import DeviceCard from "./components/DeviceCard.vue"
 import Pagination from "components/Pagination.vue"
 
-import optionsData from "utils/optionsData"
+import { optionsPlaceholder } from "utils/optionsData"
 import { SHIP, TRANSFER, IMPORT } from "utils/baseData"
 import { commonMixin, tableListMixin } from "mixins"
 import apis from "apis"
 
-const { getDeviceList, createDevice, changeDeviceInfo, exportDeviceList, getGroupTree } = apis
-
-const { deviceTypeOptions, deviceIdOptions } = optionsData
+const { getDeviceList, exportDeviceList, getGroupTree, getDeviceTypeOptionsData } = apis
 
 const searchFromInitial = {
 	sn: "",
@@ -107,7 +105,7 @@ export default {
 			deviceStatusRadio: deviceStatusRadioInitial,
 			searchForm: cloneDeep(searchFromInitial),
 			deviceTypeOptions: [],
-			deviceIdOptions,
+			deviceIdOptions: [],
 			paginationData: {
 				total: 0,
 				current: 1,
@@ -143,11 +141,13 @@ export default {
 			getDeviceListData,
 			getGroupTreeData,
 			getOptionsListPromiseArr,
+			getDeviceType,
 			paginationData: { current, size },
 		} = this
 		Promise.allSettled([
 			getDeviceListData(current, size),
 			getGroupTreeData(),
+			getDeviceType(),
 			...getOptionsListPromiseArr(optionsTypes),
 		])
 	},
@@ -186,8 +186,23 @@ export default {
 		changePageSizeHandle(current, size) {
 			this.getDeviceListData(current, size)
 		},
-		exportDeviceList() {
-			exportDeviceList()
+		getDeviceType(typeId = 0) {
+			return getDeviceTypeOptionsData(typeId).then(({ data }) => {
+				this.deviceIdOptions = [
+					{ label: optionsPlaceholder["deviceIdOptions"], value: "" },
+					...data.map(({ parameterName, parameterCode }) => ({
+						label: parameterName,
+						value: parameterCode,
+					})),
+				]
+			})
+		},
+		exportData() {
+			const params = {
+				...this.searchForm,
+				...(this.deviceStatusRadio !== "0" && { status: this.deviceStatusRadio }),
+			}
+			exportDeviceList(params)
 		},
 		changeDeviceWorkStatus() {},
 		getGroupTreeData() {
@@ -203,6 +218,12 @@ export default {
 	watch: {
 		deviceStatusRadio() {
 			this.search()
+		},
+		"searchForm.deviceTypeId": {
+			deep: true,
+			handler(val) {
+				this.getDeviceType(val)
+			},
 		},
 	},
 }

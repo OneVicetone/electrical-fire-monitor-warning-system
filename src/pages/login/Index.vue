@@ -5,7 +5,21 @@
 			<div>
 				<a-input class="username-input" v-model="username" palceholder="请输入用户账号" />
 				<a-input class="password-input" type="password" v-model="password" palceholder="请输入用户密码" />
-				<a-button type="primary" class="login-btn" block :loading="isLogining" @click="toLogin">登录</a-button>
+				<drag-verify
+					ref="dragVerify"
+					:width="getBasePx() * 31.85"
+					text="请按住滑块拖动到最右边验证"
+					radius="0px"
+					background="transparent"
+					successText="验证成功"
+					:isPassing.sync="isPassing"
+					handlerIcon="el-icon-right"
+					successIcon="el-icon-check"
+				>
+				</drag-verify>
+				<a-button type="primary" class="login-btn" block :disabled="!isPassing" :loading="isLogining" @click="toLogin"
+					>登录</a-button
+				>
 				<a-checkbox v-model="saveLocalUserName">记住用户名</a-checkbox>
 			</div>
 		</div>
@@ -18,16 +32,19 @@
 
 <script>
 import md5 from "md5"
+import dragVerify from "vue-drag-verify2"
 import { createNamespacedHelpers } from "vuex"
 
-import { LOGIN, GET_MENU_LIST, GET_ROUTES_BY_MENU_LIST, SET_ROUTES } from "store/account"
-import { USERNAME } from "utils/storageConstant"
 import { commonMixin } from "mixins"
+import { getBasePx } from "utils/initial"
+import { USERNAME } from "utils/storageConstant"
+import { LOGIN, GET_MENU_LIST, GET_ROUTES_BY_MENU_LIST, SET_ROUTES } from "store/account"
 
 const { mapGetters, mapMutations, mapActions } = createNamespacedHelpers("account")
 export default {
 	name: "Login",
 	mixins: [commonMixin],
+	components: { dragVerify },
 	data() {
 		return {
 			// username: "ww",
@@ -37,6 +54,7 @@ export default {
 			source: 1,
 			saveLocalUserName: false,
 			isLogining: false,
+			isPassing: false,
 		}
 	},
 	computed: mapGetters({
@@ -67,6 +85,7 @@ export default {
 				console.error(err)
 			}
 		},
+		getBasePx,
 	},
 	watch: {
 		saveLocalUserName(val) {
@@ -119,6 +138,9 @@ export default {
 					color: #81899c;
 				}
 			}
+			.password-input {
+				margin-bottom: 0;
+			}
 			> button {
 				height: 4.16rem;
 			}
@@ -132,6 +154,15 @@ export default {
 					}
 				}
 			}
+		}
+		.drag_verify {
+			margin: 2.75rem 0 2.92rem;
+			// background: transparent !important;
+			// color: #0096ff;
+		}
+		.ant-btn-primary[disabled] {
+			background-color: transparent;
+			color: #dcdcdc;
 		}
 	}
 	.footer-text {

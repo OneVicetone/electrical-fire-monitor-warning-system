@@ -51,7 +51,7 @@
 				/>
 			</a-form-model-item>
 			<a-form-model-item>
-				<!-- <a-range-picker v-model="searchForm.alarmTime" size="small" format="YYYY-MM-DD" /> -->
+				<a-range-picker size="small" format="YYYY-MM-DD" @change="getTimePickerDate" />
 			</a-form-model-item>
 			<a-form-model-item>
 				<a-button type="primary" size="small" @click="search">搜索</a-button>
@@ -140,7 +140,8 @@ export default {
 				alarmLevel: "",
 				deviceTypeId: "",
 				status: "",
-				alarmTime: [moment(), moment()],
+				startDate: "",
+				endDate: "",
 			},
 			groupTypeOptions: [],
 			alarmTypeOptions: [],
@@ -226,7 +227,7 @@ export default {
 			this.alarmHandleData = alarmDetail
 			const { data: tableList } = await realTimeData({ deviceId })
 			this.handAlarm = tableList || {}
-			this.showAlert = true;
+			this.showAlert = true
 		},
 		async dialogSure(params) {
 			const result = await processAlarm(params)
@@ -234,13 +235,10 @@ export default {
 			this.getTableData()
 			this.showAlert = false
 		},
-	},
-	watch: {
-		searchForm: {
-			handler(val) {
-				console.log(val)
-			},
-			deep: true,
+		getTimePickerDate(_, dateStr) {
+			const [startDate, endDate] = dateStr
+			this.searchForm.startDate = startDate
+			this.searchForm.endDate = endDate
 		},
 	},
 }
