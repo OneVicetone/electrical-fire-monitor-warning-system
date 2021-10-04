@@ -1,8 +1,8 @@
 <template>
     <div>
         <a-upload class="uploader" list-type="picture-card" :customRequest="handleUploadFile" :remove="imgDel"
-              :file-list="fileList" @preview="handlePreview">
-              <div v-if="fileList.length < len">
+            :file-list="fileList" @preview="handlePreview">
+            <div v-if="fileList.length < len">
                 <a-icon type="plus" />
             </div>
         </a-upload>

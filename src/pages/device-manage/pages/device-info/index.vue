@@ -36,7 +36,14 @@
 				</div>
 				<div class="device-detailed-info">
 					<ContentTitle title="设备详细信息" />
-					<LabelAndValue :labels="deviceDetailedLabel" :values="deviceInfoObj" />
+					<LabelAndValue
+						:labels="deviceDetailedLabel"
+						:values="deviceInfoObj"
+						:picList="installImg"
+						@on-get-pic="getDeviceInfoDetail"
+						@delete-img-source="delImgSource"
+						@add-img-source="addImgSource"
+					/>
 				</div>
 			</div>
 			<div class="device-info-right">
@@ -120,6 +127,9 @@
 			@refresh-alarm-list="allRequest"
 		>
 		</DealWithDialog>
+		<AccordPic v-model="picLog" :havePic="installImg" @on-delete-img="delImgSource" @add-pic="addImgSource">
+			<div class="positions">安装位置：{{ deviceInfoObj.installPosition }}</div>
+		</AccordPic>
 	</div>
 </template>
 
@@ -134,8 +144,9 @@ import LabelAndValue from "components/LabelAndValue.vue"
 import Pagination from "components/Pagination.vue"
 import SimpleTable from "components/SimpleTable.vue"
 import LineChart from "components/LineChart.vue"
-import DeviceDetaiCommandl from "components/DeviceDetaiCommandl.vue"
+import DeviceDetaiCommandl from "components/businessComp/DeviceDetaiCommandl.vue"
 import DealWithDialog from "components/businessComp/DealWithDialog.vue"
+import AccordPic from "components/businessComp/AccordPic.vue"
 
 import apis from "apis"
 import { commonMixin } from "mixins"
@@ -149,6 +160,8 @@ const {
 	realTimeData,
 	getAlarmDetail,
 	processAlarm,
+	deletePositionImg,
+	addPositionImg,
 } = apis
 
 export default {
@@ -164,6 +177,7 @@ export default {
 		DeviceDetaiCommandl,
 		LineChart,
 		DealWithDialog,
+		AccordPic,
 	},
 	props: {
 		id: String,
@@ -242,6 +256,7 @@ export default {
 			isAble: false,
 			alarmHandleData: {},
 			handAlarm: {},
+			picLog: false,
 		}
 	},
 	computed: {
@@ -252,8 +267,12 @@ export default {
 			} = this
 			return chartData[chartRadioValue] ? Object.values(chartData[chartRadioValue]).map(i => i) : []
 		},
+		installImg() {
+			return this.deviceInfoObj?.installPositionImg.split(",")
+		},
 		remarks() {
-			return this.alarmHandleData.processBOList && this.alarmHandleData.processBOList[0].remark
+			const str = this.alarmHandleData.processBOList && this.alarmHandleData.processBOList[0]
+			return str && str.remark
 		},
 	},
 	mounted() {
@@ -286,7 +305,9 @@ export default {
 				this.historyCountData = historyCountDataClone
 			})
 		},
-		previewSetupPhoto() {},
+		previewSetupPhoto() {
+			this.picLog = true
+		},
 		getTableData(current = 1, size = 10) {
 			const params = {
 				current,
@@ -357,6 +378,24 @@ export default {
 			const [startDate, endDate] = dates
 			this.filterForm.startDate = startDate
 			this.filterForm.endDate = endDate
+		},
+		delImgSource(url) {
+			const params = {
+				deviceId: +this.id,
+				url,
+			}
+			deletePositionImg(params).then(res => {
+				this.getDeviceInfoDetail()
+			})
+		},
+		addImgSource(url) {
+			const params = {
+				deviceId: +this.id,
+				url,
+			}
+			addPositionImg(params).then(res => {
+				this.getDeviceInfoDetail()
+			})
 		},
 	},
 }

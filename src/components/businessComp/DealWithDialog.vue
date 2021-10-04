@@ -64,7 +64,7 @@ import Dialog from "components/Dialog.vue"
 import NavTitles from "components/NavTitles.vue"
 import SimpleTable from "components/SimpleTable.vue"
 import Upload from "components/Upload.vue"
-import DeviceDetaiCommandl from "components/DeviceDetaiCommandl.vue"
+import DeviceDetaiCommandl from "components/businessComp/DeviceDetaiCommandl.vue"
 import warnIcon from "@/assets/icons/warn-icon.png"
 import dangerIcon from "@/assets/icons/danger-icon.png"
 
@@ -173,7 +173,8 @@ export default {
 			})
         },
         imgList() {
-            return this.showList && this.showList.processBOList[0].sitePhotos.split(',');
+            const str = this.showList && this.showList.processBOList[0] && this.showList.processBOList[0].sitePhotos;
+            return str && str.split(',') || [];
         }
     },
     watch: {
@@ -185,9 +186,12 @@ export default {
                 this.warnSure = `${confirmFlag}`;
                 this.dealWith = `${processType}`;
                 // 清空上传记录
-                this.$nextTick(() => {
-                    this.$refs.upload.fileList = [];
-                })
+                if (this.able) {
+                    this.$nextTick(() => {
+                        const refs = this.$refs?.upload;
+                        refs.fileList = [];
+                    })
+                }
             }
         }
     },

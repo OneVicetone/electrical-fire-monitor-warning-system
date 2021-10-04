@@ -83,7 +83,15 @@ const setupDeviceApis = (http, BASE_URL) => ({
 		}),
 
 	updateDeviceTypeById: ({ id, supplier, model, protocol, network, productImgPath, deviceTypeId }) =>
-		http.get(`${BASE_URL}/api-device/deviceType/add`, { id, supplier, model, protocol, network, productImgPath, deviceTypeId }),
+		http.get(`${BASE_URL}/api-device/deviceType/add`, {
+			id,
+			supplier,
+			model,
+			protocol,
+			network,
+			productImgPath,
+			deviceTypeId,
+		}),
 
 	deleteDeviceType: id => http.get(`${BASE_URL}/api-device/deviceType/remove`, { id }),
 
@@ -125,6 +133,12 @@ const setupDeviceApis = (http, BASE_URL) => ({
 		http.get(`${BASE_URL}/api-device/reportData/getByDateForModule`, { deviceId, startDate, endDate }),
 
 	getDeviceTypeOptionsData: typeId => http.get(`${BASE_URL}/api-device/deviceType/parameter/list`, { typeId }),
+
+	addPositionImg: ({ deviceId, url }) =>
+		http.formPost(`${BASE_URL}/api-device/install/positionImg/add`, { deviceId, url }),
+
+	deletePositionImg: ({ deviceId, url }) =>
+		http.formPost(`${BASE_URL}/api-device/install/positionImg/delete`, { deviceId, url }),
 })
 
 export default setupDeviceApis

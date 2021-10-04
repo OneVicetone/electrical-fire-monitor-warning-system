@@ -43,7 +43,7 @@
 import Dialog from "components/Dialog.vue"
 import Tabs from "components/Tabs.vue"
 import NavTitles from "components/NavTitles.vue"
-import CommandRecord from "components/CommandRecord.vue"
+import CommandRecord from "components/businessComp/CommandRecord.vue"
 import { dialogControl } from "mixins"
 import apis from "apis"
 
