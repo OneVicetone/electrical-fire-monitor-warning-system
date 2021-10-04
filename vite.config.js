@@ -2,9 +2,9 @@ import { defineConfig } from "vite"
 import path from "path"
 import { createVuePlugin } from "vite-plugin-vue2"
 
-// const alias = require(path.resolve(__dirname, "vite-config/alias.js"))
-const theme = require(path.resolve(__dirname, "vite-config/theme.js"))
-const proxy = require(path.resolve(__dirname, "vite-config/proxy.js"))
+// const alias = require(path.resolve(__dirname, "config/alias.js"))
+const theme = require(path.resolve(__dirname, "config/theme.js"))
+const proxy = require(path.resolve(__dirname, "config/proxy.js"))
 
 const srcPath = path.resolve(__dirname, "src")
 const layoutsPath = path.resolve(__dirname, "src/layouts")

@@ -1,6 +1,6 @@
 const path = require("path")
 
-const theme = require(path.resolve(__dirname, "vite-config/theme.js"))
+const theme = require(path.resolve(__dirname, "config/theme.js"))
 
 const srcPath = path.resolve(__dirname, "src")
 const layoutsPath = path.resolve(__dirname, "src/layouts")
