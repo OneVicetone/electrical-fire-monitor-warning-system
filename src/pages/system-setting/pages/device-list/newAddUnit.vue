@@ -95,7 +95,6 @@
 <script>
 import Dialog from "components/Dialog.vue"
 import NavTitles from "components/NavTitles.vue"
-import Upload from "components/Upload.vue"
 import MapModal from "components/MapModal.vue"
 import apis from "apis"
 import { dialogControl, form } from "mixins"
@@ -104,7 +103,7 @@ const { createDevice, getSelectOptions } = apis
 
 export default {
     name:"AddUnit",
-    components: { Dialog, NavTitles, Upload, MapModal },
+    components: { Dialog, NavTitles, MapModal },
     mixins: [dialogControl, form],
     props: {
         treeData: Array,
@@ -153,8 +152,8 @@ export default {
                     deviceTypeId = '',
                     installPosition = '',
                     address = '',
-                    addressLat = '',
-                    addressLon = '',
+                    // addressLat = '',
+                    // addressLon = '',
                     alias = '',
                     iccid = '',
                     groupId = '',
@@ -249,6 +248,7 @@ export default {
                     safetyDirectorMobile: linkPhone,
                     };
                 const res = await createDevice(params);
+                console.log(res)
                 this.$emit('input', false);
                 this.$emit('on-fresh-data');
             }
