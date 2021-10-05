@@ -96,7 +96,7 @@ export default {
 			},
 			treeData: [],
 			isShowDialog: false,
-			editForm: {}
+			editForm: {},
 		}
 	},
 	mounted() {

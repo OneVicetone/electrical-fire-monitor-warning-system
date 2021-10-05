@@ -88,7 +88,7 @@
             <a-button type="primary" class="mr125" @click="formSure">确定</a-button>
             <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
         </section>
-        <MapModal v-model="showMap"></MapModal>
+        <MapModal v-model="showMap" @save-select-point="showAddress"></MapModal>
     </Dialog>
 </template>
 
@@ -118,7 +118,9 @@ export default {
                 deviceName: '',
                 deviceType: '',
                 linkGroup: '',
-                location: '222',
+                location: '',
+                lng: '',
+                lat: '',
                 iccid: '',
                 installLocation: '',
             },
@@ -206,6 +208,12 @@ export default {
         alertMap() {
             this.showMap = true;
         },
+        showAddress({ point: { lng, lat }, address }) {
+            this.unitForm.location = address;
+            this.unitForm.lng = lng;
+            this.unitForm.lat = lat;
+            this.showMap = false;
+        },
         formSure() {
             const validates = [this.$refs.unitInfo, this.$refs.safe];
             const cb = async () => {
@@ -216,6 +224,8 @@ export default {
                         deviceName,
                         linkGroup,
                         location,
+                        lng,
+                        lat,
                         iccid,
                         installLocation,
                     },
@@ -230,8 +240,8 @@ export default {
                     deviceTypeId: +deviceType,
                     installPosition: installLocation,
                     address: location,
-                    addressLat: 23.333,
-                    addressLon: 108.3333,
+                    addressLat: lat,
+                    addressLon: lng,
                     alias: deviceName,
                     iccid,
                     groupId: linkGroup[linkGroup.length-1],

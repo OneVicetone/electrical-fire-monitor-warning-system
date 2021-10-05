@@ -35,7 +35,8 @@
                     <a-input
                         v-model="unitForm.unitAddress"
                         class="ipt-disabled__color"
-                        placeholder="请选择单位地址">
+                        placeholder="请选择单位地址"
+                        disabled>
                         <a-icon slot="suffix" type="bulb" @click="alertMap" />
                     </a-input>
                 </a-form-model-item>
@@ -131,7 +132,10 @@
             <a-button type="primary" class="mr125" @click="formSure">确定</a-button>
             <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
         </section>
-        <MapModal v-model="showMap" @emit-coordinate="onCoordinate"></MapModal>
+         <!-- @emit-coordinate="onCoordinate" -->
+        <MapModal v-model="showMap"
+        :emitPoint="{ lat: unitForm.lat, lng: unitForm.lngs }"
+        @save-select-point="showAddress"></MapModal>
     </Dialog>
 </template>
 
@@ -216,8 +220,8 @@ export default {
                     upUnit: this.treeShow(this.groupOptions, parentId),
                     unitType: typeCode,
                     unitAddress: address,
-                    // lngs: "",
-                    // lat: "",
+                    lngs: addressLon || 101.518461,
+                    lat: addressLat || 3.073281,
                     unitCount: employeeNum,
                     area: floorSpace,
                 }
@@ -274,14 +278,14 @@ export default {
                     this.upload[`${type}Pic`] = imgUrl;
 				})
         },
-        onCoordinate({lng, lat}) {
-            this.unitForm.unitAddress = `lng:${lng},lat:${lat}`;
-            this.unitForm.lngs = lng;
-            this.unitForm.lat = lat;
-            console.log(this.unitForm)
-        },
         alertMap() {
             this.showMap = true;
+        },
+        showAddress({ point: { lng, lat }, address }) {
+            this.unitForm.unitAddress = address;
+            this.unitForm.lngs = lng;
+            this.unitForm.lat = lat;
+            this.showMap = false;
         },
         formSure() {
             const validates = [this.$refs.unitInfo, this.$refs.safe];
