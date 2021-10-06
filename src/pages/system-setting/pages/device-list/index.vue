@@ -31,7 +31,7 @@
 					<a-button type="primary" size="small" @click="search">搜索</a-button>
 					<a-button type="primary" size="small">重置</a-button>
 				</a-form-model-item>
-				
+
 				<div class="other-btns">
 					<a-button type="primary" size="small" @click="add"><a-icon type="plus" />新增设备</a-button>
 					<a-popover trigger="click" placement="bottomRight">
@@ -42,13 +42,13 @@
 						</a-list>
 						<a-button type="primary" size="small">批量操作<a-icon type="down" /></a-button>
 					</a-popover>
-					<a-button type="primary" size="small" @click="exportDeviceList">导出</a-button>
+					<a-button type="primary" size="small" @click="exportData">导出</a-button>
 				</div>
 			</a-form-model>
 
 			<a-table :columns="columns" :data-source="tableData" :pagination="false">
 				<div slot="idx" slot-scope="text, record, index">
-					{{ index + 1 }}
+					{{ getListIdx(paginationData, index) }}
 				</div>
 
 				<div slot="deliverGoodsTime" slot-scope="text">
@@ -97,7 +97,7 @@ import apis from "apis"
 import { commonMixin, tableListMixin } from "mixins"
 import optionsData from "utils/optionsData"
 
-const { getDeviceListForSystemSettiing, getGroupTree } = apis
+const { getDeviceListForSystemSettiing, getGroupTree, exportDeviceList } = apis
 const { deviceIdOptions } = optionsData
 
 export default {
@@ -140,7 +140,7 @@ export default {
 			isShowDialog: false,
 			formCell: {},
 			// buttonType: '',
-			eventType: ''
+			eventType: "",
 		}
 	},
 	mounted() {
@@ -172,13 +172,13 @@ export default {
 			})
 		},
 		add() {
-			this.eventType = '新增设备'
+			this.eventType = "新增设备"
 			this.isShowDialog = true
 		},
 		delete(id) {},
 		editCell(text) {
 			console.log(text)
-			this.eventType = '编辑设备'
+			this.eventType = "编辑设备"
 			this.formCell = text
 			this.isShowDialog = true
 		},
@@ -197,6 +197,13 @@ export default {
 		handleSelectTreeNode(key) {
 			this.parentId = key
 			this.search()
+		},
+		exportData() {
+			const params = {
+				...this.searchForm,
+				...(this.deviceStatusRadio !== "0" && { status: this.deviceStatusRadio }),
+			}
+			exportDeviceList(params).then(() => msg.success("正在导出...可在右上角-个人中心-下载中心页面查看"))
 		},
 	},
 }

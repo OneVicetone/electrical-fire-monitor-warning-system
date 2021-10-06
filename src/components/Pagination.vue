@@ -34,15 +34,15 @@ export default {
 		},
 		showQuickJumper: {
 			type: Boolean,
-			default: true
+			default: true,
 		},
 		showSizeChanger: {
 			type: Boolean,
-			default: true
+			default: true,
 		},
 		simple: {
 			type: Boolean,
-			default: false
+			default: false,
 		},
 		changePageSizeHandle: {
 			type: Function,
@@ -57,6 +57,7 @@ export default {
 <style lang="less" scoped>
 .pagination-container {
 	width: 100%;
+	min-height: 5rem;
 	position: relative;
 	margin: 2.75rem 0 0;
 	.ant-pagination {
@@ -68,7 +69,7 @@ export default {
 		font-size: 1rem;
 		font-family: Microsoft YaHei;
 		font-weight: 400;
-		color: #81899C;
+		color: #81899c;
 	}
 	/deep/ .ant-pagination-item-active {
 		width: 2.5rem;

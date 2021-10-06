@@ -20,10 +20,10 @@
 					</a-upload>
 					<a-form-model :model="formData">
 						<a-form-model-item label="设备型号" required>
-							<a-select v-model="formData.model" :options="deviceTypeOptions" />
+							<a-input v-model="formData.model" type="number" placeholder="请输入设备类型" />
 						</a-form-model-item>
 						<a-form-model-item label="设备类型" required>
-							<a-input v-model="formData.deviceTypeId" type="number" placeholder="请输入设备类型" />
+							<a-select v-model="formData.deviceTypeId" :options="deviceTypeOptions" />
 						</a-form-model-item>
 
 						<a-form-model-item label="设备协议" required>
@@ -126,6 +126,8 @@ export default {
 			return getDeviceTypeDetail(this.id).then(({ data }) => {
 				this.formData = {
 					...data,
+					deviceTypeId: data.type,
+					protocol: data.protocolType
 				}
 			})
 		},

@@ -69,13 +69,14 @@
 
 <script>
 import { cloneDeep } from "lodash"
+import { message as msg } from "ant-design-vue"
 
 import OrganizationList from "components/OrganizationList.vue"
 import DeviceCard from "./components/DeviceCard.vue"
 import Pagination from "components/Pagination.vue"
 
 import { optionsPlaceholder } from "utils/optionsData"
-import { SHIP, TRANSFER, IMPORT } from "utils/baseData"
+import { TRANSFER, SHIP, IMPORT } from "utils/baseData"
 import { commonMixin, tableListMixin } from "mixins"
 import apis from "apis"
 
@@ -118,18 +119,18 @@ export default {
 						this.push(`/device-manage/batch-operation/${TRANSFER}`)
 					},
 				},
-				{
-					name: "批量导入",
-					operate() {
-						this.push(`/device-manage/batch-operation/${IMPORT}`)
-					},
-				},
-				{
-					name: "批量发货",
-					operate() {
-						this.push(`/device-manage/batch-operation/${SHIP}`)
-					},
-				},
+				// {
+				// 	name: "批量导入",
+				// 	operate() {
+				// 		this.push(`/device-manage/batch-operation/${IMPORT}`)
+				// 	},
+				// },
+				// {
+				// 	name: "批量发货",
+				// 	operate() {
+				// 		this.push(`/device-manage/batch-operation/${SHIP}`)
+				// 	},
+				// },
 			],
 			deviceListData: [],
 			treeData: [],
@@ -202,7 +203,7 @@ export default {
 				...this.searchForm,
 				...(this.deviceStatusRadio !== "0" && { status: this.deviceStatusRadio }),
 			}
-			exportDeviceList(params)
+			exportDeviceList(params).then(() => msg.success("正在导出...可在右上角-个人中心-下载中心页面查看"))
 		},
 		changeDeviceWorkStatus() {},
 		getGroupTreeData() {

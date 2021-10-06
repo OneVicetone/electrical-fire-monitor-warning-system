@@ -1,6 +1,6 @@
 import Layout from "layouts/Layout.vue"
 
-const Login = () => import("pages/login/Index.vue")
+const Login = () => import("pages/login/index.vue")
 const Monitor = () => import("pages/monitor/index.vue")
 const DeviceManage = () => import("pages/device-manage/index.vue")
 const AlarmCenter = () => import("pages/alarm-center/index.vue")

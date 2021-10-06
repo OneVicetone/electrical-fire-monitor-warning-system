@@ -26,5 +26,10 @@ export const tableListMixin = {
 				})
 			)
 		},
+		getListIdx({ current, size }, index) {
+			const idx = index + 1
+			const currentNum = (current - 1) * size
+			return currentNum + idx
+		},
 	},
 }

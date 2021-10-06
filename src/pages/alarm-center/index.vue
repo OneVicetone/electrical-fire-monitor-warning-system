@@ -63,10 +63,12 @@
 
 		<a-table :columns="columns" :data-source="tableData" :pagination="false">
 			<div slot="idx" slot-scope="text, record, index">
-				{{ index + 1 }}
+				{{ getListIdx(paginationData, index) }}
 			</div>
 
-			<div slot="alarmTypeName" slot-scope="text, record"></div>
+			<div slot="alarmValue" slot-scope="text">
+				{{ text.alarmValue ? text.alarmValue + text.unit : "-" }}
+			</div>
 			<div slot="alarmTime" slot-scope="text">
 				{{ text.alarmTime | filterTimeToYYYYMMDD }}
 			</div>
@@ -105,7 +107,6 @@
 </template>
 
 <script>
-import moment from "moment"
 import Pagination from "components/Pagination.vue"
 import NumCount from "components/NumCount.vue"
 import DealWithDialog from "components/businessComp/DealWithDialog.vue"
@@ -156,8 +157,8 @@ export default {
 				{ title: "设备类型", dataIndex: "deviceTypeName" },
 				{ title: "设备型号", dataIndex: "deviceTypeModel" },
 				{ title: "报警级别", scopedSlots: { customRender: "alarmLevel" } },
-				{ title: "报警类型", scopedSlots: { customRender: "alarmTypeName" } },
-				{ title: "报警详情", dataIndex: "alarmValue" },
+				{ title: "报警类型", dataIndex: "alarmTypeName" },
+				{ title: "报警详情", scopedSlots: { customRender: "alarmValue" } },
 				{ title: "报警时间", scopedSlots: { customRender: "alarmTime" } },
 				{ title: "报警恢复时间", scopedSlots: { customRender: "recoverTime" } },
 				{ title: "报警位置", dataIndex: "address" },
