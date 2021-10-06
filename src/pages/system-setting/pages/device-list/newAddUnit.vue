@@ -1,5 +1,5 @@
 <template>
-    <Dialog v-model="visibles" title="新增设备" :forms="formCell">
+    <Dialog v-model="visibles" :title="eventType" :forms="formCell">
         <Nav-titles class="unit-base-info" title="设备信息">
             <a-form-model
                 ref="unitInfo"
@@ -13,6 +13,7 @@
                     <a-input
                         v-model="unitForm.deviceNumber"
                         @blur="() => {$refs.deviceNumber.onFieldBlur()}"
+                        :maxLength="50"
                         placeholder="请输入设备编号"
                     />
                 </a-form-model-item>
@@ -20,6 +21,7 @@
                     <a-input
                         v-model="unitForm.deviceName"
                         @blur="() => {$refs.deviceName.onFieldBlur()}"
+                        :maxLength="50"
                         placeholder="请输入设备名称"
                     />
                 </a-form-model-item>
@@ -39,10 +41,10 @@
                 <a-form-model class="form-right" layout="inline" :model="unitForm" :labelCol="{ style: 'width: 72px;float: left;' }"
                     :wrapper-col="{ style: 'width: 22rem' }">
                     <a-form-model-item label="关联SIM卡" class="mr0">
-                        <a-input v-model="unitForm.iccid" placeholder="请输入ICCID号" />
+                        <a-input v-model="unitForm.iccid" :maxLength="50" placeholder="请输入ICCID号" />
                     </a-form-model-item>
                     <a-form-model-item label="安装位置" class="mr0">
-                        <a-input v-model="unitForm.installLocation" placeholder="请输入设备安装位置" />
+                        <a-input v-model="unitForm.installLocation" :maxLength="50" placeholder="请输入设备安装位置" />
                     </a-form-model-item>
                 </a-form-model>
                 <a-form-model-item label="定位地址" prop="location">
@@ -88,14 +90,13 @@
             <a-button type="primary" class="mr125" @click="formSure">确定</a-button>
             <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
         </section>
-        <MapModal v-model="showMap"></MapModal>
+        <MapModal v-model="showMap" @save-select-point="showAddress"></MapModal>
     </Dialog>
 </template>
 
 <script>
 import Dialog from "components/Dialog.vue"
 import NavTitles from "components/NavTitles.vue"
-import Upload from "components/Upload.vue"
 import MapModal from "components/MapModal.vue"
 import apis from "apis"
 import { dialogControl, form } from "mixins"
@@ -104,11 +105,12 @@ const { createDevice, getSelectOptions } = apis
 
 export default {
     name:"AddUnit",
-    components: { Dialog, NavTitles, Upload, MapModal },
+    components: { Dialog, NavTitles, MapModal },
     mixins: [dialogControl, form],
     props: {
         treeData: Array,
-        formCell: Object
+        formCell: Object,
+        eventType: String
     },
     data() {
         return {
@@ -118,14 +120,16 @@ export default {
                 deviceName: '',
                 deviceType: '',
                 linkGroup: '',
-                location: '222',
+                location: '',
+                lng: '',
+                lat: '',
                 iccid: '',
                 installLocation: '',
             },
             baseInfoRules: {
                 deviceNumber: [{ required: true, message: '请输入设备编号', trigger: 'blur' }],
-                deviceType: [{ required: true, message: '请选择上级单位', trigger: 'change' }],
-                linkGroup: [{ required: true, message: '请选择单位类型', trigger: 'change' }],
+                deviceType: [{ required: true, message: '请选择设备型号', trigger: 'change' }],
+                linkGroup: [{ required: true, message: '请选择关联分组', trigger: 'change' }],
             },
             safe: {
                 safePrincipal: '',
@@ -151,8 +155,8 @@ export default {
                     deviceTypeId = '',
                     installPosition = '',
                     address = '',
-                    addressLat = '',
-                    addressLon = '',
+                    // addressLat = '',
+                    // addressLon = '',
                     alias = '',
                     iccid = '',
                     groupId = '',
@@ -206,6 +210,12 @@ export default {
         alertMap() {
             this.showMap = true;
         },
+        showAddress({ point: { lng, lat }, address }) {
+            this.unitForm.location = address;
+            this.unitForm.lng = lng;
+            this.unitForm.lat = lat;
+            this.showMap = false;
+        },
         formSure() {
             const validates = [this.$refs.unitInfo, this.$refs.safe];
             const cb = async () => {
@@ -216,6 +226,8 @@ export default {
                         deviceName,
                         linkGroup,
                         location,
+                        lng,
+                        lat,
                         iccid,
                         installLocation,
                     },
@@ -230,8 +242,8 @@ export default {
                     deviceTypeId: +deviceType,
                     installPosition: installLocation,
                     address: location,
-                    addressLat: 23.333,
-                    addressLon: 108.3333,
+                    addressLat: lat,
+                    addressLon: lng,
                     alias: deviceName,
                     iccid,
                     groupId: linkGroup[linkGroup.length-1],
@@ -239,6 +251,7 @@ export default {
                     safetyDirectorMobile: linkPhone,
                     };
                 const res = await createDevice(params);
+                console.log(res)
                 this.$emit('input', false);
                 this.$emit('on-fresh-data');
             }

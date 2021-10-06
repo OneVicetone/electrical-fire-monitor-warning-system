@@ -49,6 +49,7 @@
 		</div>
 		<new-add-unit
 			v-model="isShowDialog"
+			:headerName="eventSource"
 			:editForm="editForm"
 			@refresh-table="getTableData"></new-add-unit>
 	</div>
@@ -96,7 +97,8 @@ export default {
 			},
 			treeData: [],
 			isShowDialog: false,
-			editForm: {}
+			editForm: {},
+			eventSource: ''
 		}
 	},
 	mounted() {
@@ -128,11 +130,13 @@ export default {
 			})
 		},
 		add() {
+			this.eventSource = '新增单位';
 			this.isShowDialog = true
 		},
 		delete(id) {},
 		editCell(text) {
 			console.log(text)
+			this.eventSource = '编辑单位';
 			this.editForm = { ...text };
 			this.isShowDialog = true;
 		},
