@@ -1,5 +1,5 @@
 <template>
-    <Dialog v-model="visibles" title="新增单位" :form="unitForm">
+    <Dialog v-model="visibles" :title="headerName" :form="unitForm">
         <Nav-titles class="unit-base-info" title="单位基本信息">
             <a-form-model
                 ref="unitInfo"
@@ -132,10 +132,11 @@
             <a-button type="primary" class="mr125" @click="formSure">确定</a-button>
             <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
         </section>
-         <!-- @emit-coordinate="onCoordinate" -->
         <MapModal v-model="showMap"
-        :emitPoint="{ lat: unitForm.lat, lng: unitForm.lngs }"
-        @save-select-point="showAddress"></MapModal>
+            :sources="sources"
+            :emitPoint="{ lat: unitForm.lat, lng: unitForm.lngs, name: unitForm.unitAddress }"
+            @save-select-point="showAddress">
+        </MapModal>
     </Dialog>
 </template>
 
@@ -153,6 +154,7 @@ export default {
     components: { Dialog, NavTitles, Upload, MapModal },
     mixins: [dialogControl, form, uploadFileMixin],
     props: {
+        headerName: String,
         editForm: Object
     },
     data() {
@@ -195,6 +197,11 @@ export default {
             designLoading: false
         }
     },
+    computed: {
+        sources() {
+            return this.headerName === '编辑单位';
+        }
+    },
     watch: {
         visibles(v) {
             if (v) {
@@ -215,13 +222,14 @@ export default {
                     effectPicPath = '',
                     designPicPath = ''
                 } = this.editForm || {};
+                console.log('---',addressLat, addressLon)
                 this.unitForm = {
                     unitName: name,
                     upUnit: this.treeShow(this.groupOptions, parentId),
                     unitType: typeCode,
                     unitAddress: address,
-                    lngs: addressLon || 101.518461,
-                    lat: addressLat || 3.073281,
+                    lngs: addressLon || 24.600386,
+                    lat: addressLat || 113.840743,
                     unitCount: employeeNum,
                     area: floorSpace,
                 }
@@ -279,6 +287,9 @@ export default {
 				})
         },
         alertMap() {
+            this.unitForm.unitAddress = this.editForm.address || '';
+            this.unitForm.lngs = this.editForm.addressLon || '';
+            this.unitForm.lat = this.editForm.addressLat || '';
             this.showMap = true;
         },
         showAddress({ point: { lng, lat }, address }) {

@@ -26,7 +26,7 @@
                 <div class="flex-yCenter">
                     <div class="flex">
                         <div class="btn sure">确定</div>
-                        <div class="btn cancel">取消</div>
+                        <div class="btn cancel" @click="cancelAddress">取消</div>
                     </div>
                     <img class="icons" @click="closeMap" src="@/assets/icons/close.png" alt="">
                 </div>
@@ -37,13 +37,11 @@
 </template>
 
 <script>
-// import Map from "components/Map.vue"
 import { getBasePx } from "utils/initial"
 import { dialogControl } from "mixins"
 
 export default {
     name:"MapModal",
-    // components: { Map },
     mixins: [dialogControl],
     props: {
         // 放大系数
@@ -55,7 +53,8 @@ export default {
             type: Object,
             default: () => {}
         },
-        edit: Boolean
+        edit: Boolean,
+        sources: Boolean,
     },
     data() {
         return {
@@ -69,7 +68,7 @@ export default {
             map: '', // 地图实例
             mk: '', // Marker实例
             locationPoint: null,
-            markClick: false
+            markClick: false,
         }
     },
     computed: {
@@ -88,11 +87,13 @@ export default {
     },
     methods: {
         initMap() {
-            console.log(this.emitPoint)
+            console.log('1111111',this.emitPoint)
       var that = this
+      const { lat, lng, name } = this.emitPoint;
+      this.form.address = name;
       // 1、挂载地图
       this.map = new BMapGL.Map('map-container', { enableMapClick: false })
-      var point = new BMapGL.Point(118.332222, 22.223323)
+      var point = new BMapGL.Point(lat, lng)
       this.map.centerAndZoom(point, 19)
       // 3、设置图像标注并绑定拖拽标注结束后事件
       this.mk = new BMapGL.Marker(point, { enableDragging: true })
@@ -101,8 +102,8 @@ export default {
             that.markClick = true;
             that.getAddrByPoint(e.latlng)
       })
-      // 6、浏览器定位
-      this.geolocation()
+      // 6、浏览器定位(新增才会开启定位)
+      !this.sources && this.geolocation()
       // 7、绑定点击地图任意点事件
       this.map.addEventListener('click', function(e) {
             console.log('点击', e)
@@ -124,7 +125,6 @@ export default {
           that.getAddrByPoint(res.point)
           that.locationPoint = res.point
         } else {
-        //   alert('failed' + this.getStatus())
           that.locationPoint = new BMapGL.Point(113.3324436, 23.1315381)
           that.getAddrByPoint({lng: 113.3324436,lat: 23.1315381})
         }
@@ -175,6 +175,12 @@ export default {
     },
     closeMap() {
         this.$emit('input', false);
+    },
+    cancelAddress() {
+        const { lat, lng, name } = this.emitPoint;
+        this.form.address = name;
+        console.log(lng,lat)
+        this.getAddrByPoint({lat, lng})
     }
   }
 }
@@ -193,6 +199,7 @@ export default {
             position: absolute;
             z-index: 9999999;
             margin-top: 1.58rem;
+            margin-left: 1rem;
         }
         #map-container {
             position: absolute;
@@ -219,9 +226,9 @@ export default {
         .icons {
             width: 2.5rem;
             height: 2.5rem;
-                position: relative;
-                left: 100%;
-                transform: translateX(10rem);
+            position: relative;
+            left: 100%;
+            transform: translateX(9rem);
         }
     }
 }

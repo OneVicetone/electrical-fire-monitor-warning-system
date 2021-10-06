@@ -81,6 +81,7 @@
 		<new-add-unit
 			v-model="isShowDialog"
 			:treeData="treeData"
+			:eventType="eventType"
 			:formCell="formCell"
 			@on-fresh-data="getTableData"
 		></new-add-unit>
@@ -139,6 +140,7 @@ export default {
 			isShowDialog: false,
 			formCell: {},
 			// buttonType: '',
+			eventType: ''
 		}
 	},
 	mounted() {
@@ -170,11 +172,13 @@ export default {
 			})
 		},
 		add() {
+			this.eventType = '新增设备'
 			this.isShowDialog = true
 		},
 		delete(id) {},
 		editCell(text) {
 			console.log(text)
+			this.eventType = '编辑设备'
 			this.formCell = text
 			this.isShowDialog = true
 		},

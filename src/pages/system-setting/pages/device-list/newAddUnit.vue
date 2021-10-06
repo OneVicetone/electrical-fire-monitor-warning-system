@@ -1,5 +1,5 @@
 <template>
-    <Dialog v-model="visibles" title="新增设备" :forms="formCell">
+    <Dialog v-model="visibles" :title="eventType" :forms="formCell">
         <Nav-titles class="unit-base-info" title="设备信息">
             <a-form-model
                 ref="unitInfo"
@@ -13,6 +13,7 @@
                     <a-input
                         v-model="unitForm.deviceNumber"
                         @blur="() => {$refs.deviceNumber.onFieldBlur()}"
+                        :maxLength="50"
                         placeholder="请输入设备编号"
                     />
                 </a-form-model-item>
@@ -20,6 +21,7 @@
                     <a-input
                         v-model="unitForm.deviceName"
                         @blur="() => {$refs.deviceName.onFieldBlur()}"
+                        :maxLength="50"
                         placeholder="请输入设备名称"
                     />
                 </a-form-model-item>
@@ -39,10 +41,10 @@
                 <a-form-model class="form-right" layout="inline" :model="unitForm" :labelCol="{ style: 'width: 72px;float: left;' }"
                     :wrapper-col="{ style: 'width: 22rem' }">
                     <a-form-model-item label="关联SIM卡" class="mr0">
-                        <a-input v-model="unitForm.iccid" placeholder="请输入ICCID号" />
+                        <a-input v-model="unitForm.iccid" :maxLength="50" placeholder="请输入ICCID号" />
                     </a-form-model-item>
                     <a-form-model-item label="安装位置" class="mr0">
-                        <a-input v-model="unitForm.installLocation" placeholder="请输入设备安装位置" />
+                        <a-input v-model="unitForm.installLocation" :maxLength="50" placeholder="请输入设备安装位置" />
                     </a-form-model-item>
                 </a-form-model>
                 <a-form-model-item label="定位地址" prop="location">
@@ -107,7 +109,8 @@ export default {
     mixins: [dialogControl, form],
     props: {
         treeData: Array,
-        formCell: Object
+        formCell: Object,
+        eventType: String
     },
     data() {
         return {
@@ -125,8 +128,8 @@ export default {
             },
             baseInfoRules: {
                 deviceNumber: [{ required: true, message: '请输入设备编号', trigger: 'blur' }],
-                deviceType: [{ required: true, message: '请选择上级单位', trigger: 'change' }],
-                linkGroup: [{ required: true, message: '请选择单位类型', trigger: 'change' }],
+                deviceType: [{ required: true, message: '请选择设备型号', trigger: 'change' }],
+                linkGroup: [{ required: true, message: '请选择关联分组', trigger: 'change' }],
             },
             safe: {
                 safePrincipal: '',

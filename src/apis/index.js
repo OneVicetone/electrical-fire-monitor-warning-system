@@ -15,9 +15,9 @@ import setupReportApis from "./reportData"
 // const BASE_URL = process ? "http://api.bbfxc.com/api" : "/"
 
 // development
-// const BASE_URL = "/api"
+const BASE_URL = "/api"
 // production
-const BASE_URL = "http://www.bbfxc.com/api"
+// const BASE_URL = "http://www.bbfxc.com/api"
 
 export default {
 	...setupAccoutApis(http, BASE_URL),
