@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { message as msg } from 'ant-design-vue'
+import { message as msg } from "ant-design-vue"
 
 import Breadcrumb from "components/Breadcrumb.vue"
 import NavTitles from "components/NavTitles.vue"
@@ -78,7 +78,6 @@ export default {
 	data() {
 		return {
 			uploading: false,
-			historyList: ["首页", "系统设置", "设备类型管理", `${this.isAdd ? "新增" : "编辑"}设备类型`],
 			formData: {
 				model: "",
 				deviceTypeId: "",
@@ -110,9 +109,13 @@ export default {
 		isAdd() {
 			return this.id === "add"
 		},
+		historyList() {
+			return ["首页", "系统设置", "设备类型管理", `${this.isAdd ? "新增" : "编辑"}设备类型`]
+		},
 	},
 	mounted() {
 		const { isAdd, getDeviceTypeById, getUploadUrl, getOptionsListPromiseArr } = this
+		console.log(isAdd)
 		const optionsTypes = ["deviceType", "protocolType"]
 		const promiseArr = [getUploadUrl(), ...getOptionsListPromiseArr(optionsTypes)]
 		!isAdd && promiseArr.push(getDeviceTypeById())
