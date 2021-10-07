@@ -40,7 +40,7 @@ export default {
 			})
 		},
 		setMapToContainer(BMapGL, defaultStyleId) {
-			const mapDefaultZoom = 8
+			const mapDefaultZoom = 19
 			const map = new BMapGL.Map("map_container")
 			this.mapInstance = map
 			map.enableScrollWheelZoom(true)
