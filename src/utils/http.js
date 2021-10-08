@@ -20,6 +20,7 @@ const successCode = 1
 const axiosInstance = axios.create({
 	timeout: 10000,
 	headers: getRequestHeader(),
+	
 })
 const requestInterceptFunc = req => req
 

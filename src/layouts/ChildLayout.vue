@@ -58,7 +58,7 @@ export default {
 	.layout-content-container {
 		height: auto;
 		background-color: #12172a;
-		padding: 4rem 2.58rem;
+		padding: 4rem 2.08rem;
 	}
 	.ant-layout-content {
 		height: auto;

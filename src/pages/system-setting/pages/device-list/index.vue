@@ -29,6 +29,8 @@
 				</a-form-model-item>
 				<a-form-model-item>
 					<a-button type="primary" size="small" @click="search">搜索</a-button>
+				</a-form-model-item>
+				<a-form-model-item>
 					<a-button type="primary" size="small" @click="reset">重置</a-button>
 				</a-form-model-item>
 
@@ -97,10 +99,8 @@ import NewAddUnits from "./NewAddUnits.vue"
 
 import apis from "apis"
 import { commonMixin, tableListMixin } from "mixins"
-import optionsData from "utils/optionsData"
 
 const { getDeviceListForSystemSettiing, getGroupTree, exportDeviceList } = apis
-const { deviceIdOptions } = optionsData
 const searchFromInitial = {
 	deviceTypeId: "",
 	deviceModelId: "",
@@ -118,7 +118,7 @@ export default {
 			searchForm: cloneDeep(searchFromInitial),
 			deviceTypeOptions: [],
 			batchOperationOptions: [],
-			deviceIdOptions,
+			deviceIdOptions: [],
 			columns: [
 				{ title: "序号", scopedSlots: { customRender: "idx" } },
 				{ title: "设备ID", dataIndex: "sn" },
@@ -147,10 +147,18 @@ export default {
 			eventType: "",
 		}
 	},
+	watch: {
+		"searchForm.deviceTypeId": {
+			deep: true,
+			handler(val) {
+				this.getDeviceId(val)
+			},
+		},
+	},
 	mounted() {
 		const optionsTypes = ["deviceType"]
-		const { getGroupTreeData, getTableData, getOptionsListPromiseArr } = this
-		Promise.allSettled([getGroupTreeData(), getTableData(), ...getOptionsListPromiseArr(optionsTypes)])
+		const { getGroupTreeData, getTableData, getOptionsListPromiseArr, getDeviceId } = this
+		Promise.allSettled([getGroupTreeData(), getTableData(), ...getOptionsListPromiseArr(optionsTypes), getDeviceId()])
 	},
 	methods: {
 		getTableData(current = 1, size = 10) {
@@ -214,6 +222,7 @@ export default {
 			this.searchForm = cloneDeep(searchFromInitial)
 			this.search()
 		},
+		
 	},
 }
 </script>

@@ -1,7 +1,7 @@
 import apis from "apis"
 import { optionsPlaceholder } from "utils/optionsData"
 
-const { getSelectOptions } = apis
+const { getSelectOptions, getDeviceIdOptionsData } = apis
 
 export const tableListMixin = {
 	methods: {
@@ -30,6 +30,17 @@ export const tableListMixin = {
 			const idx = index + 1
 			const currentNum = (current - 1) * size
 			return currentNum + idx
+		},
+		getDeviceId(typeId = 0) {
+			return getDeviceIdOptionsData(typeId).then(({ data }) => {
+				this.deviceIdOptions = [
+					{ label: optionsPlaceholder["deviceIdOptions"], value: "" },
+					...data.map(({ parameterName, parameterCode }) => ({
+						label: parameterName,
+						value: parameterCode,
+					})),
+				]
+			})
 		},
 	},
 }

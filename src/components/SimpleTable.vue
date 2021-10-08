@@ -53,8 +53,11 @@ export default {
 			width: 6.75rem;
 		}
 	}
-	.tabel-header > div {
+	.table-header > div {
 		background-color: #0f1426;
+	}
+	.table-body > div {
+		background-color: #131a2d;
 	}
 }
 </style>
