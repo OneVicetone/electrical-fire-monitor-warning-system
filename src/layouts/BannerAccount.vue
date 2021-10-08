@@ -101,7 +101,7 @@ export default {
 	},
 	computed: {
 		userInfo() {
-			const { loginName } = this.$store.state.account.userInfo
+			const { loginName, sub } = this.$store.state.account.userInfo
 			return { loginName }
 		},
 	},
@@ -115,9 +115,12 @@ export default {
 			this.changePasswordForm = form
 		},
 		updatePassword() {
-			// TODO: 解析用户信息获取到用户id
+			const { password, newPassword, enterNewPassword } = this.changePasswordForm
+			if (!password) return msg.error("当前密码不能为空")
+			if (!newPassword) return msg.error("新密码不能为空")
+			if (newPassword !== enterNewPassword) return msg.error("两次输入密码不一致")
 			const params = {
-				id: "",
+				userId: this.userInfo.sub,
 				...this.changePasswordForm,
 			}
 			changePassword(params).then(() => {
