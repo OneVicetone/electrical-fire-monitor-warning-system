@@ -21,7 +21,7 @@
 
 			<a-table :columns="columns" :data-source="tableData" :pagination="false">
 				<div slot="idx" slot-scope="text, record, index">
-					{{ index + 1 }}
+					{{ getListIdx(paginationData, index) }}
 				</div>
 				<div slot="enable" slot-scope="text">
 					{{ text.enable | filterAccountEnableStatus }}
@@ -51,7 +51,8 @@
 			v-model="isShowDialog"
 			:headerName="eventSource"
 			:editForm="editForm"
-			@refresh-table="getTableData"></new-add-unit>
+			@refresh-table="getTableData"
+		></new-add-unit>
 	</div>
 </template>
 
@@ -62,7 +63,7 @@ import newAddUnit from "./AddUnit.vue"
 import OrganizationList from "components/OrganizationList.vue"
 import Pagination from "components/Pagination.vue"
 
-import { commonMixin } from "mixins"
+import { commonMixin, tableListMixin } from "mixins"
 import apis from "apis"
 
 const { getUnitList, createUnit, disableByUserId, enableByUserId, getUnitDetailById, getGroupTree, changePassword } =
@@ -70,7 +71,7 @@ const { getUnitList, createUnit, disableByUserId, enableByUserId, getUnitDetailB
 
 export default {
 	name: "NetworkUnitManage",
-	mixins: [commonMixin],
+	mixins: [commonMixin, tableListMixin],
 	components: { newAddUnit, OrganizationList, Pagination },
 	data() {
 		return {
@@ -98,7 +99,7 @@ export default {
 			treeData: [],
 			isShowDialog: false,
 			editForm: {},
-			eventSource: ''
+			eventSource: "",
 		}
 	},
 	mounted() {
@@ -130,15 +131,15 @@ export default {
 			})
 		},
 		add() {
-			this.eventSource = '新增单位';
+			this.eventSource = "新增单位"
 			this.isShowDialog = true
 		},
 		delete(id) {},
 		editCell(text) {
 			console.log(text)
-			this.eventSource = '编辑单位';
-			this.editForm = { ...text };
-			this.isShowDialog = true;
+			this.eventSource = "编辑单位"
+			this.editForm = { ...text }
+			this.isShowDialog = true
 		},
 		search() {
 			const {

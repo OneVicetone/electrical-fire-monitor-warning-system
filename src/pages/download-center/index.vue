@@ -12,7 +12,7 @@
 
 			<a-table :columns="columns" :data-source="tableData" :pagination="false">
 				<div slot="idx" slot-scope="text, record, index">
-					{{ index + 1 }}
+					{{ getListIdx(paginationData, index) }}
 				</div>
 				<div slot="downloadTime" slot-scope="text">
 					{{ text.createTime | filterTimeToYYYYMMDD }}

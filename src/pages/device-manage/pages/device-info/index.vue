@@ -86,7 +86,7 @@
 					<ContentTitle title="历史报警记录" />
 					<a-table :columns="columns" :data-source="tableData" :pagination="false">
 						<div slot="idx" slot-scope="text, record, index">
-							{{ index + 1 }}
+							{{ getListIdx(paginationData, index) }}
 						</div>
 
 						<div slot="alarmTypeName" slot-scope="text, record"></div>
@@ -149,7 +149,7 @@ import DealWithDialog from "components/businessComp/DealWithDialog.vue"
 import AccordPic from "components/businessComp/AccordPic.vue"
 
 import apis from "apis"
-import { commonMixin } from "mixins"
+import { commonMixin, tableListMixin } from "mixins"
 import { nameForKey } from "utils/baseData"
 
 const {
@@ -166,7 +166,7 @@ const {
 
 export default {
 	name: "DeviceInfo",
-	mixins: [commonMixin],
+	mixins: [commonMixin, tableListMixin],
 	components: {
 		Breadcrumb,
 		NumCount,
