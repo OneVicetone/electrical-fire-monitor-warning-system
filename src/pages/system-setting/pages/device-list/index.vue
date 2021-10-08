@@ -78,20 +78,20 @@
 				:changePageSizeHandle="changePageSizeHandle"
 			/>
 		</div>
-		<new-add-unit
+		<NewAddUnits
 			v-model="isShowDialog"
 			:treeData="treeData"
 			:eventType="eventType"
 			:formCell="formCell"
 			@on-fresh-data="getTableData"
-		></new-add-unit>
+		></NewAddUnits>
 	</div>
 </template>
 
 <script>
 import OrganizationList from "components/OrganizationList.vue"
 import Pagination from "components/Pagination.vue"
-import newAddUnit from "./newAddUnit.vue"
+import NewAddUnits from "./NewAddUnits.vue"
 
 import apis from "apis"
 import { commonMixin, tableListMixin } from "mixins"
@@ -103,7 +103,7 @@ const { deviceIdOptions } = optionsData
 export default {
 	name: "DeviceList",
 	mixins: [commonMixin, tableListMixin],
-	components: { OrganizationList, Pagination, newAddUnit },
+	components: { OrganizationList, Pagination, NewAddUnits },
 	data() {
 		return {
 			parentId: null,
@@ -114,6 +114,7 @@ export default {
 				principalUserName: "",
 			},
 			deviceTypeOptions: [],
+			batchOperationOptions: [],
 			deviceIdOptions,
 			columns: [
 				{ title: "序号", scopedSlots: { customRender: "idx" } },
@@ -188,6 +189,7 @@ export default {
 			} = this
 			this.getTableData(current, size)
 		},
+		exportDeviceList() {},
 		changePageHandle(page, pageSize) {
 			this.getTableData(page, pageSize)
 		},

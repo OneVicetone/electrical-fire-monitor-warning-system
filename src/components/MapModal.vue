@@ -25,7 +25,7 @@
                 </el-autocomplete>
                 <div class="flex-yCenter">
                     <div class="flex">
-                        <div class="btn sure">确定</div>
+                        <div class="btn sure" @click="sures">确定</div>
                         <div class="btn cancel" @click="cancelAddress">取消</div>
                     </div>
                     <img class="icons" @click="closeMap" src="@/assets/icons/close.png" alt="">
@@ -87,102 +87,119 @@ export default {
     },
     methods: {
         initMap() {
-            console.log('1111111',this.emitPoint)
-      var that = this
-      const { lat, lng, name } = this.emitPoint;
-      this.form.address = name;
-      // 1、挂载地图
-      this.map = new BMapGL.Map('map-container', { enableMapClick: false })
-      var point = new BMapGL.Point(lat, lng)
-      this.map.centerAndZoom(point, 19)
-      // 3、设置图像标注并绑定拖拽标注结束后事件
-      this.mk = new BMapGL.Marker(point, { enableDragging: true })
-      this.map.addOverlay(this.mk)
-      this.mk.addEventListener('dragend', function(e) {
-            that.markClick = true;
-            that.getAddrByPoint(e.latlng)
-      })
-      // 6、浏览器定位(新增才会开启定位)
-      !this.sources && this.geolocation()
-      // 7、绑定点击地图任意点事件
-      this.map.addEventListener('click', function(e) {
-            console.log('点击', e)
-            that.markClick = true;
-            that.getAddrByPoint(e.latlng);
-      })
-    },
-    // 获取两点间的距离
-    getDistancs(pointA, pointB) {
-      return this.map.getDistance(pointA, pointB).toFixed(2)
-    },
-    // 浏览器定位函数
-    geolocation() {
-      var that = this
-      var geolocation = new BMapGL.Geolocation()
-      geolocation.getCurrentPosition(function(res) {
-        if (this.getStatus() == BMAP_STATUS_SUCCESS) {
-            console.log('成功',res)
-          that.getAddrByPoint(res.point)
-          that.locationPoint = res.point
-        } else {
-          that.locationPoint = new BMapGL.Point(113.3324436, 23.1315381)
-          that.getAddrByPoint({lng: 113.3324436,lat: 23.1315381})
-        }
-      }, { enableHighAccuracy: true })
-    },
-    // 2、逆地址解析函数
-    getAddrByPoint(point) {
-        console.log(point)
-      var that = this
-      var geco = new BMapGL.Geocoder()
-      geco.getLocation(point, function(res) {
-        console.log('解析',res)
-        that.mk.setPosition(point)
-        that.map.panTo(point)
-        that.form.address = res.address
-        that.form.addrPoint = point
-        that.markClick && that.$emit('save-select-point', { point, address: that.form.address });
-        that.markClick = false;
-      })
-    },
-    // 8-1、地址搜索
-    querySearchAsync(str, cb) {
-        var options = {
-            onSearchComplete: function(res) {
-                var s = []
-                if (local.getStatus() == BMAP_STATUS_SUCCESS) {
-                    for (var i = 0; i < res.getCurrentNumPois(); i++) {
-                        s.push(res.getPoi(i))
-                    }
-                    cb(s)
+            console.log('1111111', this.emitPoint, this.form.address)
+            const that = this
+            const { lat, lng, name } = this.emitPoint;
+            this.form.address = name;
+            console.log('222',lat, lng, name)
+            // 1、挂载地图
+            this.map = new BMapGL.Map('map-container', { enableMapClick: false })
+            const point = new BMapGL.Point(lat, lng)
+            this.map.centerAndZoom(point, 19)
+            // 3、设置图像标注并绑定拖拽标注结束后事件
+            this.mk = new BMapGL.Marker(point, { enableDragging: true })
+            this.map.addOverlay(this.mk)
+            this.mk.addEventListener('dragend', function(e) {
+                that.markClick = true;
+                that.getAddrByPoint(e.latlng)
+            })
+            // 6、浏览器定位(新增并且没有选择过位置才会开启定位)
+            !this.sources && !this.form.address && this.geolocation()
+            this.sures()
+            // 7、绑定点击地图任意点事件
+            this.map.addEventListener('click', function(e) {
+                console.log('点击', e)
+                that.markClick = true;
+                that.getAddrByPoint(e.latlng);
+            })
+        },
+        // 获取两点间的距离
+        getDistancs(pointA, pointB) {
+            return this.map.getDistance(pointA, pointB).toFixed(2)
+        },
+        // 浏览器定位函数
+        geolocation() {
+            const that = this
+            const geolocation = new BMapGL.Geolocation()
+            geolocation.getCurrentPosition(function(res) {
+                if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                    console.log('成功',res)
+                    that.getAddrByPoint(res.point)
+                    that.locationPoint = res.point
                 } else {
-                    cb(s)
+                    that.locationPoint = new BMapGL.Point(113.3324436, 23.1315381)
+                    that.getAddrByPoint({lng: 113.3324436,lat: 23.1315381})
+                }
+            }, { enableHighAccuracy: true })
+        },
+        // 2、逆地址解析函数
+        getAddrByPoint(point) {
+            console.log(point)
+            const that = this
+            const geco = new BMapGL.Geocoder()
+            geco.getLocation(point, function(res) {
+                console.log('解析',res)
+                that.mk.setPosition(point)
+                that.map.panTo(point)
+                that.form.address = res.address
+                that.form.addrPoint = point
+                that.markClick && that.$emit('save-select-point', { point, address: that.form.address });
+                that.markClick = false;
+            })
+        },
+        // 8-1、地址搜索
+        querySearchAsync(str, cb) {
+            console.log(str)
+            const options = {
+                onSearchComplete: function(res) {
+                    console.log(local)
+                    console.log(res)
+                    const s = []
+                    if (local.getStatus() == BMAP_STATUS_SUCCESS) {
+                        for (let i = 0; i < res.getCurrentNumPois(); i++) {
+                            s.push(res.getPoi(i))
+                        }
+                        cb(s)
+                    } else {
+                        cb(s)
+                    }
                 }
             }
+            const local = new BMapGL.LocalSearch(this.map, options)
+            local.search(str)
+        },
+        // 8-2、选择地址
+        handleSelect(item) {
+            console.log(item)
+            this.form.address = item.address + item.title
+            this.form.addrPoint = item.point
+            this.map.clearOverlays()
+            this.mk = new BMapGL.Marker(item.point)
+            this.map.addOverlay(this.mk)
+            this.map.panTo(item.point)
+        },
+        closeMap() {
+            this.$emit('input', false);
+        },
+        sures() {
+            console.log(1)
+            const that = this;
+            const localSearch = new BMapGL.LocalSearch(this.map);
+            localSearch.enableAutoViewport(); // 允许自动调节窗体大小
+            localSearch.setSearchCompleteCallback((searchResult) => {
+                const poi = searchResult && searchResult.getPoi(0);
+                console.log('searchResult===>searchResult', searchResult)
+                console.log('searchResult===>poi', poi)
+                if (poi) {
+                    this.handleSelect(poi)
+                }
+            })
+            localSearch.search(this.form.address);
+        },
+        cancelAddress() {
+            this.$emit('input', false);
         }
-      var local = new BMapGL.LocalSearch(this.map, options)
-      local.search(str)
-    },
-    // 8-2、选择地址
-    handleSelect(item) {
-        console.log(item)
-      this.form.address = item.address + item.title
-      this.form.addrPoint = item.point
-      this.map.clearOverlays()
-      this.mk = new BMapGL.Marker(item.point)
-      this.map.addOverlay(this.mk)
-      this.map.panTo(item.point)
-    },
-    closeMap() {
-        this.$emit('input', false);
-    },
-    cancelAddress() {
-        const { lat, lng, name } = this.emitPoint;
-        this.form.address = name;
-        console.log(lng,lat)
-        this.getAddrByPoint({lat, lng})
     }
-  }
 }
 </script>
 <style lang='less' scoped>

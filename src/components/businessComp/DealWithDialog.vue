@@ -146,7 +146,8 @@ export default {
 			set(v){ this.$emit('input', v) }
         },
         showList() {
-            return this.alarmData;
+            console.log('获取报警详情数据', this.alarmData)
+            return Object.keys(this.alarmData).length && this.alarmData;
         },
         equipment() {
             const { deviceAlias = '--', deviceSn = '--', groupName = '--', recoverTime = '--', address = '--',  installPosition = '--'} = this.showList;
@@ -166,21 +167,22 @@ export default {
 					const num = idx - 1
 					if (num >= 0) {
 						const key = Object.keys(nameForKey)[Object.values(nameForKey).findIndex(k => i.name.includes(k))]
-						i[j] = this.handAlarmList[num][key]
+						if (this.handAlarmList.channelDataMap && this.handAlarmList.channelDataMap[num]) i[j] = this.handAlarmList[num][key]
 					}
 				})
 				return i
 			})
         },
         imgList() {
-            const str = this.showList && this.showList.processBOList[0] && this.showList.processBOList[0].sitePhotos;
+            const keys = Object.keys(this.showList)
+            const str = keys.length && this.showList && this.showList.processBOList[0] && this.showList.processBOList[0].sitePhotos;
             return str && str.split(',') || [];
         }
     },
     watch: {
         dialogVisible(v) {
             if (v) {
-                const { processBOList } = this.alarmData;
+                const { processBOList } = this.showList;
                 const { confirmFlag = '', processType = '' } = processBOList[0] || {};
                 console.log('---------', confirmFlag, processType)
                 this.warnSure = `${confirmFlag}`;

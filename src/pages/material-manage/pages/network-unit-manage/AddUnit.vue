@@ -287,9 +287,9 @@ export default {
 				})
         },
         alertMap() {
-            this.unitForm.unitAddress = this.editForm.address || '';
-            this.unitForm.lngs = this.editForm.addressLon || '';
-            this.unitForm.lat = this.editForm.addressLat || '';
+            // this.unitForm.unitAddress = this.editForm.address || '';
+            // this.unitForm.lngs = this.editForm.addressLon || 114.92353465;
+            // this.unitForm.lat = this.editForm.addressLat || 27.8235787;
             this.showMap = true;
         },
         showAddress({ point: { lng, lat }, address }) {

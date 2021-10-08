@@ -268,7 +268,9 @@ export default {
 			return chartData[chartRadioValue] ? Object.values(chartData[chartRadioValue]).map(i => i) : []
 		},
 		installImg() {
-			return this.deviceInfoObj?.installPositionImg.split(",")
+			console.log(this.deviceInfoObj)
+			const keys = Object.keys(this.deviceInfoObj);
+			return keys.length && this.deviceInfoObj.installPositionImg && this.deviceInfoObj.installPositionImg.split(",") || []
 		},
 		remarks() {
 			const str = this.alarmHandleData.processBOList && this.alarmHandleData.processBOList[0]

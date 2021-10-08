@@ -13,6 +13,7 @@
                     <a-input
                         v-model="unitForm.deviceNumber"
                         @blur="() => {$refs.deviceNumber.onFieldBlur()}"
+                        @change="limintChange"
                         :maxLength="50"
                         placeholder="请输入设备编号"
                     />
@@ -41,7 +42,7 @@
                 <a-form-model class="form-right" layout="inline" :model="unitForm" :labelCol="{ style: 'width: 72px;float: left;' }"
                     :wrapper-col="{ style: 'width: 22rem' }">
                     <a-form-model-item label="关联SIM卡" class="mr0">
-                        <a-input v-model="unitForm.iccid" :maxLength="50" placeholder="请输入ICCID号" />
+                        <a-input v-model="unitForm.iccid" @change="iccidChange" :maxLength="50" placeholder="请输入ICCID号" />
                     </a-form-model-item>
                     <a-form-model-item label="安装位置" class="mr0">
                         <a-input v-model="unitForm.installLocation" :maxLength="50" placeholder="请输入设备安装位置" />
@@ -50,6 +51,7 @@
                 <a-form-model-item label="定位地址" prop="location">
                     <a-input
                         v-model="unitForm.location"
+                        disabled
                         class="ipt-disabled__color"
                         placeholder="请输入设备定位地址">
                         <a-icon slot="suffix" type="bulb" @click="alertMap" />
@@ -90,7 +92,10 @@
             <a-button type="primary" class="mr125" @click="formSure">确定</a-button>
             <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
         </section>
-        <MapModal v-model="showMap" @save-select-point="showAddress"></MapModal>
+        <MapModal v-model="showMap"
+            :sources="sourcesType"
+            :emitPoint="{ lat: unitForm.lat || 0, lng: unitForm.lng || 0, name: unitForm.location || '' }"
+            @save-select-point="showAddress"></MapModal>
     </Dialog>
 </template>
 
@@ -136,13 +141,16 @@ export default {
                 linkPhone: ''
             },
             fileList: [],
-            showMap: false
+            showMap: false,
         }
     },
     computed: {
         groupOptions() {
             console.log('65656', this.treeData)
             return this.treeData;
+        },
+        sourcesType() {
+            return this.eventType === '编辑设备'
         }
     },
     watch: {
@@ -180,6 +188,13 @@ export default {
         }
     },
     methods: {
+        limintChange() {
+            // 字母加数字
+            this.unitForm.deviceNumber = this.unitForm.deviceNumber.replace(/[^a-z0-9_]/g,'')
+        },
+        iccidChange() {
+            this.unitForm.iccid = this.unitForm.iccid.replace(/[^a-z0-9_]/g,'')
+        },
         computedLen(value, totalLen = 20) {
             if (value === null || value === undefined || typeof value === 'number') value = '';
             return `${value.length}/${totalLen}`
