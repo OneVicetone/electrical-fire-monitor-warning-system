@@ -34,6 +34,7 @@
 import md5 from "md5"
 import dragVerify from "vue-drag-verify2"
 import { createNamespacedHelpers } from "vuex"
+import { message as msg } from "ant-design-vue"
 
 import { commonMixin } from "mixins"
 import { getBasePx } from "utils/initial"
@@ -43,6 +44,7 @@ import { LOGIN, GET_MENU_LIST, GET_ROUTES_BY_MENU_LIST, SET_ROUTES } from "store
 const { mapGetters, mapMutations, mapActions } = createNamespacedHelpers("account")
 export default {
 	name: "Login",
+	
 	mixins: [commonMixin],
 	components: { dragVerify },
 	data() {
@@ -71,7 +73,15 @@ export default {
 		async toLogin() {
 			this.isLogining = true
 			try {
-				const { username, password, source, $router, setRoutes, login, addRoutes, getMenuList } = this
+				const { username, password, source, $router, setRoutes, login, addRoutes } = this
+				if (!username) {
+					this.isLogining = false
+					return msg.error("用户名不能为空")
+				}
+				if (!password) {
+					this.isLogining = false
+					return msg.error("用户密码不能为空")
+				}
 				const formData = new FormData()
 				formData.append("username", username)
 				formData.append("password", md5(password))
@@ -79,6 +89,7 @@ export default {
 				await login(formData)
 				setRoutes(this.routes)
 				addRoutes(this.routes)
+				msg.success("登录成功")
 				$router.replace("/monitor")
 			} catch (err) {
 				this.isLogining = false

@@ -45,6 +45,7 @@
 	}
 	.ant-table-tbody {
 		> tr > td {
+			padding-left: 6px;
 			border-color: #1f2944;
 		}
 		> tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected) > td {
@@ -138,26 +139,36 @@
 // radio
 .ant-radio-group {
 	.ant-radio-disabled .ant-radio-inner {
-		border-color: #0188E8 !important;
-		background-color: #090D18;
+		border-color: #0188e8 !important;
+		background-color: #090d18;
 		&::after {
-			background-color: #0188E8;
+			background-color: #0188e8;
 		}
 	}
 }
 
 .ant-cascader-picker {
-	background-color: #090D18 !important;
+	background-color: #090d18 !important;
 	.ant-cascader-picker-arrow {
-		color: #dcdcdc !important
+		color: #dcdcdc !important;
 	}
 }
 
 .ant-input-disabled {
-	background-color: #090D18 !important;
+	background-color: #090d18 !important;
 	color: #dcdcdc !important;
 }
+
 /deep/ .ant-input-affix-wrapper .ant-input-disabled ~ .ant-input-suffix .anticon {
 	color: inherit !important;
 	cursor: pointer !important;
+}
+
+// List
+.ant-list {
+	.ant-list-items {
+		.ant-list-item {
+			cursor: pointer;
+		}
+	}
 }

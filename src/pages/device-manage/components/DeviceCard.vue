@@ -30,7 +30,7 @@
 				<div class="info">
 					<p>设备ID：{{ deviceInfoObj.sn }}</p>
 					<p>设备类型：{{ deviceInfoObj.deviceTypeName }}</p>
-					<p>信号时间：{{ deviceInfoObj.reportTime | filterTimeToYYYYMMDD }}</p>
+					<p>信号时间：{{ deviceInfoObj.reportTime | filterTimeToYYYYMMDDHHmmss }}</p>
 					<p>设备状态：{{ deviceInfoObj.online }}</p>
 					<p>到期时间：{{ deviceInfoObj.endDate | filterTimeToYYYYMMDD }}</p>
 				</div>
@@ -81,8 +81,8 @@ export default {
 					},
 				},
 				{ name: "转移", operate: () => {} },
-				{ name: "删除", operate: () => {} },
-				{ name: "更换", operate: () => {} },
+				// { name: "删除", operate: () => {} },
+				// { name: "更换", operate: () => {} },
 			],
 			columns: [
 				{ title: "名称", key: "name" },
@@ -108,7 +108,8 @@ export default {
 					const num = idx - 1
 					if (num >= 0) {
 						const key = Object.keys(nameForKey)[Object.values(nameForKey).findIndex(k => i.name.includes(k))]
-						i[j] = this.deviceInfoObj.channelDataMap[num][key] || '-'
+						if (this.deviceInfoObj.channelDataMap && this.deviceInfoObj.channelDataMap[num])
+							i[j] = this.deviceInfoObj.channelDataMap[num][key]
 					}
 				})
 				return i
@@ -128,10 +129,14 @@ export default {
 	width: 30rem;
 	height: 29rem;
 	background-color: #131a2d;
-	border: 1px solid #00a0e9;
-	box-shadow: 0px 3px 16px 0px rgba(0, 150, 255, 0.25);
+	border: 1px solid transparent;
 	border-radius: 4px;
 	padding: 0.92rem 1.25rem;
+	transition: all 0.5s;
+	&:hover {
+		border-color: #00a0e9;
+		box-shadow: 0px 3px 16px 0px rgba(0, 150, 255, 0.25);
+	}
 	> header {
 		display: flex;
 		justify-content: space-between;
@@ -148,7 +153,7 @@ export default {
 				color: #0096ff;
 			}
 		}
-		> i[aria-label] {
+		i[aria-label] {
 			color: #fff;
 			cursor: pointer;
 		}

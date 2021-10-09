@@ -57,7 +57,7 @@
 				<a-button type="primary" size="small" @click="search">搜索</a-button>
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-button type="primary" size="small"><a-icon type="plus" />导出</a-button>
+				<a-button type="primary" size="small">导出</a-button>
 			</a-form-model-item>
 		</a-form-model>
 
@@ -116,7 +116,7 @@ import apis from "apis"
 import { commonMixin, tableListMixin } from "mixins"
 
 const { getAlarmCount, getAlarmList, getAlarmDetail, processAlarm, realTimeData } = apis
-const { alarmLevelOptions, deviceIdOptions, handleStatusOptions } = allOptionsData
+const { alarmLevelOptions, handleStatusOptions } = allOptionsData
 
 export default {
 	name: "AlarmCenter",
@@ -147,7 +147,7 @@ export default {
 			groupTypeOptions: [],
 			alarmTypeOptions: [],
 			alarmLevelOptions,
-			deviceIdOptions,
+			deviceIdOptions: [],
 			handleStatusOptions,
 			columns: [
 				{ title: "序号", scopedSlots: { customRender: "idx" } },
@@ -189,12 +189,13 @@ export default {
 	},
 	mounted() {
 		const optionsTypes = ["alarmType", "groupType"]
-		const { getOptionsListPromiseArr, getTableData } = this
+		const { getOptionsListPromiseArr, getTableData, getDeviceId } = this
 		Promise.allSettled([
 			getAlarmCount().then(({ data }) => {
 				this.alarmCountData.forEach(i => (i.num = data[i.key]))
 			}),
 			getTableData(),
+			getDeviceId(),
 			...getOptionsListPromiseArr(optionsTypes),
 		])
 	},

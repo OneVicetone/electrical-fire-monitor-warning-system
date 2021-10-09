@@ -6,7 +6,7 @@
 		<div class="device-list-content">
 			<a-form-model class="table-search-form" layout="inline" :model="searchForm">
 				<a-form-model-item>
-					<a-input v-model="searchForm.name" placeholder="请输入设备编码/名称" size="small" />
+					<a-input v-model="searchForm.sn" placeholder="请输入设备编码/名称" size="small" />
 				</a-form-model-item>
 				<a-form-model-item>
 					<a-select
@@ -29,7 +29,9 @@
 				</a-form-model-item>
 				<a-form-model-item>
 					<a-button type="primary" size="small" @click="search">搜索</a-button>
-					<a-button type="primary" size="small">重置</a-button>
+				</a-form-model-item>
+				<a-form-model-item>
+					<a-button type="primary" size="small" @click="reset">重置</a-button>
 				</a-form-model-item>
 
 				<div class="other-btns">
@@ -89,16 +91,22 @@
 </template>
 
 <script>
+import { cloneDeep } from "lodash"
+
 import OrganizationList from "components/OrganizationList.vue"
 import Pagination from "components/Pagination.vue"
 import NewAddUnits from "./NewAddUnits.vue"
 
 import apis from "apis"
 import { commonMixin, tableListMixin } from "mixins"
-import optionsData from "utils/optionsData"
 
 const { getDeviceListForSystemSettiing, getGroupTree, exportDeviceList } = apis
-const { deviceIdOptions } = optionsData
+const searchFromInitial = {
+	deviceTypeId: "",
+	deviceModelId: "",
+	sn: "",
+	principalUserName: "",
+}
 
 export default {
 	name: "DeviceList",
@@ -107,15 +115,10 @@ export default {
 	data() {
 		return {
 			parentId: null,
-			searchForm: {
-				deviceTypeId: "",
-				deviceModelId: "",
-				name: "",
-				principalUserName: "",
-			},
+			searchForm: cloneDeep(searchFromInitial),
 			deviceTypeOptions: [],
 			batchOperationOptions: [],
-			deviceIdOptions,
+			deviceIdOptions: [],
 			columns: [
 				{ title: "序号", scopedSlots: { customRender: "idx" } },
 				{ title: "设备ID", dataIndex: "sn" },
@@ -144,10 +147,18 @@ export default {
 			eventType: "",
 		}
 	},
+	watch: {
+		"searchForm.deviceTypeId": {
+			deep: true,
+			handler(val) {
+				this.getDeviceId(val)
+			},
+		},
+	},
 	mounted() {
 		const optionsTypes = ["deviceType"]
-		const { getGroupTreeData, getTableData, getOptionsListPromiseArr } = this
-		Promise.allSettled([getGroupTreeData(), getTableData(), ...getOptionsListPromiseArr(optionsTypes)])
+		const { getGroupTreeData, getTableData, getOptionsListPromiseArr, getDeviceId } = this
+		Promise.allSettled([getGroupTreeData(), getTableData(), ...getOptionsListPromiseArr(optionsTypes), getDeviceId()])
 	},
 	methods: {
 		getTableData(current = 1, size = 10) {
@@ -208,6 +219,11 @@ export default {
 			}
 			exportDeviceList(params).then(() => msg.success("正在导出...可在右上角-个人中心-下载中心页面查看"))
 		},
+		reset() {
+			this.searchForm = cloneDeep(searchFromInitial)
+			this.search()
+		},
+		
 	},
 }
 </script>

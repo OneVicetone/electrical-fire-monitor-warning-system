@@ -18,8 +18,9 @@ const getRequestHeader = (type = "json") => {
 const successCode = 1
 
 const axiosInstance = axios.create({
-	timeout: 3000,
+	timeout: 10000,
 	headers: getRequestHeader(),
+	
 })
 const requestInterceptFunc = req => req
 
@@ -47,7 +48,7 @@ const responseInterceptFunc = res => {
 		message.error(data.message)
 		throw new Error(data.message)
 	}
-	if (data.code === 20001 || data.code === 20010 || data.code === 20004) {
+	if (data.code - 20000 > 0) {
 		localStorage.clear()
 		window.location = "/"
 		throw new ReferenceError("token error")

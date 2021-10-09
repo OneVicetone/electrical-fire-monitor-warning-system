@@ -75,12 +75,11 @@ import OrganizationList from "components/OrganizationList.vue"
 import DeviceCard from "./components/DeviceCard.vue"
 import Pagination from "components/Pagination.vue"
 
-import { optionsPlaceholder } from "utils/optionsData"
 import { TRANSFER, SHIP, IMPORT } from "utils/baseData"
 import { commonMixin, tableListMixin } from "mixins"
 import apis from "apis"
 
-const { getDeviceList, exportDeviceList, getGroupTree, getDeviceTypeOptionsData } = apis
+const { getDeviceList, exportDeviceList, getGroupTree } = apis
 
 const searchFromInitial = {
 	sn: "",
@@ -136,19 +135,30 @@ export default {
 			treeData: [],
 		}
 	},
+	watch: {
+		deviceStatusRadio() {
+			this.search()
+		},
+		"searchForm.deviceTypeId": {
+			deep: true,
+			handler(val) {
+				this.getDeviceId(val)
+			},
+		},
+	},
 	mounted() {
 		const optionsTypes = ["deviceType"]
 		const {
 			getDeviceListData,
 			getGroupTreeData,
 			getOptionsListPromiseArr,
-			getDeviceType,
+			getDeviceId,
 			paginationData: { current, size },
 		} = this
 		Promise.allSettled([
 			getDeviceListData(current, size),
 			getGroupTreeData(),
-			getDeviceType(),
+			getDeviceId(),
 			...getOptionsListPromiseArr(optionsTypes),
 		])
 	},
@@ -187,17 +197,6 @@ export default {
 		changePageSizeHandle(current, size) {
 			this.getDeviceListData(current, size)
 		},
-		getDeviceType(typeId = 0) {
-			return getDeviceTypeOptionsData(typeId).then(({ data }) => {
-				this.deviceIdOptions = [
-					{ label: optionsPlaceholder["deviceIdOptions"], value: "" },
-					...data.map(({ parameterName, parameterCode }) => ({
-						label: parameterName,
-						value: parameterCode,
-					})),
-				]
-			})
-		},
 		exportData() {
 			const params = {
 				...this.searchForm,
@@ -214,17 +213,6 @@ export default {
 		handleSelectTreeNode(key) {
 			this.parentId = key
 			this.search()
-		},
-	},
-	watch: {
-		deviceStatusRadio() {
-			this.search()
-		},
-		"searchForm.deviceTypeId": {
-			deep: true,
-			handler(val) {
-				this.getDeviceType(val)
-			},
 		},
 	},
 }

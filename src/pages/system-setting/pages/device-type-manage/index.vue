@@ -14,7 +14,7 @@
 
 		<a-table :columns="columns" :data-source="tableData" :pagination="false">
 			<div slot="idx" slot-scope="text, record, index">
-				{{ (paginationData.current - 1 > 0 ? paginationData.current - 1 : "") + String(index + 1 === 10 ? 0 : index + 1) }}
+				{{ getListIdx(paginationData, index) }}
 			</div>
 			<div slot="productImgPath" slot-scope="text">
 				<img class="tabel-img" :src="text.productImgPath" />

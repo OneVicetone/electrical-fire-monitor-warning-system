@@ -1,5 +1,5 @@
 const optionsPlaceholder = {
-	groupTypeOptions: "情选择单位",
+	groupTypeOptions: "请选择单位",
 	alarmTypeOptions: "请选择报警类型",
 	alarmLevelOptions: "请选择报警级别",
 	deviceIdOptions: "请选择设备编号",
@@ -33,8 +33,8 @@ const allOptionsData = {
 	],
 	handleStatusOptions: [
 		{ label: "待处理", value: 1 },
-		{ label: "已处理", value: 2 },
-		{ label: "已恢复", value: 3 },
+		{ label: "已处理", value: 3 },
+		{ label: "已恢复", value: 2 },
 	],
 	deviceTypeOptions: [
 		{ label: "电气火灾探测器", value: 1 },

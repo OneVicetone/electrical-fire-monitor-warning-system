@@ -1,6 +1,6 @@
 <template>
 	<div class="banner-account-container">
-		<a-badge :count="99" :offset="[0, 0]">
+		<a-badge :count="notifyNum" :offset="[0, 0]" @click="toPath('/alarm-center')">
 			<a-icon class="notify-icon" type="bell" />
 		</a-badge>
 		<div class="account">
@@ -52,12 +52,12 @@
 import { cloneDeep } from "lodash"
 import { message as msg } from "ant-design-vue"
 
-import NavTitles from "components/NavTitles.vue"
 import Dialog from "components/Dialog.vue"
+import NavTitles from "components/NavTitles.vue"
 
 import apis from "apis"
 import { commonMixin } from "mixins"
-const { getLoginCode, changePassword } = apis
+const { loginout, changePassword, getUserNotifyNum } = apis
 
 export default {
 	name: "BannerAccount",
@@ -72,6 +72,7 @@ export default {
 				newPassword: "",
 				enterNewPassword: "",
 			},
+			notifyNum: 0,
 			dropdownOptions: [
 				{
 					name: "下载中心",
@@ -90,7 +91,7 @@ export default {
 					name: "退出登录",
 					operate() {
 						const self = this
-						getLoginCode().then(() => {
+						loginout().then(() => {
 							localStorage.clear()
 							self.push("/login")
 						})
@@ -101,9 +102,12 @@ export default {
 	},
 	computed: {
 		userInfo() {
-			const { loginName } = this.$store.state.account.userInfo
-			return { loginName }
+			const { loginName, sub } = this.$store.state.account.userInfo
+			return { loginName, sub }
 		},
+	},
+	mounted() {
+		this.getNotify()
 	},
 	methods: {
 		resetChangePasswordForm() {
@@ -115,9 +119,12 @@ export default {
 			this.changePasswordForm = form
 		},
 		updatePassword() {
-			// TODO: 解析用户信息获取到用户id
+			const { password, newPassword, enterNewPassword } = this.changePasswordForm
+			if (!password) return msg.error("当前密码不能为空")
+			if (!newPassword) return msg.error("新密码不能为空")
+			if (newPassword !== enterNewPassword) return msg.error("两次输入密码不一致")
 			const params = {
-				id: "",
+				userId: this.userInfo.sub,
 				...this.changePasswordForm,
 			}
 			changePassword(params).then(() => {
@@ -129,6 +136,9 @@ export default {
 		},
 		cancelChangePassword() {
 			this.resetChangePasswordForm()
+		},
+		getNotify() {
+			return getUserNotifyNum().then(({ data }) => (this.notifyNum = data))
 		},
 	},
 }

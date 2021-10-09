@@ -126,13 +126,13 @@ const setupDeviceApis = (http, BASE_URL) => ({
 	getDeviceDetailHistortAlarmList: ({ current, size, deviceId }) =>
 		http.get(`${BASE_URL}/api-alarm/history/device/pageList`, { current, size, deviceId }),
 
-	getDeviceListForSystemSettiing: ({ current, size, groupId, deviceTypeId, deviceModelId, sn }) =>
-		http.get(`${BASE_URL}/api-device/device/pageList`, { current, size, groupId, deviceTypeId, deviceModelId, sn }),
+	getDeviceListForSystemSettiing: ({ current, size, groupId, deviceTypeId, deviceModelId, sn, iccid }) =>
+		http.get(`${BASE_URL}/api-device/device/pageList`, { current, size, groupId, deviceTypeId, deviceModelId, sn, iccid }),
 
 	getDeviceDetailHistoryChartData: ({ deviceId, startDate, endDate }) =>
 		http.get(`${BASE_URL}/api-device/reportData/getByDateForModule`, { deviceId, startDate, endDate }),
 
-	getDeviceTypeOptionsData: typeId => http.get(`${BASE_URL}/api-device/deviceType/parameter/list`, { typeId }),
+	getDeviceIdOptionsData: typeId => http.get(`${BASE_URL}/api-device/deviceType/parameter/list`, { typeId }),
 
 	addPositionImg: ({ deviceId, url }) =>
 		http.formPost(`${BASE_URL}/api-device/install/positionImg/add`, { deviceId, url }),

@@ -269,8 +269,10 @@ export default {
 		},
 		installImg() {
 			console.log(this.deviceInfoObj)
-			const keys = Object.keys(this.deviceInfoObj);
-			return keys.length && this.deviceInfoObj.installPositionImg && this.deviceInfoObj.installPositionImg.split(",") || []
+			const keys = Object.keys(this.deviceInfoObj)
+			return (
+				(keys.length && this.deviceInfoObj.installPositionImg && this.deviceInfoObj.installPositionImg.split(",")) || []
+			)
 		},
 		remarks() {
 			const str = this.alarmHandleData.processBOList && this.alarmHandleData.processBOList[0]
@@ -282,8 +284,14 @@ export default {
 	},
 	methods: {
 		allRequest() {
-			const { getDeviceInfoDetail, getDeviceCount, getTableData, getChartData } = this
-			Promise.allSettled([getDeviceInfoDetail(), getDeviceCount(), getTableData(), getChartData()])
+			const { getDeviceInfoDetail, getDeviceCount, getTableData, getChartData, getDeviceStatusTableData } = this
+			Promise.allSettled([
+				getDeviceInfoDetail(),
+				getDeviceCount(),
+				getTableData(),
+				getChartData(),
+				getDeviceStatusTableData(),
+			])
 		},
 		sendCommand() {
 			this.dialog = true
