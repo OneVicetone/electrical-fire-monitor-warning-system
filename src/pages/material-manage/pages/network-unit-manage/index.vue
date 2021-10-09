@@ -132,6 +132,7 @@ export default {
 		},
 		add() {
 			this.eventSource = "新增单位"
+			this.editForm = {};
 			this.isShowDialog = true
 		},
 		delete(id) {},

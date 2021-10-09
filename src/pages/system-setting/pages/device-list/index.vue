@@ -185,11 +185,12 @@ export default {
 		},
 		add() {
 			this.eventType = "新增设备"
+			this.formCell = {}
 			this.isShowDialog = true
 		},
 		delete(id) {},
 		editCell(text) {
-			console.log(text)
+			console.log('编辑',text)
 			this.eventType = "编辑设备"
 			this.formCell = text
 			this.isShowDialog = true

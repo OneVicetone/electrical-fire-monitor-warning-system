@@ -116,7 +116,9 @@
 				</div>
 			</div>
 		</div>
-		<DeviceDetaiCommandl v-model="dialog" @on-res="allRequest"></DeviceDetaiCommandl>
+		<DeviceDetaiCommandl v-model="dialog"
+		:defaultValue="deviceDetaiCommandlValue"
+		@on-res="allRequest"></DeviceDetaiCommandl>
 		<DealWithDialog
 			v-model="alarmAlert"
 			:able="isAble"
@@ -162,6 +164,7 @@ const {
 	processAlarm,
 	deletePositionImg,
 	addPositionImg,
+	getDeviceConfig
 } = apis
 
 export default {
@@ -257,6 +260,7 @@ export default {
 			alarmHandleData: {},
 			handAlarm: {},
 			picLog: false,
+			deviceDetaiCommandlValue: {}
 		}
 	},
 	computed: {
@@ -293,7 +297,10 @@ export default {
 				getDeviceStatusTableData(),
 			])
 		},
-		sendCommand() {
+		async sendCommand() {
+			const res = await getDeviceConfig(this.id);
+			console.log(res)
+			this.deviceDetaiCommandlValue = res.data || {};
 			this.dialog = true
 		},
 		getDeviceInfoDetail() {

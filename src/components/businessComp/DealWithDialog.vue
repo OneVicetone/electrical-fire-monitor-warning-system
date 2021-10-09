@@ -37,7 +37,7 @@
                         <span class="yahei nowrap">现场图片：</span>
                         <Upload v-if="able" ref="upload" @is-done="uploadDone"></Upload>
                         <div v-else class="show-img" >
-                            <img v-for="(item, index) in imgList" :key="index" :src="item" alt="">
+                            <img v-for="(item, index) in imgList" :key="index" :src="item" @click="openBigImg(item)" alt="">
                         </div>
                     </div>
                 </Nav-titles>
@@ -56,6 +56,7 @@
             source="alarm" :againDevice="showList.deviceId"
             @on-res="deviceRes"
         ></DeviceDetaiCommandl>
+        <BigImg v-model="bigImg" :url="imgBig"></BigImg>
     </Dialog>
 </template>
 
@@ -65,6 +66,7 @@ import NavTitles from "components/NavTitles.vue"
 import SimpleTable from "components/SimpleTable.vue"
 import Upload from "components/Upload.vue"
 import DeviceDetaiCommandl from "components/businessComp/DeviceDetaiCommandl.vue"
+import BigImg from "components/businessComp/BigImg.vue"
 import warnIcon from "@/assets/icons/warn-icon.png"
 import dangerIcon from "@/assets/icons/danger-icon.png"
 
@@ -79,7 +81,7 @@ const nameForKey = {
 
 export default {
     name:"DealWithDialog",
-    components: { Dialog, NavTitles, SimpleTable, Upload, DeviceDetaiCommandl },
+    components: { Dialog, NavTitles, SimpleTable, Upload, DeviceDetaiCommandl, BigImg },
     props: {
         dialogVisible: {
             type: Boolean,
@@ -137,7 +139,9 @@ export default {
 			],
             uploadList: [{id: 1, comp: 'Upload'}],
             resultList: [],
-            deviceDetaiCommandl: false
+            deviceDetaiCommandl: false,
+            bigImg: false,
+            imgBig: ''
         }
     },
     computed: {
@@ -161,13 +165,14 @@ export default {
 			}
         },
         list() {
+            console.log('this.handAlarmList', this.handAlarmList, Object.keys(this.handAlarmList).length)
             if (!Object.keys(this.handAlarmList).length) return []; 
             return this.defaultTableData.map(i => {
 				Object.keys(i).forEach((j, idx) => {
 					const num = idx - 1
 					if (num >= 0) {
 						const key = Object.keys(nameForKey)[Object.values(nameForKey).findIndex(k => i.name.includes(k))]
-						if (this.handAlarmList.channelDataMap && this.handAlarmList.channelDataMap[num]) i[j] = this.handAlarmList[num][key]
+						i[j] = this.handAlarmList[num][key] || '-'
 					}
 				})
 				return i
@@ -237,6 +242,10 @@ export default {
         deviceRes() {
             this.$emit('input', false);
             this.$emit('refresh-alarm-list')
+        },
+        openBigImg(url) {
+            this.bigImg = true;
+            this.imgBig = url;
         }
     }
 }
@@ -279,6 +288,7 @@ export default {
             img{
                 width: 6.67rem;
                 height: 6.67rem;
+                cursor: pointer;
                 &:not(:first-child) {
                     margin-left: 8px;
                 }

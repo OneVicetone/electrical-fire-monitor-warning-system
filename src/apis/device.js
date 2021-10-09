@@ -26,32 +26,8 @@ const setupDeviceApis = (http, BASE_URL) => ({
 			safetyDirectorMobile,
 		}),
 
-	changeDeviceInfo: ({
-		sn,
-		deviceTypeId,
-		installPosition,
-		address,
-		addressLat,
-		addressLon,
-		alias,
-		iccid,
-		groupId,
-		safetyDirector,
-		safetyDirectorMobile,
-	}) =>
-		http.get(`${BASE_URL}/api-device/device/modify`, {
-			sn,
-			deviceTypeId,
-			installPosition,
-			address,
-			addressLat,
-			addressLon,
-			alias,
-			iccid,
-			groupId,
-			safetyDirector,
-			safetyDirectorMobile,
-		}),
+	changeDeviceInfo: (params) =>
+		http.get(`${BASE_URL}/api-device/device/modify`, params),
 
 	getDeviceList: ({ current, size, groupId, deviceTypeId, deviceModelId, sn, status, iccid }) =>
 		http.get(`${BASE_URL}/api-device/deviceMgr/pageList`, {
@@ -95,6 +71,8 @@ const setupDeviceApis = (http, BASE_URL) => ({
 
 	deleteDeviceType: id => http.get(`${BASE_URL}/api-device/deviceType/remove`, { id }),
 
+	getDeviceConfig: deviceId => http.get(`${BASE_URL}/api-device/deviceConfig/get`, { deviceId }),
+
 	getDeviceTypeDetail: id => http.get(`${BASE_URL}/api-device/deviceType/detail`, { id }),
 
 	getDeviceInfoDetail: id => http.get(`${BASE_URL}/api-device/deviceInfo/detail/${id}`),
@@ -102,19 +80,21 @@ const setupDeviceApis = (http, BASE_URL) => ({
 	deviceCmd: ({
 		deviceId,
 		cmdType,
-		content: { iz = ``, temp = ``, rv = ``, rc = ``, ccr = ``, realFreq = ``, beatsFreq = `` },
+		content
+		// content: { iz = ``, temp = ``, rv = ``, rc = ``, ccr = ``, realFreq = ``, beatsFreq = `` },
 	}) =>
 		http.post(`${BASE_URL}/api-device/deviceCmd/send`, {
 			deviceId,
 			cmdType,
 			content: {
-				iz,
-				temp,
-				rv,
-				rc,
-				ccr,
-				realFreq,
-				beatsFreq,
+				...content
+				// iz,
+				// temp,
+				// rv,
+				// rc,
+				// ccr,
+				// realFreq,
+				// beatsFreq,
 			},
 		}),
 
