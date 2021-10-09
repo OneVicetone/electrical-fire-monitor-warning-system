@@ -204,9 +204,9 @@ export default {
 	.data-count {
 		position: fixed;
 		top: calc(@banner-no-include-logo-height + 4.42rem);
-		background-color: #12223d;
+		background-color: rgba(18, 34, 61, 0.6);
 		border: 0.08px solid rgba(0, 0, 0, 0.5);
-		opacity: 0.6;
+		// opacity: 0.6;
 		z-index: 2;
 	}
 	.network-group,
@@ -216,12 +216,13 @@ export default {
 	}
 	.network-group {
 		left: @side-left-right-spacing;
-		padding: 0.67rem;
+		// padding: 0.67rem;
+		padding: 1.08rem 1.33rem;
 		.group-count {
 			display: flex;
 			flex-wrap: wrap;
 			.group-count-item {
-				width: 8.83rem;
+				width: 8.4rem;
 				height: 5rem;
 				display: flex;
 				flex-direction: column;

@@ -57,6 +57,7 @@ import NavTitles from "components/NavTitles.vue"
 
 import apis from "apis"
 import { commonMixin } from "mixins"
+import { TOKEN, VUEX } from "utils/storageConstant"
 const { loginout, changePassword, getUserNotifyNum } = apis
 
 export default {
@@ -92,7 +93,8 @@ export default {
 					operate() {
 						const self = this
 						loginout().then(() => {
-							localStorage.clear()
+							localStorage.removeItem(TOKEN)
+							localStorage.removeItem(VUEX)
 							self.push("/login")
 						})
 					},
@@ -102,8 +104,8 @@ export default {
 	},
 	computed: {
 		userInfo() {
-			const { loginName, sub } = this.$store.state.account.userInfo
-			return { loginName, sub }
+			const { loginName, sub, token } = this.$store.state.account.userInfo
+			return { loginName, sub, token }
 		},
 	},
 	mounted() {
@@ -123,11 +125,16 @@ export default {
 			if (!password) return msg.error("当前密码不能为空")
 			if (!newPassword) return msg.error("新密码不能为空")
 			if (newPassword !== enterNewPassword) return msg.error("两次输入密码不一致")
-			const params = {
-				userId: this.userInfo.sub,
-				...this.changePasswordForm,
-			}
-			changePassword(params).then(() => {
+			// const params = {
+			// 	userId: this.userInfo.sub,
+			// 	...this.changePasswordForm,
+			// }
+			const form = new FormData()
+			form.append("password", password)
+			form.append("newPassword", newPassword)
+			form.append("userId", this.userInfo.sub)
+
+			changePassword(form).then(() => {
 				msg.success("修改成功, 请使用新密码重新登录")
 				this.resetChangePasswordForm()
 				localStorage.clear()

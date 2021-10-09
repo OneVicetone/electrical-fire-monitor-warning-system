@@ -249,7 +249,7 @@ export default {
 			],
 			simpleTableData: [
 				{ name: "漏电(mA)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
-				{ name: "温度(c)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "温度(℃)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 				{ name: "电压(V)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 				{ name: "电流(A)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 				{ name: "功率(W)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
@@ -523,10 +523,14 @@ export default {
 					}
 				}
 			}
+			.device-status,
+			.device-detailed-info {
+				padding-top: 1.42rem;
+				padding-right: 1.42rem;
+				padding-left: 1.67rem;
+			}
 			.device-status {
 				height: 24rem;
-				padding-right: 1.42rem;
-				padding-left: 1.08rem;
 			}
 			.device-detailed-info {
 				height: 30.5rem;

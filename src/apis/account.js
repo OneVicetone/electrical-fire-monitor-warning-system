@@ -1,12 +1,12 @@
 const setupAccoutApis = (http, BASE_URL) => ({
 	login: form => http.formPost(`${BASE_URL}/api-user/auth/login`, form),
 
-	loginout: token => http.post(`${BASE_URL}/api-user/auth/loginOff`, { token }),
+	loginout: () => http.formPost(`${BASE_URL}/api-user/auth/loginOff`),
 
 	getLoginCode: () => http.get(`${BASE_URL}/api-user/auth/loginCode`, {}),
 
-	changePassword: ({ userId, password, newPassword }) =>
-		http.put(`${BASE_URL}/api-user/auth/updatePassword`, { userId, password, newPassword }),
+	changePassword: form =>
+		http.formPut(`${BASE_URL}/api-user/auth/updatePassword`, form),
 
 	getUserMenuList: () => http.get(`${BASE_URL}/api-user/menu/web/list`, {}),
 

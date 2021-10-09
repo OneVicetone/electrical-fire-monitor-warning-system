@@ -127,7 +127,7 @@ export default {
 				this.formData = {
 					...data,
 					deviceTypeId: data.type,
-					protocol: data.protocolType
+					protocol: data.protocolType,
 				}
 			})
 		},
@@ -170,7 +170,7 @@ export default {
 				margin: 0 4.58rem 0 1.58rem;
 				img {
 					width: 100%;
-					height: 100%;
+					height: 12.5rem;
 				}
 			}
 		}

@@ -15,7 +15,7 @@
 					{{ getListIdx(paginationData, index) }}
 				</div>
 				<div slot="downloadTime" slot-scope="text">
-					{{ text.createTime | filterTimeToYYYYMMDD }}
+					{{ text.createTime | filterTimeToYYYYMMDDHHmmss }}
 				</div>
 				<div slot="fileSize" slot-scope="text">
 					{{ text.fileSize ? `${text.fileSize}KB` : "-" }}
@@ -40,7 +40,6 @@
 </template>
 
 <script>
-import { message as msg } from "ant-design-vue"
 import { cloneDeep } from "lodash"
 
 import Pagination from "components/Pagination.vue"
