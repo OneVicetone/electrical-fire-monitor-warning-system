@@ -162,7 +162,10 @@ export default {
     mixins: [dialogControl, form, uploadFileMixin],
     props: {
         headerName: String,
-        editForm: Object
+        editForm: {
+            type: Object,
+            default: () => {}
+        }
     },
     data() {
         return {
@@ -215,6 +218,7 @@ export default {
             if (v) {
                 this.getTreeGroup();
                 this.getOptions();
+                const userInfo = JSON.parse(localStorage.getItem('vuex'))
                 const {
                     name = '',
                     parentId = '',
@@ -230,7 +234,7 @@ export default {
                     effectPicPath = '',
                     designPicPath = ''
                 } = this.editForm || {};
-                console.log('---', this.unitForm, this.upload )
+                console.log('---', this.unitForm, this.upload, userInfo.account )
                 this.unitForm = {
                     unitName: name,
                     upUnit: this.treeShow(this.groupOptions, parentId),
@@ -243,7 +247,7 @@ export default {
                 }
                 this.safe = {
                     safePrincipal: principalUserName,
-                    principalAccount: loginName,
+                    principalAccount: userInfo.account.userInfo.loginName,
                     linkPhone: mobile
                 }
                 this.upload = {

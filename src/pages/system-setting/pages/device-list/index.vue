@@ -190,7 +190,7 @@ export default {
 		},
 		delete(id) {},
 		editCell(text) {
-			console.log(text)
+			console.log('编辑',text)
 			this.eventType = "编辑设备"
 			this.formCell = text
 			this.isShowDialog = true

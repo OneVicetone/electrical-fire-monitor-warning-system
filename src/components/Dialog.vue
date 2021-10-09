@@ -39,16 +39,10 @@ export default {
 			type: Boolean,
 			default: true,
 		},
-		// 弹窗内的表单
-		forms: {
-			type: Object,
-			default: () => ({}),
-		},
 		coefficient: {
 			type: Number,
 			default: 1
 		},
-		fRefs: Array
 	},
 	computed: {
 		visible: {
@@ -57,16 +51,6 @@ export default {
 		},
 		modalWidth() {
 			return this.getBasePx() * 83.12 * this.coefficient;
-		}
-	},
-	watch: {
-		visible(v) {
-			const keys = Object.keys(this.forms);
-			if (!v) {
-				console.log(this.fRefs)
-				keys.forEach(y => this.forms[y] = '');
-				this.fRefs.forEach(x => x.resetFields());
-			}
 		}
 	},
 	methods: {

@@ -1,6 +1,5 @@
 <template>
-    <Dialog v-model="visibles" :title="eventType" :forms="formCell"
-        :fRefs="[$refs.unitInfo, $refs.safe]">
+    <Dialog v-model="visibles" :title="eventType">
         <Nav-titles class="unit-base-info" title="设备信息">
             <a-form-model
                 ref="unitInfo"
@@ -16,6 +15,7 @@
                         @blur="() => {$refs.deviceNumber.onFieldBlur()}"
                         @change="limintChange"
                         :maxLength="50"
+                        :disabled="sourcesType"
                         placeholder="请输入设备编号"
                     />
                 </a-form-model-item>
@@ -40,7 +40,7 @@
                         :fieldNames="{ label: 'title', value: 'key', children: 'children' }"
                         placeholder="请选择设备分组"/>
                 </a-form-model-item>
-                <a-form-model class="form-right" layout="inline" :model="unitForm" :labelCol="{ style: 'width: 72px;float: left;' }"
+                <a-form-model class="mb form-right" layout="inline" :model="unitForm" :labelCol="{ style: 'width: 72px;float: left;' }"
                     :wrapper-col="{ style: 'width: 22rem' }">
                     <a-form-model-item label="关联SIM卡" class="mr0">
                         <a-input v-model="unitForm.iccid" @change="iccidChange" :maxLength="50" placeholder="请输入ICCID号" />
@@ -109,15 +109,21 @@ import MapModal from "components/MapModal.vue"
 import apis from "apis"
 import { dialogControl, form } from "mixins"
 
-const { createDevice, getSelectOptions } = apis
+const { createDevice, getSelectOptions, changeDeviceInfo } = apis
 
 export default {
     name:"AddUnit",
     components: { Dialog, NavTitles, MapModal },
     mixins: [dialogControl, form],
     props: {
-        treeData: Array,
-        formCell: Object,
+        treeData: {
+            type: Array,
+            default: () => ([])
+        },
+        formCell:{
+            type: Object,
+            default: () => ({})
+        },
         eventType: String
     },
     data() {
@@ -159,6 +165,7 @@ export default {
     watch: {
         visibles(v) {
             if (v) {
+                console.log(this.formCell)
                 this.getOptions();
                 const { treeShow, groupOptions } = this;
                 const {
@@ -187,6 +194,13 @@ export default {
                     safePrincipal: safetyDirector,
                     linkPhone: safetyDirectorMobile,
                 }
+                this.safe = {
+                    safePrincipal: safetyDirector,
+                    linkPhone: safetyDirectorMobile
+                }
+            } else {
+                this.$refs.unitInfo.resetFields()
+                this.$refs.safe.resetFields()
             }
         }
     },
@@ -239,15 +253,15 @@ export default {
             const cb = async () => {
                 const {
                     unitForm: {
-                        deviceNumber,
-                        deviceType,
-                        deviceName,
+                        deviceNumber = '',
+                        deviceType = '',
+                        deviceName = '',
                         linkGroup,
-                        location,
-                        lng,
-                        lat,
-                        iccid,
-                        installLocation,
+                        location = '',
+                        lng = '',
+                        lat = '',
+                        iccid = '',
+                        installLocation = '',
                     },
                     safe: {
                         safePrincipal,
@@ -267,8 +281,20 @@ export default {
                     groupId: linkGroup[linkGroup.length-1],
                     safetyDirector: safePrincipal,
                     safetyDirectorMobile: linkPhone,
-                    };
-                const res = await createDevice(params);
+                };
+                const modify = {
+                    id: Object.keys(this.formCell).length && this.formCell.id,
+                    deviceTypeId: +deviceType,
+                    installPosition: installLocation,
+                    address: location,
+                    addressLat: lat,
+                    addressLon: lng,
+                    alias: deviceName,
+                    iccid,
+                    safetyDirector: safePrincipal,
+                    safetyDirectorMobile: linkPhone,
+                }
+                const res = this.sourcesType ? await changeDeviceInfo(modify) : await createDevice(params);
                 console.log(res)
                 this.$emit('input', false);
                 msg.success(`${this.sourcesType ? "修改" : "新增"}成功`)
@@ -335,5 +361,8 @@ export default {
             margin-left: 4.08rem
         }
     }
+}
+.mb {
+    margin-bottom: 24px;
 }
 </style>
