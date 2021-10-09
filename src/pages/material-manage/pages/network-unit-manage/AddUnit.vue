@@ -1,5 +1,6 @@
 <template>
-    <Dialog v-model="visibles" :title="headerName" :form="unitForm">
+    <Dialog v-model="visibles" :title="headerName" :coefficient="1.2"
+        :fRefs="[$refs.unitInfo, $refs.safe]">
         <Nav-titles class="unit-base-info" title="单位基本信息">
             <a-form-model
                 ref="unitInfo"
@@ -20,7 +21,8 @@
                 </a-form-model-item>
                 <a-form-model-item label="上级单位" prop="upUnit">
                     <a-cascader :options="groupOptions"
-                         change-on-select v-model="unitForm.upUnit"
+                        :disabled="sources"
+                        change-on-select v-model="unitForm.upUnit"
                         :fieldNames="{ label: 'title', value: 'key', children: 'children' }"
                         placeholder="请选择上级单位"/>
                 </a-form-model-item>
@@ -42,12 +44,14 @@
                 </a-form-model-item>
             </a-form-model>
             <a-form-model class="form-right" layout="inline" :model="unitForm" :labelCol="{ style: 'width: 72px;float: left;' }"
-                :wrapper-col="{ style: 'width: 22rem;' }">
+                :wrapper-col="{ style: 'width: 29rem;' }">
                 <a-form-model-item label="单位人数" class="mr0">
-                    <a-input v-model="unitForm.unitCount" placeholder="请输入单位大概人数" />
+                    <a-input v-model="unitForm.unitCount" @change="unitForm.unitCount = unitForm.unitCount.replace(/\D/g, '')"
+                    placeholder="请输入单位大概人数" :maxLength="10"/>
                 </a-form-model-item>
                 <a-form-model-item label="占地面积" class="mr0">
-                    <a-input v-model="unitForm.area" placeholder="请输入单位占地面积（㎡）" />
+                    <a-input v-model="unitForm.area" @change="unitForm.area = unitForm.area.replace(/\D/g, '')"
+                    placeholder="请输入单位占地面积（㎡）"  :maxLength="10"/>
                 </a-form-model-item>
             </a-form-model>
         </Nav-titles>
@@ -59,7 +63,7 @@
                     :rules="safeRules"
                     labelAlign="right"
                     :labelCol="{ style: 'width: 132px;float: left;' }"
-                    :wrapper-col="{ span: 18 }"
+                    :wrapper-col="{ style: 'width: 65.5rem;float: left;' }"
                     class="form-right"
                 >
                     <a-form-model-item ref="safePrincipal" label="安全负责人" prop="safePrincipal">
@@ -74,6 +78,7 @@
                     <a-form-model-item ref="principalAccount" label="安全负责人登录账户" prop="principalAccount">
                         <a-input
                             v-model="safe.principalAccount"
+                            :disabled="sources"
                             @blur="() => {$refs.principalAccount.onFieldBlur()}"
                             :suffix="computedLen(safe.principalAccount)"
                             :maxLength="20"
@@ -84,8 +89,9 @@
                         <a-input
                             v-model="safe.linkPhone"
                             @blur="() => {$refs.linkPhone.onFieldBlur()}"
-                            :suffix="computedLen(safe.linkPhone)"
-                            :maxLength="20"
+                            :suffix="computedLen(safe.linkPhone, 11)"
+                            @change="safe.linkPhone = safe.linkPhone.replace(/\D/g, '')"
+                            :maxLength="11"
                             placeholder="请输入安全负责人联系电话"
                         />
                     </a-form-model-item>
@@ -141,6 +147,7 @@
 </template>
 
 <script>
+import { message as msg } from "ant-design-vue"
 import Dialog from "components/Dialog.vue"
 import NavTitles from "components/NavTitles.vue"
 import Upload from "components/Upload.vue"
@@ -204,6 +211,7 @@ export default {
     },
     watch: {
         visibles(v) {
+            console.log(v)
             if (v) {
                 this.getTreeGroup();
                 this.getOptions();
@@ -222,7 +230,7 @@ export default {
                     effectPicPath = '',
                     designPicPath = ''
                 } = this.editForm || {};
-                console.log('---',addressLat, addressLon)
+                console.log('---', this.unitForm, this.upload )
                 this.unitForm = {
                     unitName: name,
                     upUnit: this.treeShow(this.groupOptions, parentId),
@@ -342,6 +350,7 @@ export default {
                 const res = await createUnit(params);
                 console.log('表单填写', res)
                 this.$emit('input', false);
+                msg.success(`${this.sources ? "修改" : "新增"}成功`)
                 this.$emit('refresh-table');
             }
             this.recursionRef(validates, cb);
@@ -398,6 +407,7 @@ export default {
                 height: 13.42rem;
                 margin-bottom: 1.08rem;
                 margin-right: 0;
+                padding: 0;
                 svg {
                     width: 3.33rem;
                     height: 3.33rem;

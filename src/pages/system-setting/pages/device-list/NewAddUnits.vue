@@ -1,5 +1,6 @@
 <template>
-    <Dialog v-model="visibles" :title="eventType" :forms="formCell">
+    <Dialog v-model="visibles" :title="eventType" :forms="formCell"
+        :fRefs="[$refs.unitInfo, $refs.safe]">
         <Nav-titles class="unit-base-info" title="设备信息">
             <a-form-model
                 ref="unitInfo"
@@ -82,6 +83,7 @@
                             v-model="safe.linkPhone"
                             :suffix="computedLen(safe.linkPhone, 11)"
                             :maxLength="11"
+                            @change="safe.linkPhone = safe.linkPhone.replace(/\D/g, '')"
                             placeholder="请输入安全负责人联系电话"
                         />
                     </a-form-model-item>
@@ -100,6 +102,7 @@
 </template>
 
 <script>
+import { message as msg } from "ant-design-vue"
 import Dialog from "components/Dialog.vue"
 import NavTitles from "components/NavTitles.vue"
 import MapModal from "components/MapModal.vue"
@@ -268,6 +271,7 @@ export default {
                 const res = await createDevice(params);
                 console.log(res)
                 this.$emit('input', false);
+                msg.success(`${this.sourcesType ? "修改" : "新增"}成功`)
                 this.$emit('on-fresh-data');
             }
             this.recursionRef(validates, cb);

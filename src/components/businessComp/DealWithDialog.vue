@@ -161,13 +161,14 @@ export default {
 			}
         },
         list() {
+            console.log('this.handAlarmList', this.handAlarmList, Object.keys(this.handAlarmList).length)
             if (!Object.keys(this.handAlarmList).length) return []; 
             return this.defaultTableData.map(i => {
 				Object.keys(i).forEach((j, idx) => {
 					const num = idx - 1
 					if (num >= 0) {
 						const key = Object.keys(nameForKey)[Object.values(nameForKey).findIndex(k => i.name.includes(k))]
-						if (this.handAlarmList.channelDataMap && this.handAlarmList.channelDataMap[num]) i[j] = this.handAlarmList[num][key]
+						i[j] = this.handAlarmList[num][key] || '-'
 					}
 				})
 				return i

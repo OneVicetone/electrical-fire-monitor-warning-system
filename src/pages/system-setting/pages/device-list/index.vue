@@ -174,6 +174,7 @@ export default {
 		},
 		add() {
 			this.eventType = "新增设备"
+			this.formCell = {}
 			this.isShowDialog = true
 		},
 		delete(id) {},

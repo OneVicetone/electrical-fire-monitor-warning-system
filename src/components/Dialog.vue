@@ -47,7 +47,8 @@ export default {
 		coefficient: {
 			type: Number,
 			default: 1
-		}
+		},
+		fRefs: Array
 	},
 	computed: {
 		visible: {
@@ -61,7 +62,11 @@ export default {
 	watch: {
 		visible(v) {
 			const keys = Object.keys(this.forms);
-			!v && keys.length && keys.forEach(y=> this.forms[y] = '');
+			if (!v) {
+				console.log(this.fRefs)
+				keys.forEach(y => this.forms[y] = '');
+				this.fRefs.forEach(x => x.resetFields());
+			}
 		}
 	},
 	methods: {

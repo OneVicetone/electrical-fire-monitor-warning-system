@@ -79,8 +79,8 @@ export default {
             selectOpt: [
                 { name: '数据阈值', value: '1' },
                 { name: '消音&复位', value: '2' },
-                { name: '合闸开闸', value: '3' },
-                { name: '路由绑定', value: '4' },
+                // { name: '合闸开闸', value: '3' },
+                // { name: '路由绑定', value: '4' },
             ],
             records: [],
             total: 0,
