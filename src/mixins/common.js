@@ -36,7 +36,7 @@ export const commonMixin = {
 		filterAlarmStatus(val) {
 			switch (val) {
 				case 1:
-					return "报警中"
+					return "未处理"
 				case 2:
 					return "已恢复"
 				case 3:

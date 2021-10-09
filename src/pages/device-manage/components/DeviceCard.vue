@@ -3,7 +3,7 @@
 		<header>
 			<div class="device-name">
 				<img src="@/assets/icons/device-icon.png" alt="设备图标" />
-				<span class="device-name">{{ deviceInfoObj.deviceTypeName }}</span>
+				<span class="device-name">{{ deviceInfoObj.alias }}</span>
 			</div>
 			<div>
 				<a-switch
@@ -31,7 +31,10 @@
 					<p>设备ID：{{ deviceInfoObj.sn }}</p>
 					<p>设备类型：{{ deviceInfoObj.deviceTypeName }}</p>
 					<p>信号时间：{{ deviceInfoObj.reportTime | filterTimeToYYYYMMDDHHmmss }}</p>
-					<p>设备状态：{{ deviceInfoObj.online }}</p>
+					<p>
+						设备状态：{{ deviceInfoObj.online }} {{ deviceInfoObj.alarm ? "," : ""
+						}}<span class="alarm-text" v-if="deviceInfoObj.alarm">报警</span>
+					</p>
 					<p>到期时间：{{ deviceInfoObj.endDate | filterTimeToYYYYMMDD }}</p>
 				</div>
 			</div>
@@ -93,7 +96,7 @@ export default {
 			],
 			defaultTableData: [
 				{ name: "漏电(mA)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
-				{ name: "温度(c)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "温度(℃)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 				{ name: "电压(V)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 				{ name: "电流(A)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 				{ name: "功率(W)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
@@ -180,6 +183,10 @@ export default {
 				color: #dcdcdc;
 				font-size: 0.8rem;
 				line-height: 6px;
+				.alarm-text {
+					color: #cf4f47;
+					padding: 0 0 0 0.5rem;
+				}
 			}
 			.ant-table-wrapper .ant-table {
 				max-height: 14rem;

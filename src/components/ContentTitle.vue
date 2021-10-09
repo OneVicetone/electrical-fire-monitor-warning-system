@@ -63,9 +63,9 @@ header {
 			content: "";
 			display: block;
 			width: 3rem;
-			height: 3rem;
+			height: 2.5rem;
 			position: absolute;
-			left: -3rem;
+			left: -2.5rem;
 			top: 50%;
 			transform: translateY(-50%);
 			background: url("~assets/icons/content-title-icon.png") no-repeat;

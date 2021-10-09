@@ -103,6 +103,15 @@ class Http {
 			headers: getRequestHeader("form"),
 		})
 	}
+
+	static formPut(url, data) {
+		return axiosInstance({
+			url,
+			method: "put",
+			data,
+			headers: getRequestHeader("form"),
+		})
+	}
 }
 
 export default Http

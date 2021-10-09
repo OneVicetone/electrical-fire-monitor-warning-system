@@ -32,7 +32,7 @@ const allOptionsData = {
 		{ label: "BY-003", value: 3 },
 	],
 	handleStatusOptions: [
-		{ label: "待处理", value: 1 },
+		{ label: "未处理", value: 1 },
 		{ label: "已处理", value: 3 },
 		{ label: "已恢复", value: 2 },
 	],

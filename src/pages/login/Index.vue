@@ -44,14 +44,14 @@ import { LOGIN, GET_MENU_LIST, GET_ROUTES_BY_MENU_LIST, SET_ROUTES } from "store
 const { mapGetters, mapMutations, mapActions } = createNamespacedHelpers("account")
 export default {
 	name: "Login",
-	
+
 	mixins: [commonMixin],
 	components: { dragVerify },
 	data() {
 		return {
 			// username: "ww",
 			// password: "BYkj8080",
-			username: "",
+			username: localStorage.getItem(USERNAME) || "",
 			password: "",
 			source: 1,
 			saveLocalUserName: false,
