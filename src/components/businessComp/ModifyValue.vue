@@ -6,12 +6,12 @@
         <header>
 			<div>参数设置</div>
 		</header>
-        <div class="show-value">参数名称：</div>
-        <div class="show-value">原参数值：</div>
+        <div class="show-value">参数名称：{{ emitValue && emitValue.label }}</div>
+        <div class="show-value">原参数值：{{ modelValue }}</div>
         <div class="show-value">
             新参数值：
-            <a-input v-model="ipt[name]" class="ipt"></a-input>
-            <!-- {{aa}} -->
+            <a-input v-model="forms[emitValue && emitValue.model]" class="ipt"></a-input>
+            {{emitValue && emitValue.desc}}
         </div>
         <section class="btns paddings">
             <a-button type="primary" class="mr125" @click="clickSure">确定</a-button>
@@ -37,10 +37,12 @@ export default {
             type: Object,
             default: () => ({})
         },
-        deviceId: [Number, String]
+        deviceId: [Number, String],
+        modelValue: [Number, String],
     },
     data() {
         return {
+            forms: {}
         }
     },
     computed: {
@@ -56,29 +58,16 @@ export default {
     },
     methods: {
         clickSure() {
-
             const params = {
                 deviceId: this.deviceId,
                 cmdType: 1, // 固定
                 content: {
-                    iz: '',
-                    temp: '',
-                    izTm: '',
-                    tempTm: '',
-                    rv: '',
-                    rc: '',
-                    ov: '',
-                    ovt: '',
-                    uv: '',
-                    uvt: '',
-                    oi: '',
-                    oit: '',
-                    op: '',
-                    opt: '',
-                    os: '',
-                    ost: '',
+                    ...this.forms
                 } 
             }
+            this.$emit('sure-modify', params)
+            this.forms = {};
+            this.$emit('input', false)
         }
     }
 }

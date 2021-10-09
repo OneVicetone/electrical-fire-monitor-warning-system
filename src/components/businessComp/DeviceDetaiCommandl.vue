@@ -1,6 +1,6 @@
 <template>
     <Dialog class="dialog-custom" v-model="visibles" :coefficient="1.2" title="发送指令">
-        <Tabs v-model="tabModel" :tabs="tabArr"></Tabs>
+        <Tabs v-model="tabModel" :tabs="tabArr" @tab-change="tabChange"></Tabs>
         <div class="comp-content flex-between">
             <!-- 820 && 数据阙值 || 复位 -->
             <div class="comp-content__form" v-if="defaultValue && defaultValue.protocolType === '820'">
@@ -12,7 +12,7 @@
                         </div>
                     </a-form-model-item>
                 </a-form-model>
-                <a-radio-group v-else v-model="radioGroup">
+                <a-radio-group v-else v-model="formData.control">
                     <a-radio value="quiet">消音</a-radio>
                     <a-radio value="reset">复位</a-radio>
                 </a-radio-group>
@@ -30,34 +30,46 @@
                         <div v-for="(item, index) in B9SThreshold" :key="index" class="flex-center" style="margin-bottom: 2rem;">
                             <div class="display-ib" style="width: 29rem;">
                                 <span class="font label-name">{{item.label}}</span>
-                                <a-input style="width: 10rem" disabled/>
+                                <a-input style="width: 10rem" v-model="B9SForm[item.model]" disabled/>
                                 <span class="font">{{item.desc}}</span>
                             </div>
                             <div class="btn" @click="onModify(item)">修改</div>
                         </div>
                     </div>
                 </div>
-                <div v-else-if="tabModel === '2'" class="openClose">
-                    <span class="yahei">开关控制：</span>
-                    <a-radio-group v-model="radioGroup">
-                        <a-radio value="quiet">分闸</a-radio>
-                        <a-radio value="reset">合闸</a-radio>
-                        <a-radio value="rese0t">闭锁</a-radio>
-                    </a-radio-group>
-                    <ul class="desc yahei">
-                        <li>1、当前开关状态：合闸</li>
-                        <li>2、闭锁后不能远程控制开关，需要先在设备那里手动解锁</li>
-                        <li>3、远程下发指令合闸，必须先开启自动分合闸模式</li>
-                    </ul>
+                <div v-else-if="tabModel === '3'" class="openClose">
+                    <div>
+                        <span class="yahei tx-r">操作分合闸：</span>
+                        <a-radio-group v-model="B9SForm.workMode">
+                            <a-radio value="1">自动</a-radio>
+                            <a-radio value="2">手动</a-radio>
+                        </a-radio-group>
+                        <ul class="desc yahei">
+                            <li>(1、手动模式下，不能远程进行开关控制，默认自动模式)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <span class="yahei tx-r">开关控制：</span>
+                        <a-radio-group v-model="B9SForm.workStatus">
+                            <a-radio value="1">分闸</a-radio>
+                            <a-radio value="2">合闸</a-radio>
+                            <a-radio value="3">闭锁</a-radio>
+                            <a-radio value="4">解锁</a-radio>
+                        </a-radio-group>
+                        <ul class="desc yahei">
+                            <li>1、当前开关状态：合闸</li>
+                            <li>2、闭锁后不能远程控制开关，需要先在设备那里手动解锁</li>
+                            <li>3、远程下发指令合闸，必须先开启自动分合闸模式</li>
+                        </ul>
+                    </div>
                 </div>
                 <div v-else class="route">
                     <div class="improt yahei">智能空开需要与网关路由绑定后才可以上报数据</div>
                     <span class="yahei">绑定路由：</span>
-                    <a-input class="ipt"></a-input>
+                    <a-input class="ipt" v-model="B9SForm.gateway"></a-input>
                 </div>
-                <section class="btns paddings">
-                    <a-button type="primary" v-if="showComp" class="mr125" @click="doSure">确定</a-button>
-                    <a-button type="primary" v-else class="mr125" @click="sendDev">发送指令</a-button>
+                <section class="btns paddings" v-if="tabModel !== '1'">
+                    <a-button type="primary" class="mr125" @click="sendDev">发送指令</a-button>
                     <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
                 </section>
             </div>
@@ -77,8 +89,10 @@
             </NavTitles>
         </div>
         <ModifyValue v-model="modifyLlog"
-            :emitValue="emitValue"
-            :deviceId="source === 'alarm' ? againDevice : $route.params.id">
+            :emitValue="emitValue" :modelValue="modelValue"
+            this.modelB9SForm = this.B9SForm;
+            :deviceId="source === 'alarm' ? againDevice : $route.params.id"
+            @sure-modify="modifyEvent">
         </ModifyValue>
     </Dialog>
 </template>
@@ -160,7 +174,8 @@ export default {
 				size: 5,
             },
             modifyLlog: false,
-            emitValue: {}
+            emitValue: {},
+            modelValue: '',
         }
     },
     watch: {
@@ -168,8 +183,14 @@ export default {
            this.tabModel = '1';
             if (v) {
                 this.getList()
-                this.formData = this.defaultValue && this.defaultValue.threshold
-                this.B9SForm = this.defaultValue && this.defaultValue.threshold
+                if (this.defaultValue && this.defaultValue.protocolType === '820') {
+                    this.formData = this.defaultValue && this.defaultValue.threshold;
+                    this.B9SForm = {}
+
+                } else {
+                    this.B9SForm = this.defaultValue && this.defaultValue.threshold
+                    this.formData = {}
+                }
             }
         }
     },
@@ -192,6 +213,10 @@ export default {
         }
     },
     methods: {
+        tabChange() {
+            // this.formData = {};
+            // this.B9SForm = {}
+        },
         getList({ current = 1, size = 5 } = {}) {
             const {
                 $route: {
@@ -220,15 +245,7 @@ export default {
         async doSure() {
             const {
                 tabModel,
-                formData: {
-                    iz = "",
-                    temp = "",
-                    rv = "",
-                    rc = "",
-                    ccr = "",
-                    realFreq = "",
-                    beatsFreq = ""
-                },
+                formData,
                 $route: {
                     params: { id }
                 },
@@ -238,15 +255,7 @@ export default {
             const params = {
 				deviceId:  source === 'alarm' ? againDevice : id,
 				cmdType: tabModel,
-				content: {
-					iz: iz,
-					temp: temp,
-					rv: rv,
-					rc: rc,
-					ccr: ccr,
-					realFreq: realFreq,
-					beatsFreq: beatsFreq
-				}
+				content: {...formData}
 			}
             const result = await deviceCmd(params);
             console.log('指令结果', result)
@@ -254,8 +263,28 @@ export default {
             this.$emit('on-res');
             this.$emit('input', false);
         },
-        sendDev() {
-
+        async sendDev() {
+            const {
+                tabModel,
+                formData,
+                B9SForm,
+                $route: {
+                    params: { id }
+                },
+                againDevice,
+                source
+            } = this;
+            const data = this.defaultValue && this.defaultValue.protocolType === '820' ? formData : B9SForm;
+            const params = {
+				deviceId:  source === 'alarm' ? againDevice : id,
+				cmdType: tabModel,
+				content: {...data}
+			}
+            const result = await deviceCmd(params);
+            console.log('指令结果', result)
+            this.$message.success('更新成功');
+            this.$emit('on-res');
+            this.$emit('input', false);
         },
         onPage(val) {
             this.getList({current: val, size:5});
@@ -263,6 +292,14 @@ export default {
         onModify(value) {
             this.modifyLlog = true;
             this.emitValue = value;
+            this.modelValue = this.B9SForm[value.model];
+        },
+        async modifyEvent(params) {
+            const result = await deviceCmd(params);
+            console.log(result)
+            this.getList()
+            this.$message.success('更新成功');
+            this.$emit('on-res');
         }
     }
 }
