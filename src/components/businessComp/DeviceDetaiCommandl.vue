@@ -29,7 +29,7 @@
                     <div class="forms">
                         <div v-for="(item, index) in B9SThreshold" :key="index" class="flex-center" style="margin-bottom: 2rem;">
                             <div class="display-ib" style="width: 29rem;">
-                                <span class="font label-name">{{item.label}}</span>
+                                <span class="font label-name">{{item.label}}：</span>
                                 <a-input style="width: 10rem" v-model="B9SForm[item.model]" disabled/>
                                 <span class="font">{{item.desc}}</span>
                             </div>
@@ -141,22 +141,22 @@ export default {
             ],
             B9SForm: {},
             B9SThreshold: [
-                {label: '漏电阈值：', model: 'iz', desc: '（80~1000mA）'},
-                {label: '过温阈值：', model: 'temp', desc: '（40~150℃）'},
-                {label: '过压阈值：', model: 'ov', desc: '（100~500V）'},
-                {label: '欠压阈值：', model: 'uv', desc: '（10~500V）'},
-                {label: '过电流：', model: 'oi', desc: '（5~6000mA）'},
-                {label: '过功率：', model: 'op', desc: '（10~655350 W）'},
-                {label: '过电能：', model: 'os', desc: '（0~65535 kWh）'},
-                {label: '额定电压：', model: 'rv', desc: '（0~500 V）'},
-                {label: '漏电时间：', model: 'izTm', desc: '（100-2000ms）'},
-                {label: '过温时间：', model: 'tempTm', desc: '（0.1-360s）'},
-                {label: '过压时间：', model: 'ovt', desc: '（0.1-360s）'},
-                {label: '欠压时间：', model: 'uvt', desc: '（0.1-360s）'},
-                {label: '过电流时间：', model: 'oit', desc: '（0.1-360s）'},
-                {label: '过功率时间：', model: 'opt', desc: '（0.1-360s）'},
-                {label: '过电能时间：', model: 'ost', desc: '（0.1-360s）'},
-                {label: '额定电流：', model: 'rc', desc: '（0-2000A）'},
+                {label: '漏电阈值', model: 'iz', desc: '（80~1000mA）'},
+                {label: '过温阈值', model: 'temp', desc: '（40~150℃）'},
+                {label: '过压阈值', model: 'ov', desc: '（100~500V）'},
+                {label: '欠压阈值', model: 'uv', desc: '（10~500V）'},
+                {label: '过电流', model: 'oi', desc: '（5~6000mA）'},
+                {label: '过功率', model: 'op', desc: '（10~655350 W）'},
+                {label: '过电能', model: 'os', desc: '（0~65535 kWh）'},
+                {label: '额定电压', model: 'rv', desc: '（0~500 V）'},
+                {label: '漏电时间', model: 'izTm', desc: '（100-2000ms）'},
+                {label: '过温时间', model: 'tempTm', desc: '（0.1-360s）'},
+                {label: '过压时间', model: 'ovt', desc: '（0.1-360s）'},
+                {label: '欠压时间', model: 'uvt', desc: '（0.1-360s）'},
+                {label: '过电流时间', model: 'oit', desc: '（0.1-360s）'},
+                {label: '过功率时间', model: 'opt', desc: '（0.1-360s）'},
+                {label: '过电能时间', model: 'ost', desc: '（0.1-360s）'},
+                {label: '额定电流', model: 'rc', desc: '（0-2000A）'},
             ],
             drevNotes: '1',
             selectOpt: [

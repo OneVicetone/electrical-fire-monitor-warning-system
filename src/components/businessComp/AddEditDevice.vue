@@ -365,4 +365,8 @@ export default {
 .mb {
     margin-bottom: 24px;
 }
+/deep/ .ant-input-affix-wrapper .ant-input-disabled ~ .ant-input-suffix .anticon {
+	color: #dcdcdc !important;
+	cursor: pointer !important;
+}
 </style>

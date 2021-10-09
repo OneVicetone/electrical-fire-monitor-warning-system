@@ -39,19 +39,30 @@
 				<SimpleTable :columns="columns" :tableData="tableData" />
 			</div>
 		</section>
+		<AddEditDevice
+			v-model="isShowDialog"
+			:treeData="treeData"
+			eventType="编辑设备"
+			:formCell="formCell"
+			@on-fresh-data="$emit('re-request-list')"
+		></AddEditDevice>
 	</div>
 </template>
 
 <script>
 import SimpleTable from "components/SimpleTable.vue"
+import AddEditDevice from "components/businessComp/AddEditDevice.vue"
 
+import apis from "apis"
 import { commonMixin } from "mixins"
 import { nameForKey } from "utils/baseData"
+
+const { getDeviceInfoDetail } = apis
 
 export default {
 	name: "DeviceCard",
 	mixins: [commonMixin],
-	components: { SimpleTable },
+	components: { SimpleTable, AddEditDevice },
 	props: {
 		deviceInfoObj: {
 			type: Object,
@@ -64,6 +75,10 @@ export default {
 				maturityTime: "",
 			}),
 		},
+		treeData: {
+			type: Array,
+			default: () => ([])
+		}
 	},
 	data() {
 		return {
@@ -78,6 +93,11 @@ export default {
 					name: "编辑",
 					operate: () => {
 						console.log("详情", this)
+						getDeviceInfoDetail(this.deviceInfoObj.id).then(res => {
+							console.log('编辑',res)
+							this.formCell = res.data || {};
+							this.isShowDialog = true;
+						})
 					},
 				},
 				{ name: "转移", operate: () => {} },
@@ -99,6 +119,8 @@ export default {
 				{ name: "功率(W)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 				{ name: "电量(度)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 			],
+			isShowDialog: false,
+			formCell: {}
 		}
 	},
 	computed: {
