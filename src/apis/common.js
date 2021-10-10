@@ -10,7 +10,9 @@ const setupCommonApis = (http, BASE_URL) => ({
 
 	uploadFile: ({ url, data }) => http.formPost(url, data),
 
-	getCommonTemplateByType: type => http.get(`${BASE_URL}/api-user/template/get`, { type }),
+	getCommonTemplateByType: type => window.location.href = `${BASE_URL}/api-user/template/get?type=${type}`,
+
+	getBatchOperationProgress: scheduleKey => http.get(`${BASE_URL}/api-user/dealSchedule/query`, { scheduleKey }),
 })
 
 export default setupCommonApis

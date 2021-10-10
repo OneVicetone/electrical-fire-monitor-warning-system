@@ -4,7 +4,7 @@
 		<div class="network-group">
 			<ContentTitle title="联网单位" />
 			<div class="group-count">
-				<div class="group-count-item" v-for="item of groupCount" :key="item.name">
+				<div class="group-count-item" v-for="item of groupCount" :key="item.name" @click="toPath(item.path)">
 					<span>{{ item.value }}</span>
 					<span>{{ item.name }}</span>
 				</div>
@@ -39,7 +39,6 @@
 
 <script>
 import { cloneDeep } from "lodash"
-import * as echarts from "echarts"
 
 import Map from "components/Map.vue"
 import ContentTitle from "components/ContentTitle.vue"
@@ -47,6 +46,7 @@ import MarkerInfo from "./components/MarkerInfo.vue"
 import BarChart from "components/BarChart.vue"
 
 import apis from "apis"
+import { commonMixin } from "mixins"
 
 const {
 	monitorCount,
@@ -59,18 +59,19 @@ const {
 
 export default {
 	name: "Monitor",
+	mixins: [commonMixin],
 	components: { Map, ContentTitle, MarkerInfo, BarChart },
 	data() {
 		return {
 			mapInstance: null,
 			mapCenterPoint: { lon: 118.332222, lat: 22.223323 },
 			groupCount: [
-				{ name: "总接入单位", value: "-", key: "totalGroupNum" },
-				{ name: "总接入设备", value: "-", key: "totalDeviceNum" },
-				{ name: "报警累计", value: "-", key: "totalAlarmNum" },
-				{ name: "今日报警", value: "-", key: "todayAlarmNum" },
-				{ name: "今日故障", value: "-", key: "todayFaultNum" },
-				{ name: "今日离线", value: "-", key: "todayOffLineDeviceNum" },
+				{ name: "总接入单位", value: "-", key: "totalGroupNum", path: "/material-manage/network-unit-manage" },
+				{ name: "总接入设备", value: "-", key: "totalDeviceNum", path: "/device-manage" },
+				{ name: "报警累计", value: "-", key: "totalAlarmNum", path: "/alarm-center" },
+				{ name: "今日报警", value: "-", key: "todayAlarmNum", path: "/alarm-center" },
+				{ name: "今日故障", value: "-", key: "todayFaultNum", path: "/alarm-center" },
+				{ name: "今日离线", value: "-", key: "todayOffLineDeviceNum", path: "/alarm-center" },
 			],
 			count: "0",
 			filterTypesOptions: [
@@ -146,7 +147,9 @@ export default {
 				type: filterTypeKey,
 				grooupId: filterVal,
 			}
-			return getMonitorDataList(params).then(({ data }) => this.setMapPoint(data.filter(Boolean)))
+			return getMonitorDataList(params).then(
+				({ data }) => new Promise(resolve => setTimeout(() => resolve(this.setMapPoint(data.filter(Boolean))), 1000))
+			)
 		},
 		setMapPoint(arr) {
 			this.count = String(arr.length)
@@ -177,6 +180,10 @@ export default {
 					if (this.showMarkerInfo) this.showMarkerInfo = false
 				})
 				// TODO: 地图中心设置为最后一个点位？
+				if (idx === arr.length - 1) {
+					this.mapInstance.centerAndZoom(point, 19)
+					marker.domElement.click()
+				}
 			})
 		},
 		setMapInstance(instance) {
@@ -231,6 +238,7 @@ export default {
 				margin: 1rem 0.6rem 0;
 				background-color: #3f4a77;
 				color: #aaddff;
+				cursor: pointer;
 				> span:first-child {
 					font-size: 1.83rem;
 					font-weight: bold;

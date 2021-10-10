@@ -49,7 +49,7 @@ const responseInterceptFunc = res => {
 		window.location = "/"
 		throw new ReferenceError("token error")
 	}
-	if (data.code !== successCode) {
+	if (data.code && data.code !== successCode) {
 		message.error(data.message)
 		throw new Error(data.message)
 	}

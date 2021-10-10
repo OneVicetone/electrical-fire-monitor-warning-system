@@ -41,17 +41,24 @@ export default {
 		},
 		coefficient: {
 			type: Number,
-			default: 1
+			default: 1,
+		},
+		width: {
+			type: [Number, String],
+			default: 83.12,
 		},
 	},
 	computed: {
 		visible: {
-			get: function() { return this.show },
-			set: () => {}
+			get: function () {
+				return this.show
+			},
+			set: () => {},
 		},
 		modalWidth() {
-			return this.getBasePx() * 83.12 * this.coefficient;
-		}
+			const { width, coefficient } = this
+			return this.getBasePx() * width * coefficient
+		},
 	},
 	methods: {
 		closeDialog() {

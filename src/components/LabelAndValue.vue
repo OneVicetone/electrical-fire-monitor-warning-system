@@ -11,10 +11,8 @@
 				<a-button v-if="item.key === 'installPosition'" ghost size="small" @click="onView">查看</a-button>
 			</p>
 		</div>
-		<AccordPic
-			v-model="picLog" :havePic="picList"
-			@on-delete-img="delImg" @add-pic="addPic">
-			<div class="positions">安装位置：{{values.installPosition}}</div>
+		<AccordPic v-model="picLog" :havePic="picList" @on-delete-img="delImg" @add-pic="addPic">
+			<div class="positions">安装位置：{{ values.installPosition }}</div>
 		</AccordPic>
 	</div>
 </template>
@@ -41,26 +39,26 @@ export default {
 			type: String,
 			default: "#dcdcdc",
 		},
-		picList: Array
+		picList: Array,
 	},
 	data() {
 		return {
-			picLog: false
+			picLog: false,
 		}
 	},
 	methods: {
 		onView() {
-			console.log('待看')
-			this.picLog = true;
+			console.log("待看")
+			this.picLog = true
 			// this.$emit('on-view-pic')
 		},
 		delImg(url) {
-			this.$emit('delete-img-source', url)
+			this.$emit("delete-img-source", url)
 		},
 		addPic(url) {
-			this.$emit('add-img-source', url)
-		}
-	}
+			this.$emit("add-img-source", url)
+		},
+	},
 }
 </script>
 
@@ -80,7 +78,8 @@ export default {
 			position: relative;
 			button {
 				position: absolute;
-				right: 0;
+				right: -10rem;
+				top: -0.5rem;
 			}
 		}
 	}
