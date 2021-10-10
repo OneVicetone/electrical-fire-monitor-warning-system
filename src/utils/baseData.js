@@ -13,6 +13,12 @@ const SHIP = 'ship' // 发货
 const TRANSFER = 'transfer' // 转组
 const IMPORT = 'import' // 导入
 
+const templateTypeMap = {
+	[TRANSFER]: 'batchChangeDevice',
+	[IMPORT]: 'batchImportDevice',
+	[SHIP]: 'batchDeliverGoods'
+}
+
 const simpleTableNameForKey = {
 	temp: "温度",
 	electricLeakage: "漏电",
@@ -27,5 +33,6 @@ export {
 	SHIP,
 	TRANSFER,
 	IMPORT,
+	templateTypeMap,
 	simpleTableNameForKey as nameForKey
 }

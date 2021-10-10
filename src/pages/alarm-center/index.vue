@@ -110,9 +110,10 @@
 import Pagination from "components/Pagination.vue"
 import NumCount from "components/NumCount.vue"
 import DealWithDialog from "components/businessComp/DealWithDialog.vue"
-import allOptionsData from "utils/optionsData"
+
 
 import apis from "apis"
+import allOptionsData from "utils/optionsData"
 import { commonMixin, tableListMixin } from "mixins"
 
 const { getAlarmCount, getAlarmList, getAlarmDetail, processAlarm, realTimeData } = apis

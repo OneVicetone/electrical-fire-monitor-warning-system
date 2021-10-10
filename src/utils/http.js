@@ -44,14 +44,14 @@ const responseInterceptFunc = res => {
 		message.error(statusText)
 		throw new Error(data.message)
 	}
-	if (data.code !== successCode) {
-		message.error(data.message)
-		throw new Error(data.message)
-	}
 	if (data.code - 20000 > 0) {
 		localStorage.clear()
 		window.location = "/"
 		throw new ReferenceError("token error")
+	}
+	if (data.code && data.code !== successCode) {
+		message.error(data.message)
+		throw new Error(data.message)
 	}
 	if (url.includes("/login")) {
 		localStorage.setItem(TOKEN, authorization)

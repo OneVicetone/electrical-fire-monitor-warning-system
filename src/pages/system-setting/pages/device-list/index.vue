@@ -99,6 +99,7 @@ import AddEditDevice from "components/businessComp/AddEditDevice.vue"
 
 import apis from "apis"
 import { commonMixin, tableListMixin } from "mixins"
+import { TRANSFER, SHIP, IMPORT } from "utils/baseData"
 
 const { getDeviceListForSystemSettiing, getGroupTree, exportDeviceList, getDeviceInfoDetail } = apis
 const searchFromInitial = {
@@ -117,7 +118,26 @@ export default {
 			parentId: null,
 			searchForm: cloneDeep(searchFromInitial),
 			deviceTypeOptions: [],
-			batchOperationOptions: [],
+			batchOperationOptions: [
+				{
+					name: "批量导入",
+					operate() {
+						this.push(`/device-manage/batch-operation/${IMPORT}`)
+					},
+				},
+				{
+					name: "批量发货",
+					operate() {
+						this.push(`/device-manage/batch-operation/${SHIP}`)
+					},
+				},
+				{
+					name: "批量转组",
+					operate() {
+						this.push(`/device-manage/batch-operation/${TRANSFER}`)
+					},
+				},
+			],
 			deviceIdOptions: [],
 			columns: [
 				{ title: "序号", scopedSlots: { customRender: "idx" } },
@@ -226,7 +246,6 @@ export default {
 			this.searchForm = cloneDeep(searchFromInitial)
 			this.search()
 		},
-		
 	},
 }
 </script>

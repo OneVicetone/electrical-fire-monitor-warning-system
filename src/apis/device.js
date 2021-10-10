@@ -26,8 +26,7 @@ const setupDeviceApis = (http, BASE_URL) => ({
 			safetyDirectorMobile,
 		}),
 
-	changeDeviceInfo: (params) =>
-		http.get(`${BASE_URL}/api-device/device/modify`, params),
+	changeDeviceInfo: params => http.get(`${BASE_URL}/api-device/device/modify`, params),
 
 	getDeviceList: ({ current, size, groupId, deviceTypeId, deviceModelId, sn, status, iccid }) =>
 		http.get(`${BASE_URL}/api-device/deviceMgr/pageList`, {
@@ -80,14 +79,14 @@ const setupDeviceApis = (http, BASE_URL) => ({
 	deviceCmd: ({
 		deviceId,
 		cmdType,
-		content
+		content,
 		// content: { iz = ``, temp = ``, rv = ``, rc = ``, ccr = ``, realFreq = ``, beatsFreq = `` },
 	}) =>
 		http.post(`${BASE_URL}/api-device/deviceCmd/send`, {
 			deviceId,
 			cmdType,
 			content: {
-				...content
+				...content,
 				// iz,
 				// temp,
 				// rv,
@@ -107,7 +106,15 @@ const setupDeviceApis = (http, BASE_URL) => ({
 		http.get(`${BASE_URL}/api-alarm/history/device/pageList`, { current, size, deviceId }),
 
 	getDeviceListForSystemSettiing: ({ current, size, groupId, deviceTypeId, deviceModelId, sn, iccid }) =>
-		http.get(`${BASE_URL}/api-device/device/pageList`, { current, size, groupId, deviceTypeId, deviceModelId, sn, iccid }),
+		http.get(`${BASE_URL}/api-device/device/pageList`, {
+			current,
+			size,
+			groupId,
+			deviceTypeId,
+			deviceModelId,
+			sn,
+			iccid,
+		}),
 
 	getDeviceDetailHistoryChartData: ({ deviceId, startDate, endDate }) =>
 		http.get(`${BASE_URL}/api-device/reportData/getByDateForModule`, { deviceId, startDate, endDate }),
@@ -119,6 +126,12 @@ const setupDeviceApis = (http, BASE_URL) => ({
 
 	deletePositionImg: ({ deviceId, url }) =>
 		http.formPost(`${BASE_URL}/api-device/install/positionImg/delete?deviceId=${deviceId}&url=${url}`),
+
+	batchDeliverGoods: form => http.formPost(`${BASE_URL}/api-device/device/batchDeliverGoods`, form),
+
+	batchChangeGroup: form => http.formPost(`${BASE_URL}/api-device/device/batchChangeGroup`, form),
+
+	batchImportDevice: form => http.formPost(`${BASE_URL}/api-device/device/batchImport`, form),
 })
 
 export default setupDeviceApis
