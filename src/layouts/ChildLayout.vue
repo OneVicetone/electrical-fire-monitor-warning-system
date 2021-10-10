@@ -63,7 +63,6 @@ export default {
 	.ant-layout-content {
 		height: auto;
 		// height: 100%;
-		
 	}
 }
 </style>

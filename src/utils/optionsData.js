@@ -1,5 +1,3 @@
-import { isPC } from "utils/commonFunctions"
-
 const optionsPlaceholder = {
 	groupTypeOptions: "请选择单位",
 	alarmTypeOptions: "请选择报警类型",

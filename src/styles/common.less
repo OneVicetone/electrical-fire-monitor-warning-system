@@ -175,15 +175,40 @@
 	}
 }
 
-//
+// Cascader
 div.ant-cascader-menus {
-	background-color: #3F4A77;
+	background-color: #3f4a77;
 	.ant-cascader-menus-content {
 		.ant-cascader-menu {
 			border-color: #152348;
 			.ant-cascader-menu-item-active:not(.ant-cascader-menu-item-disabled) {
 				background-color: #152348;
 			}
+		}
+	}
+}
+
+// MenuItem
+.ant-menu {
+	li.ant-menu-item {
+		transition: all 0.5s;
+		&.ant-menu-item-selected {
+			position: relative;
+			background-color: #0f1426;
+			> span {
+				color: #0096ff;
+			}
+			&::before {
+				content: "";
+				width: 3px;
+				height: 100%;
+				position: absolute;
+				left: 0;
+				background-color: #0096ff;
+			}
+		}
+		&:hover {
+			color: #0096ff;
 		}
 	}
 }
