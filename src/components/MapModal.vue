@@ -4,7 +4,7 @@
         :closable="false" :destroyOnClose="true" :keyboard="false"
         :maskClosable="false" :footer="null" :width="widths">
         <div class="map">
-            <div class="flex inputs">
+            <div class="flex inputs" v-if="showInput">
                 <el-autocomplete
                     v-model="form.address"
                     size="mini"
@@ -40,6 +40,11 @@
 import { getBasePx } from "utils/initial"
 import { dialogControl } from "mixins"
 
+import { addMapScript } from "utils/commonFunctions"
+import apis from "apis"
+
+const { getMapKey } = apis
+
 export default {
     name:"MapModal",
     mixins: [dialogControl],
@@ -69,6 +74,7 @@ export default {
             mk: '', // Marker实例
             locationPoint: null,
             markClick: false,
+            showInput: false
         }
     },
     computed: {
@@ -80,17 +86,26 @@ export default {
         visibles(v) {
             if (v) {
                 this.$nextTick(() => {
-                    this.initMap()
+                    this.setMap()
                 })
             }
         }
     },
     methods: {
-        initMap() {
+        setMap() {
+			if (window.BMapGL) return this.initMap(window.BMapGL)
+			const mapModule = "web"
+			getMapKey(mapModule).then(({ data: { ak } }) => {
+				addMapScript(ak).then(BMapGL => this.initMap(BMapGL))
+			})
+		},
+        initMap(BMapGL) {
             console.log('1111111', this.emitPoint, this.form.address)
             const that = this
             const { lat, lng, name } = this.emitPoint;
             this.form.address = name;
+            // 保持与地图出现同步
+            this.showInput=  true
             console.log('222',lat, lng, name)
             // 1、挂载地图
             this.map = new BMapGL.Map('map-container', { enableMapClick: false })
@@ -98,6 +113,7 @@ export default {
             this.map.centerAndZoom(point, 19)
             // 3、设置图像标注并绑定拖拽标注结束后事件
             this.mk = new BMapGL.Marker(point, { enableDragging: true })
+            this.map.enableScrollWheelZoom(true); 
             this.map.addOverlay(this.mk)
             this.mk.addEventListener('dragend', function(e) {
                 that.markClick = true;

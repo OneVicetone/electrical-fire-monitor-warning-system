@@ -115,10 +115,10 @@ const setupDeviceApis = (http, BASE_URL) => ({
 	getDeviceIdOptionsData: typeId => http.get(`${BASE_URL}/api-device/deviceType/parameter/list`, { typeId }),
 
 	addPositionImg: ({ deviceId, url }) =>
-		http.formPost(`${BASE_URL}/api-device/install/positionImg/add`, { deviceId, url }),
+		http.formPost(`${BASE_URL}/api-device/install/positionImg/add?deviceId=${deviceId}&url=${url}`),
 
 	deletePositionImg: ({ deviceId, url }) =>
-		http.formPost(`${BASE_URL}/api-device/install/positionImg/delete`, { deviceId, url }),
+		http.formPost(`${BASE_URL}/api-device/install/positionImg/delete?deviceId=${deviceId}&url=${url}`),
 })
 
 export default setupDeviceApis
