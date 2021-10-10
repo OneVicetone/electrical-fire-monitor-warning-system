@@ -170,6 +170,7 @@ export default {
 			margin: 2.75rem 0 2.92rem;
 			// background: transparent !important;
 			// color: #0096ff;
+			border: 1px solid #0096FF;
 		}
 		.ant-btn-primary[disabled] {
 			background-color: transparent;
