@@ -79,4 +79,17 @@ function xmlObj2json(xml) {
 	return jsonObj
 }
 
-export { addMapScript, initMapTheme, xmlStr2XmlObj, xmlObj2json }
+function isPC() {
+	const userAgentInfo = navigator.userAgent
+	const Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"]
+	let flag = true
+	for (let v = 0; v < Agents.length; v++) {
+		if (userAgentInfo.indexOf(Agents[v]) > 0) {
+			flag = false
+			break
+		}
+	}
+	return flag
+}
+
+export { addMapScript, initMapTheme, xmlStr2XmlObj, xmlObj2json, isPC }

@@ -52,7 +52,10 @@
 import Breadcrumb from "components/Breadcrumb.vue"
 import NavTitles from "components/NavTitles.vue"
 
-import { batchKeytoName, SHIP, TRANSFER, IMPORT } from "utils/baseData"
+import apis from "apis"
+
+const { getCommonTemplateByType } = apis
+import { batchKeytoName, SHIP, TRANSFER, IMPORT, templateTypeMap } from "utils/baseData"
 
 export default {
 	name: "BatchOperation",
@@ -78,9 +81,11 @@ export default {
 		},
 	},
 	methods: {
-        downloadTemplate() {
-            
-        },
+		downloadTemplate() {
+			getCommonTemplateByType(templateTypeMap[this.operation_type]).then(({ data }) => {
+				console.log(data)
+			})
+		},
 		enter() {
 			switch (operation_type) {
 				case SHIP:

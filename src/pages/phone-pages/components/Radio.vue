@@ -48,10 +48,11 @@ export default {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		margin: 0 1.125rem;
+		margin: 1rem 1.125rem;
 		background-color: #f5f5f5;
 		border: 1px solid;
 		border-color: transparent;
+		border-radius: 4px;
 		color: #445a79;
 		font-size: 2rem;
 		transition: all 0.5s;

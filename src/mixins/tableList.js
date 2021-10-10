@@ -1,22 +1,27 @@
 import apis from "apis"
+import { isPC } from "utils/commonFunctions"
 import { optionsPlaceholder } from "utils/optionsData"
 
 const { getSelectOptions, getDeviceIdOptionsData } = apis
 
 export const tableListMixin = {
 	methods: {
-		search() {
+		search(getDataFuncName = "getTableData") {
 			const {
 				paginationData: { current, size },
 			} = this
-			this.getTableData(current, size)
+			return this[getDataFuncName](current, size)
 		},
 		getOptionsListPromiseArr(optionsTypes = []) {
 			return optionsTypes.map(i =>
 				getSelectOptions(i).then(({ data }) => {
 					const optionsKey = `${i}Options`
 					this[optionsKey] = [
-						{ label: optionsPlaceholder[optionsKey], value: "", remark: "" },
+						{
+							label: isPC() ? optionsPlaceholder[optionsKey] : optionsPlaceholder["phoneSelectDefaultSelected"],
+							value: "",
+							remark: "",
+						},
 						...data.map(({ code, name, remark }) => ({
 							remark,
 							label: name,
