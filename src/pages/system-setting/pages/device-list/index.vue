@@ -92,6 +92,7 @@
 
 <script>
 import { cloneDeep } from "lodash"
+import { message as msg } from "ant-design-vue"
 
 import OrganizationList from "components/OrganizationList.vue"
 import Pagination from "components/Pagination.vue"
@@ -210,12 +211,12 @@ export default {
 		},
 		delete(id) {},
 		async editCell(text) {
-			console.log('编辑',text)
+			console.log("编辑", text)
 			this.eventType = "编辑设备"
 			// this.formCell = text
 			const getPhone = await getDeviceInfoDetail(text.id)
-			console.log('获取联系人', getPhone)
-			this.formCell = getPhone.data || {};
+			console.log("获取联系人", getPhone)
+			this.formCell = getPhone.data || {}
 			this.isShowDialog = true
 		},
 		search() {

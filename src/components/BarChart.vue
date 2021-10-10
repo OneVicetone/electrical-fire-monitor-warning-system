@@ -26,16 +26,17 @@ export default {
 				type: "bar",
 				itemStyle: {
 					color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-						{ offset: 0, color: "#83bff6" },
-						{ offset: 0.5, color: "#188df0" },
-						{ offset: 1, color: "#188df0" },
+						{ offset: 0, color: "#2CDEDD" },
+						// { offset: 0.5, color: "#188df0" },
+						{ offset: 1, color: "#0895E0" },
 					]),
 				},
 			})
-
+			console.log(this.dataObj)
 			const seriesData = Object.values(this.dataObj)
 			const xAxisData = Object.keys(this.dataObj)
 			const series = getSeriesItemByData(seriesData)
+
 
 			const marginTopAndBottom = 20
 			const marginLeftAndRight = 30

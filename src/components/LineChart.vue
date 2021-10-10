@@ -10,6 +10,8 @@ export default {
 	props: {
 		xAxisData: Array,
 		seriesData: Array,
+		showXAxisLabel: { type: Boolean, default: false },
+		showXAxisLine: { type: Boolean, default: false },
 		height: {
 			type: [Number, String],
 			default: "20rem",
@@ -22,7 +24,7 @@ export default {
 	},
 	computed: {
 		chartOptions() {
-			const { xAxisData, seriesData } = this
+			const { xAxisData, seriesData, showXAxisLabel, showXAxisLine } = this
 			const getSeriesItemByData = (data, color) => ({
 				data,
 				type: "line",
@@ -57,22 +59,28 @@ export default {
 				series.push(getSeriesItemByData(seriesData))
 			}
 			const marginTopAndBottom = 20
-			const marginLeftAndRight = 30
+			const marginLeftAndRight = 35
 			return {
 				grid: {
 					left: marginLeftAndRight,
 					top: marginTopAndBottom,
 					right: marginLeftAndRight,
-					bottom: 10,
+					bottom: marginTopAndBottom,
+				},
+				legend: {
+					data: ["Email", "Union Ads", "Video Ads", "Direct", "Search Engine"],
 				},
 				xAxis: {
 					type: "category",
-					axisLabel: false,
+					axisLabel: {
+						show: showXAxisLabel,
+						color: "#81899C",
+					},
 					axisLine: {
-						show: false,
+						show: showXAxisLabel,
 					},
 					splitLine: {
-						show: true,
+						show: showXAxisLine,
 						lineStyle: {
 							color: ["#385982"],
 						},
@@ -103,6 +111,8 @@ export default {
 	},
 	mounted() {
 		this.$nextTick(() => this.initChart())
+		console.log(this.xAxisData)
+		console.log(this.seriesData)
 	},
 	methods: {
 		initChart() {

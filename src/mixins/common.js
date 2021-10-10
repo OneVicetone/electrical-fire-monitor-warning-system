@@ -19,13 +19,14 @@ export const commonMixin = {
 		},
 		addRoutes(routes) {
 			routes.forEach(route => this.$router.addRoute("Layout", route))
-		}
+		},
 	},
 	filters: {
 		filterNull(val) {
-			if (!val) {
+			if (typeof val === "undefined" || val === null || val === "") {
 				return "-"
 			}
+			return val
 		},
 		filterTimeToYYYYMMDD(val) {
 			return val ? moment(val).format("YYYY-MM-DD") : "-"
@@ -57,6 +58,20 @@ export const commonMixin = {
 		},
 		filterAccountEnableStatus(val) {
 			return val ? "启用" : "禁用"
+		},
+		filterDeviceStatus(val) {
+			switch (val) {
+				case 1:
+					return "在线"
+				case 2:
+					return "离线"
+				case 3:
+					return "故障"
+				case 4:
+					return "报警"
+				default:
+					return "-"
+			}
 		},
 	},
 }

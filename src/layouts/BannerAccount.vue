@@ -4,7 +4,7 @@
 			<a-icon class="notify-icon" type="bell" />
 		</a-badge>
 		<div class="account">
-			<a-avatar size="small" icon="user" />
+			<img src="@/assets/icons/user-avatar.png" alt="user-avatar" />
 			<a-popover v-model="isShowPopover">
 				<a-list slot="content" size="small" :data-source="dropdownOptions">
 					<a-list-item
@@ -171,6 +171,10 @@ export default {
 	}
 	.account {
 		margin: 0 0 0 30px;
+		> img {
+			width: 1.75rem;
+			height: 1.75rem;
+		}
 	}
 }
 .ant-popover-inner {
