@@ -7,10 +7,10 @@
 					<div class="info">
 						<div class="device-img"></div>
 						<div class="info-text">
-							<p class="device-type">{{ deviceInfoObj.deviceTypeName | filterNull }}</p>
+							<p class="device-type">{{ deviceInfoObj.alias | filterNull }}</p>
 							<p class="device-id">
-								<span>{{ deviceInfoObj.id | filterNull }}</span>
-								<i>在线</i>
+								<span>{{ deviceInfoObj.sn | filterNull }}</span>
+								<i :class="`dot-${deviceInfoObj.showStatus}`">{{ deviceInfoObj.showStatus | filterDeviceStatus }}</i>
 							</p>
 							<p class="device-address">
 								<img src="@/assets/icons/company.png" alt="" />
@@ -59,7 +59,7 @@
 					/>
 				</div>
 				<div class="history-data-chart">
-					<ContentTitle title="历史数据走势图" />
+					<ContentTitle :title="historyChartTitle" @changeTitleContent="changeTitleContent" />
 					<div class="filter-chart">
 						<a-form-model layout="inline" :model="filterForm">
 							<a-form-model-item>
@@ -80,7 +80,7 @@
 							</a-form-model-item>
 						</a-form-model>
 					</div>
-					<LineChart :xAxisData="chartData.xAxisData" :seriesData="nowChartData" />
+					<LineChart :xAxisData="chartXAxisData" :seriesData="nowChartData" showXAxisLabel showXAxisLine />
 				</div>
 				<div class="history-alarm-log">
 					<ContentTitle title="历史报警记录" />
@@ -116,9 +116,11 @@
 				</div>
 			</div>
 		</div>
-		<DeviceDetaiCommandl v-model="dialog"
-		:defaultValue="deviceDetaiCommandlValue"
-		@on-res="allRequest"></DeviceDetaiCommandl>
+		<DeviceDetaiCommandl
+			v-model="dialog"
+			:defaultValue="deviceDetaiCommandlValue"
+			@on-res="allRequest"
+		></DeviceDetaiCommandl>
 		<DealWithDialog
 			v-model="alarmAlert"
 			:able="isAble"
@@ -164,7 +166,7 @@ const {
 	processAlarm,
 	deletePositionImg,
 	addPositionImg,
-	getDeviceConfig
+	getDeviceConfig,
 } = apis
 
 export default {
@@ -199,6 +201,10 @@ export default {
 				startDate: moment().subtract(3, "days"),
 				endDate: moment(),
 			},
+			historyChartTitle: [
+				{ name: "历史数据走势图", key: "historyData" },
+				{ name: "历史用电统计", key: "electricity" },
+			],
 			chartRadioOptions: [
 				{ label: "电流", value: "electricity" },
 				{ label: "温度", value: "temp" },
@@ -260,7 +266,7 @@ export default {
 			alarmHandleData: {},
 			handAlarm: {},
 			picLog: false,
-			deviceDetaiCommandlValue: {}
+			deviceDetaiCommandlValue: {},
 		}
 	},
 	computed: {
@@ -270,6 +276,21 @@ export default {
 				filterForm: { chartRadioValue },
 			} = this
 			return chartData[chartRadioValue] ? Object.values(chartData[chartRadioValue]).map(i => i) : []
+		},
+		chartXAxisData() {
+			const { startDate, endDate } = this.filterForm
+			const xAxisLength = 7
+			const startTime = startDate.startOf("day")
+			const endTime = endDate.endOf("day")
+			const startTimestamp = startTime.valueOf()
+			const xAxis = [startTime.format("MM-DD HH:mm")]
+			const timestampDiff = endTime.valueOf() - startTimestamp
+			const interval = timestampDiff / (xAxisLength - 2)
+			for (let i = 1; i < xAxisLength - 1; i++) {
+				xAxis.push(moment(startTimestamp + interval * i).format("MM-DD HH:mm"))
+			}
+			xAxis.push(endTime.format("MM-DD HH:mm"))
+			return xAxis
 		},
 		installImg() {
 			console.log(this.deviceInfoObj)
@@ -298,9 +319,9 @@ export default {
 			])
 		},
 		async sendCommand() {
-			const res = await getDeviceConfig(this.id);
+			const res = await getDeviceConfig(this.id)
 			console.log(res)
-			this.deviceDetaiCommandlValue = res.data || {};
+			this.deviceDetaiCommandlValue = res.data || {}
 			this.dialog = true
 		},
 		getDeviceInfoDetail() {
@@ -341,7 +362,7 @@ export default {
 				}
 			})
 		},
-		getChartData() {
+		getChartData(type = "historyData") {
 			const {
 				id,
 				filterForm: { startDate, endDate },
@@ -366,7 +387,6 @@ export default {
 		},
 		async dialogSure(params) {
 			const result = await processAlarm(params)
-			console.log("确定", result)
 			this.allRequest()
 			this.showAlert = false
 		},
@@ -414,6 +434,9 @@ export default {
 				this.getDeviceInfoDetail()
 			})
 		},
+		changeTitleContent(key) {
+			this.getChartData(key)
+		},
 	},
 }
 </script>
@@ -459,6 +482,15 @@ export default {
 							font-size: 1.17rem;
 						}
 						.device-id i {
+							.dot-before {
+								content: "";
+								display: inline-block;
+								width: 0.67rem;
+								height: 0.67rem;
+								border-radius: 50%;
+								position: relative;
+								left: -0.2rem;
+							}
 							width: 4.42rem;
 							height: 1.75rem;
 							display: inline-block;
@@ -469,15 +501,21 @@ export default {
 							line-height: 1.65rem;
 							font-size: 1rem;
 							font-style: normal;
-							&::before {
-								content: "";
-								display: inline-block;
-								width: 0.67rem;
-								height: 0.67rem;
-								border-radius: 50%;
+							&.dot-1::before {
+								.dot-before();
 								background-color: #35d4ac;
-								position: relative;
-								left: -0.2rem;
+							}
+							&.dot-2::before {
+								.dot-before();
+								background-color: #81899c;
+							}
+							&.dot-3::before {
+								.dot-before();
+								background-color: #fcbe0b;
+							}
+							&.dot-4::before {
+								.dot-before();
+								background-color: #fb5e4f;
 							}
 						}
 						.device-address {

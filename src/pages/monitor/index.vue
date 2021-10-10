@@ -23,7 +23,13 @@
 			<ContentTitle title="设备状态统计" />
 			<div class="device-data-count">
 				<div v-for="device of devicesType" :key="device.key">
-					<a-progress type="circle" :percent="getDevicePercent(device.key)" :width="80" :strokeColor="device.color" />
+					<a-progress
+						type="circle"
+						:percent="getDevicePercent(device.key)"
+						:width="80"
+						:strokeColor="device.color"
+						:format="formatProcess"
+					/>
 					<span>{{ `${device.name}(${deviceStatus[device.key]})` }}</span>
 				</div>
 			</div>
@@ -194,6 +200,9 @@ export default {
 		},
 		getDevicePercent(type) {
 			return (this.deviceStatus[type] / this.deviceStatus.totalNum).toFixed(2) * 100
+		},
+		formatProcess(percent) {
+			return percent.toFixed(0) + "%"
 		},
 	},
 }
