@@ -51,6 +51,7 @@
 			v-model="isShowDialog"
 			:headerName="eventSource"
 			:editForm="editForm"
+			:groupOptions="treeData"
 			@refresh-table="getTableData"
 		></new-add-unit>
 	</div>

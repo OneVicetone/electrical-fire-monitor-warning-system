@@ -1,6 +1,5 @@
 <template>
-    <Dialog v-model="visibles" :title="headerName" :coefficient="1.2"
-        :fRefs="[$refs.unitInfo, $refs.safe]">
+    <Dialog v-model="visibles" :title="headerName" :coefficient="1.2">
         <Nav-titles class="unit-base-info" title="单位基本信息">
             <a-form-model
                 ref="unitInfo"
@@ -155,7 +154,7 @@ import MapModal from "components/MapModal.vue"
 import apis from "apis"
 import { dialogControl, form, uploadFileMixin } from "mixins"
 
-const { createUnit, getSelectOptions, getGroupTree } = apis
+const { createUnit, getSelectOptions, updateUnit } = apis
 export default {
     name:"AddUnit",
     components: { Dialog, NavTitles, Upload, MapModal },
@@ -164,13 +163,16 @@ export default {
         headerName: String,
         editForm: {
             type: Object,
-            default: () => {}
+            default: () => ({})
+        },
+        groupOptions: {
+            type: Array,
+            default: () => ([])
         }
     },
     data() {
         return {
             unitTypeOption: [],
-            groupOptions: [],
             unitForm: {
                 unitName: '',
                 upUnit: '',
@@ -216,9 +218,8 @@ export default {
         visibles(v) {
             console.log(v)
             if (v) {
-                this.getTreeGroup();
                 this.getOptions();
-                const userInfo = JSON.parse(localStorage.getItem('vuex'))
+                // const userInfo = JSON.parse(localStorage.getItem('vuex'))
                 const {
                     name = '',
                     parentId = '',
@@ -229,12 +230,13 @@ export default {
                     employeeNum = '',
                     floorSpace = '',
                     principalUserName = '',
-                    loginName = '',
+                    principalLoginName = '',
                     mobile = '',
                     effectPicPath = '',
                     designPicPath = ''
                 } = this.editForm || {};
-                console.log('---', this.unitForm, this.upload, userInfo.account )
+                console.log('---', this.unitForm, this.upload )
+                console.log('级联', this.groupOptions, parentId, this.treeShow(this.groupOptions, parentId))
                 this.unitForm = {
                     unitName: name,
                     upUnit: this.treeShow(this.groupOptions, parentId),
@@ -247,13 +249,17 @@ export default {
                 }
                 this.safe = {
                     safePrincipal: principalUserName,
-                    principalAccount: userInfo.account.userInfo.loginName,
+                    principalAccount: principalLoginName,
                     linkPhone: mobile
                 }
                 this.upload = {
                     effectPic: effectPicPath,
                     designPic: designPicPath
                 }
+            } else {
+                this.$refs.unitInfo.resetFields()
+                this.$refs.safe.resetFields()
+
             }
         }
     },
@@ -279,12 +285,6 @@ export default {
                 }))
             })
         },
-        getTreeGroup() {
-            getGroupTree().then(result => {
-                const data = result.data;
-                this.groupOptions = data;
-            })
-        },
         computedLen(value, totalLen = 20) {
             if (value === null || value === undefined || typeof value === 'number') value = '';
             return `${value.length}/${totalLen}`
@@ -299,9 +299,6 @@ export default {
 				})
         },
         alertMap() {
-            // this.unitForm.unitAddress = this.editForm.address || '';
-            // this.unitForm.lngs = this.editForm.addressLon || 114.92353465;
-            // this.unitForm.lat = this.editForm.addressLat || 27.8235787;
             this.showMap = true;
         },
         showAddress({ point: { lng, lat }, address }) {
@@ -314,6 +311,7 @@ export default {
             const validates = [this.$refs.unitInfo, this.$refs.safe];
             const cb = async () => {
                 const {
+                    editForm: { id },
                     unitForm: {
                         unitName,
                         upUnit,
@@ -346,21 +344,19 @@ export default {
                     employeeNum: unitCount,
                     floorSpace: area,
                     principalUserName: safePrincipal,
-                    loginName: principalAccount,
                     mobile: linkPhone,
                     effectPicPath: effectPic,
                     designPicPath: designPic
                 };
-                const res = await createUnit(params);
+                Object.assign(params, this.sources ? { id } : {loginName: principalAccount});
+                // const res = await createUnit(params);
+                const res = this.sources ? await updateUnit(params) : await createUnit(params);
                 console.log('表单填写', res)
                 this.$emit('input', false);
                 msg.success(`${this.sources ? "修改" : "新增"}成功`)
                 this.$emit('refresh-table');
             }
             this.recursionRef(validates, cb);
-        },
-        onUpload(e) {
-            this.fileList = e;
         },
     }
 }

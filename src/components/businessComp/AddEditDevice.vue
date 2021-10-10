@@ -181,6 +181,7 @@ export default {
                     safetyDirector = '',
                     safetyDirectorMobile = '',
                 } = this.formCell || {};
+                console.log(treeShow(groupOptions, groupId))
                 this.unitForm = {
                     deviceNumber: sn,
                     deviceType: deviceTypeId,
