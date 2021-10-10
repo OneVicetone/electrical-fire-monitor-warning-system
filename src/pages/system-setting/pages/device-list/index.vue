@@ -80,13 +80,13 @@
 				:changePageSizeHandle="changePageSizeHandle"
 			/>
 		</div>
-		<NewAddUnits
+		<AddEditDevice
 			v-model="isShowDialog"
 			:treeData="treeData"
 			:eventType="eventType"
 			:formCell="formCell"
 			@on-fresh-data="getTableData"
-		></NewAddUnits>
+		></AddEditDevice>
 	</div>
 </template>
 
@@ -95,13 +95,13 @@ import { cloneDeep } from "lodash"
 
 import OrganizationList from "components/OrganizationList.vue"
 import Pagination from "components/Pagination.vue"
-import NewAddUnits from "./NewAddUnits.vue"
+import AddEditDevice from "components/businessComp/AddEditDevice.vue"
 
 import apis from "apis"
 import { commonMixin, tableListMixin } from "mixins"
 import { TRANSFER, SHIP, IMPORT } from "utils/baseData"
 
-const { getDeviceListForSystemSettiing, getGroupTree, exportDeviceList } = apis
+const { getDeviceListForSystemSettiing, getGroupTree, exportDeviceList, getDeviceInfoDetail } = apis
 const searchFromInitial = {
 	deviceTypeId: "",
 	deviceModelId: "",
@@ -112,7 +112,7 @@ const searchFromInitial = {
 export default {
 	name: "DeviceList",
 	mixins: [commonMixin, tableListMixin],
-	components: { OrganizationList, Pagination, NewAddUnits },
+	components: { OrganizationList, Pagination, AddEditDevice },
 	data() {
 		return {
 			parentId: null,
@@ -209,10 +209,13 @@ export default {
 			this.isShowDialog = true
 		},
 		delete(id) {},
-		editCell(text) {
-			console.log("编辑", text)
+		async editCell(text) {
+			console.log('编辑',text)
 			this.eventType = "编辑设备"
-			this.formCell = text
+			// this.formCell = text
+			const getPhone = await getDeviceInfoDetail(text.id)
+			console.log('获取联系人', getPhone)
+			this.formCell = getPhone.data || {};
 			this.isShowDialog = true
 		},
 		search() {

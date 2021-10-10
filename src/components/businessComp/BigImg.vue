@@ -1,6 +1,6 @@
 <template>
-    <Dialog v-model="visibles" title="" class="dialog-pic">
-        <img alt="example" style="width: 80rem;height: 60rem" :src="url" />
+    <Dialog v-model="visibles" title="" :coefficient="0.8" class="dialog-pic">
+        <img alt="example" style="width: 100%;height: 100%" :src="url" />
     </Dialog>
 </template>
 

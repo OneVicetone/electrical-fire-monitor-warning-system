@@ -54,6 +54,7 @@
         </section>
         <DeviceDetaiCommandl v-model="deviceDetaiCommandl"
             source="alarm" :againDevice="showList.deviceId"
+            :defaultValue="deviceDetaiCommandlValue"
             @on-res="deviceRes"
         ></DeviceDetaiCommandl>
         <BigImg v-model="bigImg" :url="imgBig"></BigImg>
@@ -69,6 +70,10 @@ import DeviceDetaiCommandl from "components/businessComp/DeviceDetaiCommandl.vue
 import BigImg from "components/businessComp/BigImg.vue"
 import warnIcon from "@/assets/icons/warn-icon.png"
 import dangerIcon from "@/assets/icons/danger-icon.png"
+
+import apis from "apis"
+
+const { getDeviceConfig } = apis;
 
 const nameForKey = {
 	temp: "温度",
@@ -141,7 +146,8 @@ export default {
             resultList: [],
             deviceDetaiCommandl: false,
             bigImg: false,
-            imgBig: ''
+            imgBig: '',
+            deviceDetaiCommandlValue: {}
         }
     },
     computed: {
@@ -172,7 +178,7 @@ export default {
 					const num = idx - 1
 					if (num >= 0) {
 						const key = Object.keys(nameForKey)[Object.values(nameForKey).findIndex(k => i.name.includes(k))]
-						i[j] = this.handAlarmList[num][key] || '-'
+						i[j] = this.handAlarmList[num] && this.handAlarmList[num][key] || '-'
 					}
 				})
 				return i
@@ -236,7 +242,9 @@ export default {
             }
             this.$emit('on-sure', params);
         },
-        sendDrec() {
+        async sendDrec() {
+            const res = await getDeviceConfig(this.showList.deviceId);
+			this.deviceDetaiCommandlValue = res.data || {};
             this.deviceDetaiCommandl = true;
         },
         deviceRes() {

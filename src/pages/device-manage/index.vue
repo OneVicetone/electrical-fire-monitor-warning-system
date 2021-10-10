@@ -55,7 +55,9 @@
 					v-for="device of deviceListData"
 					:key="device.id"
 					:deviceInfoObj="device"
+					:treeData="treeData"
 					@changeDeviceWorkStatus="changeDeviceWorkStatus"
+					@re-request-list="requestAll"
 				/>
 			</div>
 			<Pagination
@@ -147,22 +149,25 @@ export default {
 		},
 	},
 	mounted() {
-		const optionsTypes = ["deviceType"]
-		const {
-			getDeviceListData,
-			getGroupTreeData,
-			getOptionsListPromiseArr,
-			getDeviceId,
-			paginationData: { current, size },
-		} = this
-		Promise.allSettled([
-			getDeviceListData(current, size),
-			getGroupTreeData(),
-			getDeviceId(),
-			...getOptionsListPromiseArr(optionsTypes),
-		])
+		this.requestAll();
 	},
 	methods: {
+		requestAll() {
+			const optionsTypes = ["deviceType"]
+			const {
+				getDeviceListData,
+				getGroupTreeData,
+				getOptionsListPromiseArr,
+				getDeviceId,
+				paginationData: { current, size },
+			} = this
+			Promise.allSettled([
+				getDeviceListData(current, size),
+				getGroupTreeData(),
+				getDeviceId(),
+				...getOptionsListPromiseArr(optionsTypes),
+			])
+		},
 		getDeviceListData(current = 1, size = 10) {
 			const params = {
 				current,
