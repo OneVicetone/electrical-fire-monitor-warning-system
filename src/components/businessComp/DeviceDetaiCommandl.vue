@@ -1,6 +1,6 @@
 <template>
     <Dialog class="dialog-custom" v-model="visibles" :coefficient="1.2" title="发送指令">
-        <Tabs v-model="tabModel" :tabs="tabArr" @tab-change="tabChange"></Tabs>
+        <Tabs v-model="tabModel" :tabs="tabArr"></Tabs>
         <div class="comp-content flex-between">
             <!-- 820 && 数据阙值 || 复位 -->
             <div class="comp-content__form" v-if="defaultValue && defaultValue.protocolType === '820'">
@@ -188,7 +188,7 @@ export default {
                     this.B9SForm = {}
 
                 } else {
-                    this.B9SForm = this.defaultValue && this.defaultValue.threshold
+                    this.B9SForm = this.defaultValue && this.defaultValue.threshold;
                     this.formData = {}
                 }
             }
@@ -213,10 +213,6 @@ export default {
         }
     },
     methods: {
-        tabChange() {
-            // this.formData = {};
-            // this.B9SForm = {}
-        },
         getList({ current = 1, size = 5 } = {}) {
             const {
                 $route: {
@@ -274,7 +270,19 @@ export default {
                 againDevice,
                 source
             } = this;
-            const data = this.defaultValue && this.defaultValue.protocolType === '820' ? formData : B9SForm;
+            const data820 = {
+                control: formData.control
+            }
+            const dataB9S = {
+                3: {
+                    workMode: B9SForm.workMode,
+                    workStatus: B9SForm.workStatus
+                },
+                4: {
+                    gateway: B9SForm.gateway
+                }
+            }
+            const data = this.defaultValue && this.defaultValue.protocolType === '820' ? data820 : dataB9S[tabModel];
             const params = {
 				deviceId:  source === 'alarm' ? againDevice : id,
 				cmdType: tabModel,
