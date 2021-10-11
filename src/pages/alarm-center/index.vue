@@ -175,6 +175,7 @@ export default {
 		},
 	},
 	mounted() {
+		this.setSearchFormByQuery()
 		const optionsTypes = ["alarmType", "groupType"]
 		const { getOptionsListPromiseArr, getTableData, getDeviceId } = this
 		Promise.allSettled([

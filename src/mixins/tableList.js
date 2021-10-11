@@ -7,7 +7,7 @@ const { getSelectOptions, getDeviceIdOptionsData } = apis
 export const tableListMixin = {
 	methods: {
 		search(getDataFuncName) {
-			if (typeof getDataFuncName !== 'string') {
+			if (typeof getDataFuncName !== "string") {
 				getDataFuncName = "getTableData"
 			}
 			const {
@@ -49,6 +49,18 @@ export const tableListMixin = {
 					})),
 				]
 			})
+		},
+		setSearchFormByQuery() {
+			const { query } = this.$route
+			for (let key in query) {
+				if (!isNaN(query[key])) {
+					query[key] = Number(query[key])
+				}
+			}
+			this.searchForm = {
+				...this.searchForm,
+				...query,
+			}
 		},
 	},
 }

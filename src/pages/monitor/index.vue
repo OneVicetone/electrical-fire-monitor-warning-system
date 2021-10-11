@@ -29,6 +29,7 @@
 						:width="80"
 						:strokeColor="device.color"
 						:format="formatProcess"
+						@click="jumpToOtherPageByKey(device.key)"
 					/>
 					<span>{{ `${device.name}(${deviceStatus[device.key]})` }}</span>
 				</div>
@@ -204,6 +205,17 @@ export default {
 		formatProcess(percent) {
 			return percent.toFixed(0) + "%"
 		},
+		jumpToOtherPageByKey(key) {
+			if (key === "normalNum") {
+				this.toPath("/device-manage")
+			} else if (key === "alarmNum") {
+				this.toPath("/alarm-center")
+			} else if (key === "faultNum") {
+				this.toPath("/alarm-centerstatus=1&alarmType=8")
+			} else if (key === "offLineNum") {
+				this.toPath("/alarm-center?status=1&alarmType=30")
+			}
+		},
 	},
 }
 </script>
@@ -309,6 +321,10 @@ export default {
 				flex-direction: column;
 				justify-content: center;
 				align-items: center;
+				> div.ant-progress {
+					cursor: pointer;
+					transform: scale(0.85);
+				}
 				> span {
 					color: #aaddff;
 					font-size: 1rem;
