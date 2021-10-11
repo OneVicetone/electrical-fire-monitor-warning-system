@@ -1,4 +1,5 @@
 const path = require("path")
+const compressionPlugin = require("compression-webpack-plugin")
 
 const theme = require(path.resolve(__dirname, "config/theme.js"))
 
@@ -27,10 +28,21 @@ const alias = {
 }
 
 module.exports = {
+	productionSourceMap: false,
 	configureWebpack: {
 		resolve: {
 			alias,
 		},
+		plugins: [
+			new compressionPlugin({
+				// filename: "[path].gz[query]",
+				algorithm: "gzip",
+				test: /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i,
+				threshold: 2048,
+				minRatio: 0.8,
+				deleteOriginalAssets: true
+			}),
+		],
 	},
 	css: {
 		loaderOptions: {

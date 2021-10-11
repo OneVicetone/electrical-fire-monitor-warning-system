@@ -112,7 +112,7 @@ export default {
 		Promise.allSettled([getAlarmList(), ...getOptionsListPromiseArr(optionsTypes)])
 	},
 	methods: {
-		getAlarmList(current = 1, size = 10) {
+		getAlarmList(current = 1, size = 999) {
 			const params = {
 				current,
 				size,
