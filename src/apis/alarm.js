@@ -28,10 +28,35 @@ const setupAlarmApis = (http, BASE_URL) => ({
 
 	getAlarmDetail: id => http.get(`${BASE_URL}/api-alarm/alarm/detail/${id}`),
 
-	processAlarm: ({ alarmId, confirmFlag, processType, sitePhotos, remark = '' }) =>
+	processAlarm: ({ alarmId, confirmFlag, processType, sitePhotos, remark = "" }) =>
 		http.post(`${BASE_URL}/api-alarm/alarm/process`, { alarmId, confirmFlag, processType, sitePhotos, remark }),
-		
-	realTimeData: ({ deviceId }) => http.get(`${BASE_URL}/api-device/deviceMgr/realTimeData`,{ deviceId }),
+
+	realTimeData: ({ deviceId }) => http.get(`${BASE_URL}/api-device/deviceMgr/realTimeData`, { deviceId }),
+
+	exportAlarmListData: ({
+		current,
+		size,
+		module,
+		deviceSnName,
+		alarmType,
+		alarmLevel,
+		deviceTypeId,
+		status,
+		startDate,
+		endDate,
+	}) =>
+		http.get(`${BASE_URL}/api-alarm/alarm/export`, {
+			current,
+			size,
+			module,
+			deviceSnName,
+			alarmType,
+			alarmLevel,
+			deviceTypeId,
+			status,
+			startDate,
+			endDate,
+		}),
 })
 
 export default setupAlarmApis

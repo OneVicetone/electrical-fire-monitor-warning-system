@@ -19,32 +19,16 @@
 				<a-input v-model="searchForm.deviceName" placeholder="请输入设备编码/名称" size="small" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-select
-					v-model="searchForm.alarmType"
-					:options="alarmTypeOptions"
-					size="small"
-				/>
+				<a-select v-model="searchForm.alarmType" :options="alarmTypeOptions" size="small" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-select
-					v-model="searchForm.alarmLevel"
-					:options="alarmLevelOptions"
-					size="small"
-				/>
+				<a-select v-model="searchForm.alarmLevel" :options="alarmLevelOptions" size="small" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-select
-					v-model="searchForm.deviceTypeId"
-					:options="deviceIdOptions"
-					size="small"
-				/>
+				<a-select v-model="searchForm.deviceTypeId" :options="deviceIdOptions" size="small" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-select
-					v-model="searchForm.status"
-					:options="handleStatusOptions"
-					size="small"
-				/>
+				<a-select v-model="searchForm.status" :options="handleStatusOptions" size="small" />
 			</a-form-model-item>
 			<a-form-model-item>
 				<a-range-picker size="small" format="YYYY-MM-DD" @change="getTimePickerDate" />
@@ -53,7 +37,7 @@
 				<a-button type="primary" size="small" @click="search">搜索</a-button>
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-button type="primary" size="small">导出</a-button>
+				<a-button type="primary" size="small" @click="exportData">导出</a-button>
 			</a-form-model-item>
 		</a-form-model>
 
@@ -103,16 +87,17 @@
 </template>
 
 <script>
+import { message as msg } from "ant-design-vue"
+
 import Pagination from "components/Pagination.vue"
 import NumCount from "components/NumCount.vue"
 import DealWithDialog from "components/businessComp/DealWithDialog.vue"
-
 
 import apis from "apis"
 import allOptionsData from "utils/optionsData"
 import { commonMixin, tableListMixin } from "mixins"
 
-const { getAlarmCount, getAlarmList, getAlarmDetail, processAlarm, realTimeData } = apis
+const { getAlarmCount, getAlarmList, getAlarmDetail, processAlarm, realTimeData, exportAlarmListData } = apis
 const { alarmLevelOptions, handleStatusOptions } = allOptionsData
 
 export default {
@@ -230,7 +215,6 @@ export default {
 		},
 		async dialogSure(params) {
 			const result = await processAlarm(params)
-			console.log("确定", result)
 			this.getTableData()
 			this.showAlert = false
 		},
@@ -238,6 +222,13 @@ export default {
 			const [startDate, endDate] = dateStr
 			this.searchForm.startDate = startDate
 			this.searchForm.endDate = endDate
+		},
+		exportData() {
+			const params = {
+				...this.searchForm,
+				...this.paginationData,
+			}
+			exportAlarmListData(params).then(() => msg.success("正在导出...可在右上角-个人中心-下载中心页面查看"))
 		},
 	},
 }

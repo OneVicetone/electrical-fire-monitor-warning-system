@@ -125,7 +125,7 @@ import apis from "apis"
 import { commonMixin, tableListMixin } from "mixins"
 import { TRANSFER, SHIP, IMPORT } from "utils/baseData"
 
-const { getDeviceListForSystemSettiing, getGroupTree, exportDeviceList, getDeviceInfoDetail } = apis
+const { getDeviceListForSystemSettiing, getGroupTree, exportDataForDeviceList, getDeviceInfoDetail } = apis
 const searchFromInitial = {
 	deviceTypeId: "",
 	deviceModelId: "",
@@ -250,7 +250,6 @@ export default {
 			} = this
 			this.getTableData(current, size)
 		},
-		exportDeviceList() {},
 		changePageHandle(page, pageSize) {
 			this.getTableData(page, pageSize)
 		},
@@ -266,7 +265,7 @@ export default {
 				...this.searchForm,
 				...(this.deviceStatusRadio !== "0" && { status: this.deviceStatusRadio }),
 			}
-			exportDeviceList(params).then(() => msg.success("正在导出...可在右上角-个人中心-下载中心页面查看"))
+			exportDataForDeviceList(params).then(() => msg.success("正在导出...可在右上角-个人中心-下载中心页面查看"))
 		},
 		reset() {
 			this.searchForm = cloneDeep(searchFromInitial)
