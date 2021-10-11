@@ -2,7 +2,12 @@
 	<div class="organization-list-container">
 		<ContentTitle class="organization-title" title="组织架构列表" />
 		<a-input-search placeholder="请输入分组关键字搜索" @change="search" size="small" />
-		<a-tree :tree-data="treeData" @select="handleSelectFunc" :defaultExpandedKeys="expandedKeys"></a-tree>
+		<a-tree
+			:tree-data="treeData"
+			@select="handleSelectFunc"
+			:defaultExpandedKeys="expandedKeys"
+			:key="treeElementKey"
+		></a-tree>
 	</div>
 </template>
 
@@ -18,10 +23,19 @@ export default {
 			required: true,
 		},
 	},
+	data() {
+		return {
+			treeElementKey: "beforeUpdate",
+		}
+	},
 	computed: {
 		expandedKeys() {
-			console.log(this.treeData)
 			return this.treeData.map(i => i.key)
+		},
+	},
+	watch: {
+		expandedKeys(val) {
+			if (val.length > 0) this.treeElementKey = "updating"
 		}
 	},
 	methods: {
