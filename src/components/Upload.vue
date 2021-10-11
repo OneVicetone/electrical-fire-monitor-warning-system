@@ -6,18 +6,18 @@
                 <a-icon type="plus" />
             </div>
         </a-upload>
-        <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-            <img alt="example" style="width: 50rem;height: 50rem" :src="previewImage" />
-        </a-modal>
+        <BigImg v-model="previewVisible" title="现场图片" :url="previewImage"></BigImg>
         <slot></slot>
     </div>
 </template>
 
 <script>
+import BigImg from "components/businessComp/BigImg.vue"
 import { uploadFileMixin } from "mixins"
 
 export default {
     name:"Upload",
+    components: { BigImg },
     mixins: [uploadFileMixin],
     props: {
         len: {
@@ -55,9 +55,6 @@ export default {
                     })
                     this.$emit('is-done', this.fileList);
 				})
-        },
-        handleCancel() {
-            this.previewVisible = false;
         },
         // 打开模态框（图片预览）
         async handlePreview(file) {

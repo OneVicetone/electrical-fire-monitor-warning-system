@@ -57,7 +57,7 @@
             :defaultValue="deviceDetaiCommandlValue"
             @on-res="deviceRes"
         ></DeviceDetaiCommandl>
-        <BigImg v-model="bigImg" :url="imgBig"></BigImg>
+        <BigImg v-model="bigImg" title="现场图片" :url="imgBig"></BigImg>
     </Dialog>
 </template>
 
