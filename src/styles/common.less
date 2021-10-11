@@ -35,6 +35,12 @@
 	}
 }
 
+.btn-group-for-modal {
+	display: flex;
+	justify-content: center;
+	padding: 2rem 0 0;
+}
+
 // Table
 .ant-table {
 	.ant-table-thead tr th {
@@ -149,11 +155,21 @@
 	}
 }
 
-/deep/ .ant-cascader-picker {
+.ant-cascader-picker {
 	background-color: #090d18 !important;
 	color: #dcdcdc !important;
 	.ant-cascader-picker-arrow {
 		color: #dcdcdc !important;
+	}
+	input.ant-input.ant-cascader-input {
+		background-color: #090d18 !important;
+		&::placeholder {
+			font-size: 1rem;
+			color: #81899c;
+		}
+	}
+	.ant-cascader-picker-label {
+		color: #81899c;
 	}
 }
 

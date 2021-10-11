@@ -74,7 +74,7 @@ export default {
 	background: url("~assets/images/marker-info-bg.png") no-repeat;
 	background-size: 100%;
 	background-color: transparent;
-	opacity: 0.5;
+	// opacity: 0.5;
 	transition: all 0.5s;
 	z-index: 2;
 	.title {

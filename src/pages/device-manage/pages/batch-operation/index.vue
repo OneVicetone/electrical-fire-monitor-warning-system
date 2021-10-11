@@ -58,7 +58,7 @@
 					<span>成功：{{ importResult.success }}条</span>
 					<span>失败：{{ importResult.fail }}条</span>
 				</div>
-				<div class="btn-group">
+				<div class="btn-group btn-group-for-modal">
 					<a-button @click="changeImportResultShow">关闭</a-button>
 					<a-button type="primary" @click="downloadErrorXlsx">下载失败表格</a-button>
 				</div>
@@ -203,6 +203,7 @@ export default {
 	.pages-container-no-child-layout();
 	padding-left: 20rem;
 	padding-right: 20rem;
+	padding-bottom: 43px;
 	.batch-content {
 		width: 100%;
 		height: 70rem;
@@ -221,10 +222,6 @@ export default {
 		}
 		/deep/ .ant-upload {
 			border-color: red;
-		}
-		/deep/ .ant-input.ant-cascader-input::placeholder {
-			font-size: 1rem;
-			color: #81899c;
 		}
 		.content {
 			padding: 0 9.17rem;
@@ -262,8 +259,6 @@ export default {
 		}
 	}
 	.btn-group {
-		padding: 0;
-		margin-top: 2rem;
 		> button:first-child {
 			color: #81899c;
 		}

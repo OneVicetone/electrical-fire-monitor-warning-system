@@ -9,18 +9,28 @@
 				<a-switch
 					class="device-open-switch"
 					v-if="deviceInfoObj.workStatus !== 0"
-					:defaultChecked="deviceInfoObj.workStatus === 1"
+					:checked="deviceWorkStatus"
+					:loading="switchLoading"
 					checked-children="开"
 					un-checked-children="关"
-					@change="changeDeviceWorkStatus"
+					@change="changeShowChangeWorkStatusModal"
 				/>
-				<a-popover trigger="click" placement="bottomRight">
+				<a-popover v-model="isShowPopover" placement="bottomRight">
 					<a-list slot="content" size="small" :data-source="dropdownOptions">
-						<a-list-item slot="renderItem" slot-scope="item" @click="item.operate.call(this)">
+						<a-list-item
+							slot="renderItem"
+							slot-scope="item"
+							@click="
+								() => {
+									isShowPopover = false
+									item.operate.call(this)
+								}
+							"
+						>
 							{{ item.name }}
 						</a-list-item>
 					</a-list>
-					<a-icon type="ellipsis" />
+					<a-icon type="ellipsis" @click="isShowPopover = true" />
 				</a-popover>
 			</div>
 		</header>
@@ -50,21 +60,45 @@
 			@on-fresh-data="$emit('re-request-list')"
 		></AddEditDevice>
 
-		<a-modal v-model="isShowTransferModal" title="更换设备" :footer="null">
-			<div class="device-transfer">
-				<p>原所属分组:</p>
-				<a-input placeholder="请输入新设备号" />
-				<div class="btn-group">
-					<a-button @click="changeDevice">确定</a-button>
-					<a-button type="primary" @click="changeShowChangeDeviceModal">取消</a-button>
+		<Dialog v-model="isShowTransferModal" title="更换设备" :width="40">
+			<div class="device-transfer-container">
+				<p>原所属分组: {{ deviceInfoObj.groupName }}</p>
+				<a-form-model layout="inline">
+					<a-form-model-item label="目标分组" required>
+						<a-cascader
+							:options="groupOptions"
+							change-on-select
+							v-model="groupId"
+							:fieldNames="{ label: 'title', value: 'key', children: 'children' }"
+							placeholder="请选择设备分组"
+							:allowClear="false"
+						/>
+					</a-form-model-item>
+				</a-form-model>
+				<div class="btn-group btn-group-for-modal">
+					<a-button @click="transferDevice">确定</a-button>
+					<a-button type="primary" @click="changeShowTransferModal">取消</a-button>
 				</div>
 			</div>
-		</a-modal>
+		</Dialog>
 
+		<Dialog v-model="isShowChangeWorkStatusModal" title="输入登录密码确认" :width="40">
+			<div class="change-work-status-container">
+				<a-input v-model="enterPassword" type="password" placeholder="请输入登录密码确认" />
+				<div class="btn-group btn-group-for-modal">
+					<a-button @click="changeWorkStatus">确定</a-button>
+					<a-button type="primary" @click="changeShowChangeWorkStatusModal">取消</a-button>
+				</div>
+			</div>
+		</Dialog>
 	</div>
 </template>
 
 <script>
+import md5 from "md5"
+import { message as msg } from "ant-design-vue"
+
+import Dialog from "components/Dialog.vue"
 import SimpleTable from "components/SimpleTable.vue"
 import AddEditDevice from "components/businessComp/AddEditDevice.vue"
 
@@ -72,23 +106,16 @@ import apis from "apis"
 import { commonMixin } from "mixins"
 import { nameForKey } from "utils/baseData"
 
-const { getDeviceInfoDetail } = apis
+const { getDeviceInfoDetail, changeWorkStatus, getCmdSendStatus, getGroupTree, deviceChangeGroup } = apis
+let timer = null
 
 export default {
 	name: "DeviceCard",
 	mixins: [commonMixin],
-	components: { SimpleTable, AddEditDevice },
+	components: { SimpleTable, AddEditDevice, Dialog },
 	props: {
 		deviceInfoObj: {
 			type: Object,
-			default: () => ({
-				deviceName: "",
-				deviceId: "",
-				deviceType: "",
-				signalTime: "",
-				deviceStatus: "",
-				maturityTime: "",
-			}),
 		},
 		treeData: {
 			type: Array,
@@ -97,6 +124,7 @@ export default {
 	},
 	data() {
 		return {
+			isShowPopover: false,
 			dropdownOptions: [
 				{
 					name: "详情",
@@ -107,15 +135,21 @@ export default {
 				{
 					name: "编辑",
 					operate: () => {
-						console.log("详情", this)
 						getDeviceInfoDetail(this.deviceInfoObj.id).then(res => {
-							console.log("编辑", res)
 							this.formCell = res.data || {}
 							this.isShowDialog = true
 						})
 					},
 				},
-				{ name: "转移", operate: () => {} },
+				{
+					name: "转移",
+					operate: () => {
+						getGroupTree().then(({ data }) => {
+							this.groupOptions = data
+							this.changeShowTransferModal()
+						})
+					},
+				},
 				// { name: "删除", operate: () => {} },
 				// { name: "更换", operate: () => {} },
 			],
@@ -136,7 +170,12 @@ export default {
 			],
 			isShowDialog: false,
 			formCell: {},
-			isShowTransferModal: false
+			isShowTransferModal: false,
+			isShowChangeWorkStatusModal: false,
+			enterPassword: "",
+			switchLoading: false,
+			groupId: [],
+			groupOptions: [],
 		}
 	},
 	computed: {
@@ -153,10 +192,60 @@ export default {
 				return i
 			})
 		},
+		deviceWorkStatus() {
+			return this.deviceInfoObj.workStatus === 1
+		},
 	},
 	methods: {
-		changeDeviceWorkStatus() {
-			this.$emit("changeDeviceWorkStatus")
+		// changeDeviceWorkStatus() {
+		// 	this.$emit("changeDeviceWorkStatus")
+		// },
+		changeShowChangeWorkStatusModal() {
+			this.enterPassword = ""
+			this.switchLoading = !this.switchLoading
+			this.isShowChangeWorkStatusModal = !this.isShowChangeWorkStatusModal
+		},
+		changeWorkStatus() {
+			const { id: deviceId, workStatus } = this.deviceInfoObj
+			if (!this.enterPassword) return msg.error("请输入当前登录密码")
+			const params = {
+				deviceId,
+				workStatus: workStatus === 1 ? 2 : 1,
+				password: md5(this.enterPassword),
+			}
+			changeWorkStatus(params).then(({ data }) => this.getCmdProcess(data))
+		},
+		getCmdProcess(cmdId) {
+			timer = setInterval(() => {
+				getCmdSendStatus(cmdId).then(({ data }) => {
+					if (data !== 1) {
+						this.changeShowChangeWorkStatusModal()
+						clearInterval(timer)
+						data === 2 && msg.success("发送成功")
+						data === 3 && msg.success("发送失败")
+						data === 4 && msg.success("取消发送")
+					}
+				})
+			}, 1000)
+		},
+		changeShowTransferModal() {
+			this.isShowTransferModal = !this.isShowTransferModal
+			this.groupId = []
+		},
+		transferDevice() {
+			const {
+				deviceInfoObj: { id: deviceId },
+				groupId,
+			} = this
+			if (groupId.length === 0) return msg.error("未选择目标分组")
+			// const params = {
+			// 	deviceId,
+			// 	groupId: groupId.pop(),
+			// }
+			const form = new FormData()
+			form.append("deviceId", deviceId)
+			form.append("groupId", groupId.pop())
+			deviceChangeGroup(form)
 		},
 	},
 }
@@ -239,5 +328,17 @@ export default {
 			justify-content: center;
 		}
 	}
+}
+.change-work-status-container,
+.device-transfer-container {
+	padding: 4rem 0 0;
+	.btn-group {
+		> button:first-child {
+			color: #81899c;
+		}
+	}
+}
+.device-transfer-container {
+	padding: 4rem 2rem 0;
 }
 </style>

@@ -92,19 +92,8 @@
 		<a-modal v-model="isShowChangeDeviceModal" title="更换设备" :footer="null">
 			<div class="change-device-container">
 				<p>原设备号:</p>
-				<a-form-model layout="inline">
-					<a-form-model-item label="目标分组" required>
-						<a-cascader
-							:options="groupOptions"
-							change-on-select
-							v-model="groupId"
-							:fieldNames="{ label: 'title', value: 'key', children: 'children' }"
-							placeholder="请选择设备分组"
-							:allowClear="false"
-						/>
-					</a-form-model-item>
-				</a-form-model>
-				<div class="btn-group">
+				<a-input placeholder="请输入新设备号" />
+				<div class="btn-group btn-group-for-modal">
 					<a-button @click="changeDevice">确定</a-button>
 					<a-button type="primary" @click="changeShowChangeDeviceModal">取消</a-button>
 				</div>

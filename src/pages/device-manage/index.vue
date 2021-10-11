@@ -56,7 +56,6 @@
 					:key="device.id"
 					:deviceInfoObj="device"
 					:treeData="treeData"
-					@changeDeviceWorkStatus="changeDeviceWorkStatus"
 					@re-request-list="requestAll"
 				/>
 			</div>
