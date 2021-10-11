@@ -153,7 +153,9 @@ export default {
                 console.log('解析',res)
                 that.mk.setPosition(point)
                 that.map.panTo(point)
-                that.form.address = res && `${res.address}${res.surroundingPois[0].title}`
+                const listOne = res.surroundingPois.length && res.surroundingPois[0].title;
+                // that.form.address = res && `${res.address}${res.surroundingPois &&res.surroundingPois[0].title}`
+                that.form.address = res && listOne ? `${res.address}${listOne}` : res.address;
                 that.form.addrPoint = point
                 that.markClick && that.$emit('save-select-point', { point, address: that.form.address });
                 that.markClick = false;
