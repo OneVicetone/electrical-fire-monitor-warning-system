@@ -174,8 +174,8 @@ export default {
 						const { top, left } = e.target.domElement.getBoundingClientRect()
 						const { clientHeight, clientWidth } = document.querySelector(".marker-info-container")
 						this.position = {
-							top: top - clientHeight - 18,
-							left: left - clientWidth / 2 + 6,
+							top: top - clientHeight - 10,
+							left: left - clientWidth / 2 + 12,
 						}
 						this.markerInfo = data
 						this.showMarkerInfo = true
