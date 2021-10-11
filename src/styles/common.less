@@ -4,13 +4,14 @@
 	padding: @banner-no-include-logo-height 0 0;
 	// background-color: #12172a;
 	background-color: #0f1426;
+	overflow-y: auto;
 }
 .pages-container-no-child-layout {
-	height: 100vh;
+	min-height: 100vh;
 	.container-common();
 }
 .pages-container-has-child-layout {
-	height: @layout-height;
+	min-height: @layout-height;
 	.container-common();
 }
 .table-search-form {
@@ -183,6 +184,30 @@ div.ant-cascader-menus {
 			border-color: #152348;
 			.ant-cascader-menu-item-active:not(.ant-cascader-menu-item-disabled) {
 				background-color: #152348;
+			}
+		}
+	}
+}
+
+// CalendarPicker
+.ant-calendar-picker-container {
+	.ant-calendar {
+		border-color: #0188e8;
+		.ant-calendar-range-part {
+			background-color: #3f4a77;
+			.ant-calendar-ym-select > a {
+				color: #dcdcdc;
+			}
+			.ant-calendar-selected-end-date,
+			.ant-calendar-selected-start-date {
+				.ant-calendar-date {
+					background-color: #152348;
+				}
+			}
+			.ant-calendar-date {
+				&:hover {
+					background-color: #152348;
+				}
 			}
 		}
 	}

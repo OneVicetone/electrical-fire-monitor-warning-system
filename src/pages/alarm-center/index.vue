@@ -22,7 +22,6 @@
 				<a-select
 					v-model="searchForm.alarmType"
 					:options="alarmTypeOptions"
-					placeholder="请选择报警类型"
 					size="small"
 				/>
 			</a-form-model-item>
@@ -30,7 +29,6 @@
 				<a-select
 					v-model="searchForm.alarmLevel"
 					:options="alarmLevelOptions"
-					placeholder="请选择报警级别"
 					size="small"
 				/>
 			</a-form-model-item>
@@ -38,7 +36,6 @@
 				<a-select
 					v-model="searchForm.deviceTypeId"
 					:options="deviceIdOptions"
-					placeholder="请选择设备编号"
 					size="small"
 				/>
 			</a-form-model-item>
@@ -46,7 +43,6 @@
 				<a-select
 					v-model="searchForm.status"
 					:options="handleStatusOptions"
-					placeholder="请选择报警处理状态"
 					size="small"
 				/>
 			</a-form-model-item>

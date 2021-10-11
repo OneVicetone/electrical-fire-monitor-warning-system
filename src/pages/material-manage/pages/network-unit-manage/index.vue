@@ -203,7 +203,7 @@ export default {
 	.pages-container-has-child-layout();
 	display: flex;
 	padding: 0;
-	margin: -30px 0 0;
+	margin: -48px 0 0;
 	// overflow: hidden;
 	.organization {
 		width: 21.67rem;
