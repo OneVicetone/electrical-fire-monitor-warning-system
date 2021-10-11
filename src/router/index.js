@@ -6,15 +6,9 @@ const router = new VueRouter({
   routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//   console.log('to ---', to)
-//   console.log('from ---', from)
-//   console.log('this ---', this)
+// router.afterEach(toRoute => {
+//   const { title } = toRoute.meta
+//   document.title = title
 // })
-
-router.afterEach(toRoute => {
-  const { title } = toRoute.meta
-  document.title = title
-})
 
 export default router

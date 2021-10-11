@@ -91,7 +91,7 @@
 
 						<div slot="alarmTypeName" slot-scope="text, record"></div>
 						<div slot="alarmTime" slot-scope="text">
-							{{ text.alarmTime | filterTimeToYYYYMMDD }}
+							{{ text.alarmTime | filterTimeToYYYYMMDDHHmmss }}
 						</div>
 						<div slot="recoverTime" slot-scope="text">
 							{{ text.recoverTime | filterTimeToYYYYMMDD }}

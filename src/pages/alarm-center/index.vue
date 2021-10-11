@@ -16,7 +16,7 @@
 				<a-select v-model="searchForm.unit" :options="groupTypeOptions" placeholder="请选择单位" size="small" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-input v-model="searchForm.deviceName" placeholder="请输入设备编码/名称" size="small" />
+				<a-input v-model="searchForm.deviceSnName" placeholder="请输入设备编码/名称" size="small" />
 			</a-form-model-item>
 			<a-form-model-item>
 				<a-select v-model="searchForm.alarmType" :options="alarmTypeOptions" size="small" />
@@ -108,8 +108,8 @@ export default {
 		return {
 			alarmCountData: [
 				{ title: "全部预警", num: "-", key: "total" },
-				{ title: "高危", num: "-", icon: "/src/assets/icons/danger-icon.png", key: "highRiskNum" },
-				{ title: "预警", num: "-", icon: "/src/assets/icons/warn-icon.png", key: "warningNum" },
+				{ title: "高危", num: "-", icon: "@/assets/icons/danger-icon.png", key: "highRiskNum" },
+				{ title: "预警", num: "-", icon: "@/assets/icons/warn-icon.png", key: "warningNum" },
 				{ title: "设备故障", num: "-", key: "faultNum" },
 				{ title: "未处理", num: "-", key: "unTreatedNum" },
 				{ title: "今日新增", num: "-", key: "todayAddNum" },

@@ -140,19 +140,19 @@ export default {
 			getCommonTemplateByType(templateTypeMap[this.operation_type])
 		},
 		enter() {
-			this.changeUploading()
-			const { groupId, fileList, operation_type, deviceId, uuid, getProcess } = this
+			const { groupId, fileList, operation_type, deviceId, uuid, getProcess, changeUploading } = this
 			if (groupId.length === 0) return msg.error("请选择设备分组")
 			if (fileList.length === 0) return msg.error("请上传数据文件")
 			if (!deviceId && operation_type === IMPORT) return msg.error("请选择设备型号")
 
+			changeUploading()
 			const form = new FormData()
-			form.append("groupId", groupId)
+			form.append("groupId", groupId[groupId.length - 1])
 			form.append("file", fileList[0])
 			form.append("scheduleKey", uuid)
 			operation_type === IMPORT && form.append("deviceModelId", deviceId)
 
-			return apis[templateTypeMap[this.operation_type]](form).then(({ data }) => {
+			return apis[templateTypeMap[operation_type]](form).then(({ data }) => {
 				this.importResult = data
 				getProcess()
 			})
