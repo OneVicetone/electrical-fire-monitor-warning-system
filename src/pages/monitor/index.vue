@@ -135,9 +135,9 @@ export default {
 		},
 		getGroupOptions(val = "groupType") {
 			return getSelectOptions(val).then(({ data }) => {
-				this.filterOptions = data.map(({ id, parameterName }) => ({
-					label: parameterName,
-					value: id,
+				this.filterOptions = data.map(({ code, name }) => ({
+					label: name,
+					value: code,
 				}))
 				this.filterType = val
 				this.filterVal = this.filterOptions[0].value

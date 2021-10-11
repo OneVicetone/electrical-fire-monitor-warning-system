@@ -6,7 +6,10 @@ const { getSelectOptions, getDeviceIdOptionsData } = apis
 
 export const tableListMixin = {
 	methods: {
-		search(getDataFuncName = "getTableData") {
+		search(getDataFuncName) {
+			if (typeof getDataFuncName !== 'string') {
+				getDataFuncName = "getTableData"
+			}
 			const {
 				paginationData: { current, size },
 			} = this

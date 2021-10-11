@@ -137,8 +137,7 @@ const setupDeviceApis = (http, BASE_URL) => ({
 	exportDataForDeviceList: ({ groupId, deviceTypeId, deviceModelId, sn, status, iccid }) =>
 		http.get(`${BASE_URL}/api-device/deviceMgr/export`, { groupId, deviceTypeId, deviceModelId, sn, status, iccid }),
 
-	changeWorkStatus: ({ deviceId, password, workStatus }) =>
-		http.post(`${BASE_URL}/api-device/deviceCmd/changeWorkStatus`, { deviceId, password, workStatus }),
+	changeWorkStatus: form => http.formPost(`${BASE_URL}/api-device/deviceCmd/changeWorkStatus`, form),
 
 	getCmdSendStatus: cmdId => http.post(`${BASE_URL}/api-device/deviceCmd/getCmdSendStatus`, cmdId),
 

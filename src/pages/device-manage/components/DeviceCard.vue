@@ -208,12 +208,16 @@ export default {
 		changeWorkStatus() {
 			const { id: deviceId, workStatus } = this.deviceInfoObj
 			if (!this.enterPassword) return msg.error("请输入当前登录密码")
-			const params = {
-				deviceId,
-				workStatus: workStatus === 1 ? 2 : 1,
-				password: md5(this.enterPassword),
-			}
-			changeWorkStatus(params).then(({ data }) => this.getCmdProcess(data))
+			const form = new FormData()
+			form.append("deviceId", deviceId)
+			form.append("workStatus", workStatus === 1 ? 2 : 1)
+			form.append("password", md5(this.enterPassword))
+			changeWorkStatus(form)
+				.then(({ data }) => this.getCmdProcess(data))
+				.catch(err => {
+					console.log(err)
+					this.changeShowChangeWorkStatusModal()
+				})
 		},
 		getCmdProcess(cmdId) {
 			timer = setInterval(() => {

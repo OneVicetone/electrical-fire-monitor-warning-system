@@ -37,7 +37,7 @@
 					<a-divider type="vertical" />
 					<a @click="editCell(text)">编辑</a>
 					<a-divider type="vertical" />
-					<a @click="changeAccountStatus(text.enable, text.id)">{{ text.enable ? "禁用" : "启用" }}</a>
+					<a @click="changeAccountStatus(text.enable, text.principalUserId)">{{ text.enable ? "禁用" : "启用" }}</a>
 				</div>
 			</a-table>
 

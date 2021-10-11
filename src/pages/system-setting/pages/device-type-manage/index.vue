@@ -90,6 +90,7 @@ export default {
 			const params = {
 				current,
 				size,
+				
 				...this.searchForm,
 			}
 			getDevicesTypeList(params).then(({ data: { records, total, current, size } }) => {
