@@ -26,6 +26,7 @@ import md5 from "md5"
 import { createNamespacedHelpers } from "vuex"
 
 import { initHtmlBasePx } from "utils/initial"
+import { getCookieByKey } from "utils/commonFunctions"
 import { LOGIN, GET_MENU_LIST } from "store/account"
 
 const { mapActions } = createNamespacedHelpers("account")
@@ -38,7 +39,7 @@ export default {
 			password: "BYkj8080",
 			// username: "",
 			// password: "",
-			source: 1,
+			source: 3,
 			isLogining: false,
 		}
 	},
@@ -53,11 +54,12 @@ export default {
 		async toLogin() {
 			this.isLogining = true
 			try {
-				const { username, password, source, $router, login, getMenuList } = this
+				const { username, password, source, $router, login } = this
 				const formData = new FormData()
 				formData.append("username", username)
 				formData.append("password", md5(password))
 				formData.append("source", source)
+				formData.append("openId", getCookieByKey("openId"))
 				await login(formData)
 				// setRoutes(this.routes)
 				// addRoutes(this.routes)

@@ -95,13 +95,13 @@ import Radio from "../components/Radio.vue"
 
 import apis from "apis"
 import { initHtmlBasePx } from "utils/initial"
-import { commonMixin, uploadFileMixin } from "mixins"
+import { commonMixin, uploadFileMixin, phonePageMixin } from "mixins"
 
 const { getAlarmDetail, processAlarm } = apis
 
 export default {
 	name: "AlarmInfo",
-	mixins: [commonMixin, uploadFileMixin],
+	mixins: [commonMixin, uploadFileMixin, phonePageMixin],
 	components: { Header, Title, Radio },
 	props: {
 		id: String,

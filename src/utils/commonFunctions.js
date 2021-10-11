@@ -23,7 +23,7 @@ const initMapTheme = (map, styleId) => {
  * xml字符串转换xml对象数据
  * @param {Object} xmlStr
  */
-function xmlStr2XmlObj(xmlStr) {
+const xmlStr2XmlObj = xmlStr => {
 	let xmlObj = {}
 	if (document.all) {
 		const xmlDom = new ActiveXObject("Microsoft.XMLDOM")
@@ -39,7 +39,7 @@ function xmlStr2XmlObj(xmlStr) {
  * xml转换json数据
  * @param {Object} xml
  */
-function xml2json(xml) {
+const xml2json = xml => {
 	try {
 		var obj = {}
 		if (xml.children.length > 0) {
@@ -70,7 +70,7 @@ function xml2json(xml) {
  * xml字符串转换json数据
  * @param {Object} xml
  */
-function xmlObj2json(xml) {
+const xmlObj2json = xml => {
 	const xmlObj = xmlStr2XmlObj(xml)
 	let jsonObj = {}
 	if (xmlObj.childNodes.length > 0) {
@@ -79,7 +79,7 @@ function xmlObj2json(xml) {
 	return jsonObj
 }
 
-function isPC() {
+const isPC = () => {
 	const userAgentInfo = navigator.userAgent
 	const Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"]
 	let flag = true
@@ -92,4 +92,20 @@ function isPC() {
 	return flag
 }
 
-export { addMapScript, initMapTheme, xmlStr2XmlObj, xmlObj2json, isPC }
+const getCookieByKey = key => {
+	key = `${key}=`
+	const cookieStr = decodeURIComponent(document.cookie.replace(/;s*/gi, ";"))
+	if (!cookieStr) return ""
+	const arr = cookieStr.split(";")
+	const curItem = arr.find(item => item.indexOf(key) == 0)
+	if (!curItem) return ""
+	return curItem.replace(key, "")
+}
+
+const setTokenByCookie = () => {
+	const token = getCookieByKey("Authorization")
+	if (!token) throw new Error(`未能获取正确的Authorization，Authorization值为${token}`)
+	localStorage.setItem("token", token)
+}
+
+export { addMapScript, initMapTheme, xmlStr2XmlObj, xmlObj2json, isPC, getCookieByKey, setTokenByCookie }

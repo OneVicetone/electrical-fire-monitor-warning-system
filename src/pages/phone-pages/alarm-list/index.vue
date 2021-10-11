@@ -23,6 +23,17 @@
 				</div>
 				<div>
 					<p class="label">报警时间</p>
+					<div class="time-picker">
+						<button @click="showTimePicker('startDate')">
+							<!-- {{ searchForm.startDate ? moment(searchForm.startDate).format("YYYY-MM-DD") : "报警开始时间" }} -->
+							{{ searchForm.startDate || "报警开始时间" }}
+						</button>
+						<span>~</span>
+						<button @click="showTimePicker('endDate')">
+							<!-- {{ searchForm.endDate ? moment(searchForm.endDate).format("YYYY-MM-DD") : "报警结束时间" }} -->
+							{{ searchForm.endDate || "报警结束时间" }}
+						</button>
+					</div>
 				</div>
 				<div>
 					<p class="label">报警等级</p>
@@ -34,6 +45,15 @@
 				<a-button type="primary" @click="enterSearch">完成</a-button>
 			</div>
 		</div>
+		<van-popup v-model="isShowTimePicker">
+			<van-datetime-picker
+				v-model="searchForm[pickerType]"
+				type="date"
+				title="选择年月日"
+				@confirm="getPickTime"
+				@cancel="changeShowTimePicker"
+			/>
+		</van-popup>
 	</div>
 </template>
 
@@ -41,15 +61,14 @@
 import moment from "moment"
 import { cloneDeep } from "lodash"
 
-import { initHtmlBasePx } from "utils/initial"
-
 import Radio from "../components/Radio.vue"
 import Header from "../components/Header.vue"
 import AlarmCard from "./components/AlarmCard.vue"
 
 import apis from "apis"
-import { tableListMixin } from "mixins"
+import { initHtmlBasePx } from "utils/initial"
 import allOptionsData from "utils/optionsData"
+import { tableListMixin, phonePageMixin } from "mixins"
 
 const { phoneAlarmLevelOptions } = allOptionsData
 const { getAlarmList } = apis
@@ -60,12 +79,13 @@ const searchFromInitial = {
 	alarmLevel: "",
 	deviceTypeId: "",
 	status: "",
-	alarmTime: [moment(), moment()],
+	startDate: "",
+	endDate: "",
 }
 
 export default {
 	name: "AlarmList",
-	mixins: [tableListMixin],
+	mixins: [tableListMixin, phonePageMixin],
 	components: { Header, AlarmCard, Radio },
 	data() {
 		return {
@@ -79,6 +99,8 @@ export default {
 			isShowFilter: false,
 			alarmTypeOptions: [],
 			phoneAlarmLevelOptions,
+			pickerType: "startDate",
+			isShowTimePicker: false,
 		}
 	},
 	beforeCreate() {
@@ -118,6 +140,18 @@ export default {
 			this.changeShowFilter()
 			this.search("getAlarmList")
 		},
+		showTimePicker(type) {
+			this.pickerType = type
+			this.isShowTimePicker = true
+		},
+		changeShowTimePicker() {
+			this.isShowTimePicker = !this.isShowTimePicker
+		},
+		getPickTime(val) {
+			console.log(val)
+			this.searchForm[this.pickerType] = moment(val).format("YYYY-MM-DD")
+			this.changeShowTimePicker()
+		},
 	},
 }
 </script>
@@ -146,7 +180,7 @@ export default {
 	}
 	.filter-container {
 		width: 100%;
-		height: 76.26rem;
+		// height: 76.26rem;
 		padding: 3.08rem 2.33rem;
 		position: relative;
 		background-color: #fff;
@@ -187,6 +221,19 @@ export default {
 				color: #656566;
 				font-size: 2.17rem;
 				margin: 2.17rem 0 1.75rem 1rem;
+			}
+			.time-picker {
+				display: flex;
+				justify-content: space-between;
+				padding: 1rem;
+				> button {
+					width: 26.67rem;
+					height: 5rem;
+					background-color: #f5f5f5;
+					border-radius: 4px;
+					outline: none;
+					border: none;
+				}
 			}
 		}
 		.btn-group {
