@@ -129,10 +129,6 @@ export default {
                 that.getAddrByPoint(e.latlng);
             })
         },
-        // 获取两点间的距离
-        getDistancs(pointA, pointB) {
-            return this.map.getDistance(pointA, pointB).toFixed(2)
-        },
         // 浏览器定位函数
         geolocation() {
             const that = this
@@ -157,7 +153,7 @@ export default {
                 console.log('解析',res)
                 that.mk.setPosition(point)
                 that.map.panTo(point)
-                that.form.address = res.address
+                that.form.address = res && `${res.address}${res.surroundingPois[0].title}`
                 that.form.addrPoint = point
                 that.markClick && that.$emit('save-select-point', { point, address: that.form.address });
                 that.markClick = false;
