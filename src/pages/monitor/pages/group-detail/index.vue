@@ -57,8 +57,7 @@
 				</div>
 			</div>
 		</section>
-		<seePic v-model="seePicLog" :url="designPicPath">
-		</seePic>
+		<BigImg v-model="seePicLog" title="电气火灾系统设计图纸" :url="designPicPath"></BigImg>
 	</div>
 </template>
 
@@ -70,7 +69,7 @@ import Breadcrumb from "components/Breadcrumb.vue"
 import ContentTitle from "components/ContentTitle.vue"
 import LineChart from "components/LineChart.vue"
 import BarChart from "components/BarChart.vue"
-import SeePic from "components/businessComp/SeePic.vue"
+import BigImg from "components/businessComp/BigImg.vue"
 
 import apis from "apis"
 const {
@@ -87,7 +86,7 @@ const {
 
 export default {
 	name: "GroupDetail",
-	components: { Breadcrumb, ContentTitle, LineChart, BarChart, SeePic },
+	components: { Breadcrumb, ContentTitle, LineChart, BarChart, BigImg },
 	props: {
 		id: String,
 	},
@@ -345,6 +344,11 @@ export default {
 					top: 1.42rem;
 					right: 1.83rem;
 					cursor: pointer;
+				}
+				.drawings-img {
+					width: 100%;
+					height: 20rem;
+					margin-top: 1.5rem;
 				}
 			}
 		}

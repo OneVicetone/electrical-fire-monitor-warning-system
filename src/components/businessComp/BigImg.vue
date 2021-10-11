@@ -1,6 +1,6 @@
 <template>
-    <Dialog v-model="visibles" title="" :coefficient="0.8" class="dialog-pic">
-        <img alt="example" style="width: 100%;height: 100%" :src="url" />
+    <Dialog v-model="visibles" :title="title" :coefficient="coefficient" class="dialog-pic">
+        <img alt="example" :src="url" />
     </Dialog>
 </template>
 
@@ -13,6 +13,14 @@ export default {
     components: { Dialog },
 	mixins: [dialogControl],
     props: {
+        title: {
+            type: String,
+            default: ''
+        },
+        coefficient: {
+            type: Number,
+            default: 0.8
+        },
         url: {
             type: String,
             required: true
@@ -21,9 +29,11 @@ export default {
 }
 </script>
 <style lang='less' scoped>
-/deep/ .ant-modal-body {
-    header {
-        opacity: 0;
+.dialog-pic {
+    img {
+        width: 100%;
+        height: 50rem;
+        padding-top: 24px;
     }
 }
 </style>
