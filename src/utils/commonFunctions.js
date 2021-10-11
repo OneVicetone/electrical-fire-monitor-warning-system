@@ -1,3 +1,5 @@
+import getVueInstance from "./vueInstance"
+
 const addMapScript = (key, version = "1.0") => {
 	return new Promise(resolve => {
 		const script = document.createElement("script")
@@ -108,4 +110,27 @@ const setTokenByCookie = () => {
 	localStorage.setItem("token", token)
 }
 
-export { addMapScript, initMapTheme, xmlStr2XmlObj, xmlObj2json, isPC, getCookieByKey, setTokenByCookie }
+const showTokenInvalidationModal = () => {
+	const vueInstance = getVueInstance()
+	const errorModal = vueInstance.$error({
+		centered: true,
+		class: "token-inalidation-modal",
+		content: "您已超过60分钟未操作平台，为保护您的数据安全。3秒后自动跳转到登录页，请您重新登录！",
+		okText: "立即跳转",
+		onOk() {
+			vueInstance.$router.replace("/login")
+			vueInstance.$destroyAll()
+		},
+	})
+}
+
+export {
+	addMapScript,
+	initMapTheme,
+	xmlStr2XmlObj,
+	xmlObj2json,
+	isPC,
+	getCookieByKey,
+	setTokenByCookie,
+	showTokenInvalidationModal,
+}

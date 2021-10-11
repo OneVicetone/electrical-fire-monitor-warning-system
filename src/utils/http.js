@@ -1,6 +1,7 @@
 import axios from "axios"
 import { message } from "ant-design-vue"
 
+import { showTokenInvalidationModal } from 'utils/commonFunctions'
 import { TOKEN } from "utils/storageConstant"
 
 const getRequestHeader = (type = "json") => {
@@ -45,8 +46,7 @@ const responseInterceptFunc = res => {
 		throw new Error(data.message)
 	}
 	if (data.code - 20000 > 0) {
-		localStorage.clear()
-		window.location = "/"
+		showTokenInvalidationModal()
 		throw new ReferenceError("token error")
 	}
 	if (data.code !== successCode) {

@@ -73,13 +73,17 @@ export default {
 			this.isLogining = true
 			try {
 				const { username, password, source, $router, setRoutes, login, addRoutes } = this
+				const cancelLoading = message => {
+					msg.error({ content: message, duration: 1 })
+					setTimeout(() => {
+						this.isLogining = false
+					}, 1500)
+				}
 				if (!username) {
-					this.isLogining = false
-					return msg.error("用户名不能为空")
+					return cancelLoading("用户名不能为空")
 				}
 				if (!password) {
-					this.isLogining = false
-					return msg.error("用户密码不能为空")
+					return cancelLoading("用户密码不能为空")
 				}
 				const formData = new FormData()
 				formData.append("username", username)
