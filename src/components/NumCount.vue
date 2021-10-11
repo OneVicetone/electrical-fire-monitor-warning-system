@@ -1,5 +1,5 @@
 <template>
-	<div class="num-count-container">
+	<div class="num-count-container" @click="itemClick">
 		<div class="num-count-content">
 			<span>{{ title }}</span>
 			<div>
@@ -15,21 +15,19 @@
 export default {
 	name: "NumCount",
 	props: {
-		title: {
-			type: String,
-		},
-		num: {
-			type: [String, Number],
-		},
-		icon: {
-			type: String,
-		},
-		numColor: {
-			type: String,
-		},
+		title: String,
+		num: [String, Number],
+		icon: String,
+		numColor: String,
 		afterHasDivider: {
 			type: Boolean,
 			default: true,
+		},
+		itemKey: String,
+	},
+	methods: {
+		itemClick() {
+			this.$emit("itemClick", this.itemKey)
 		},
 	},
 }
@@ -37,29 +35,30 @@ export default {
 
 <style lang="less" scoped>
 .num-count-container {
-    display: flex;
-    align-items: center;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
 	.num-count-content {
-        padding: 0 3rem 0 2rem;
+		padding: 0 3rem 0 2rem;
 		display: flex;
 		flex-direction: column;
-        color: #81899C;
-        font-size: 1.17rem;
-        > div {
+		color: #81899c;
+		font-size: 1.17rem;
+		> div {
 			display: flex;
 			align-items: center;
-            color: #DCDCDC;
-            font-size: 2.17rem;
+			color: #dcdcdc;
+			font-size: 2.17rem;
 			> img {
 				width: 0.92rem;
 				height: 1.67rem;
 				margin: 0 0.5rem 0 0;
 			}
-        }
+		}
 	}
 	.ant-divider.ant-divider-vertical {
-        height: 1.75rem;
-        background-color: #3F4A77;
+		height: 1.75rem;
+		background-color: #3f4a77;
 	}
 }
 </style>

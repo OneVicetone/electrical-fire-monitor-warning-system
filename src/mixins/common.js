@@ -73,5 +73,33 @@ export const commonMixin = {
 					return "-"
 			}
 		},
+		filterAlarmType(val) {
+			switch (val) {
+				case 1:
+					return "过流报警"
+				case 2:
+					return "断电报警"
+				case 3:
+					return "过温报警"
+				case 4:
+					return "过压报警"
+				case 5:
+					return "欠压报警"
+				case 6:
+					return "漏电报警"
+				case 7:
+					return "过温报警"
+				case 8:
+					return "故障报警"
+				case 9:
+					return "过功率报警"
+				case 10:
+					return "过电能报警"
+				case 30:
+					return "离线报警"
+				default:
+					return "-"
+			}
+		},
 	},
 }

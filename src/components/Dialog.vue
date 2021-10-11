@@ -131,13 +131,13 @@ export default {
 			&::before {
 				content: "";
 				display: block;
-				width: 1.48rem;
-				height: 1.42rem;
+				width: 3rem;
+				height: 2.5rem;
 				position: absolute;
-				left: -1.68rem;
+				left: -3rem;
 				top: 50%;
 				transform: translateY(-50%);
-				background: url("~assets/icons/company.png") no-repeat;
+				background: url("~assets/icons/content-title-icon.png") no-repeat;
 				background-size: 100%;
 			}
 		}

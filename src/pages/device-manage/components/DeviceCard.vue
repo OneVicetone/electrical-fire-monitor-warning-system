@@ -43,7 +43,9 @@
 					<p>信号时间：{{ deviceInfoObj.reportTime | filterTimeToYYYYMMDDHHmmss }}</p>
 					<p>
 						设备状态：{{ deviceInfoObj.online }} {{ deviceInfoObj.alarm ? "," : ""
-						}}<span class="alarm-text" v-if="deviceInfoObj.alarm">报警</span>
+						}}<span class="alarm-text" v-if="deviceInfoObj.alarm">{{
+							deviceInfoObj.alarm.alarmType | filterAlarmType
+						}}</span>
 					</p>
 					<p>到期时间：{{ deviceInfoObj.endDate | filterTimeToYYYYMMDD }}</p>
 				</div>

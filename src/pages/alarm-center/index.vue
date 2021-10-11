@@ -8,7 +8,9 @@
 				:title="item.title"
 				:num="item.num"
 				:icon="item.icon"
+				:itemKey="item.key"
 				:afterHasDivider="item.afterHasDivider"
+				@itemClick="searchByType(item.key)"
 			/>
 		</div>
 		<a-form-model class="table-search-form" layout="inline" :model="searchForm">
@@ -87,6 +89,8 @@
 </template>
 
 <script>
+import moment from "moment"
+import { cloneDeep } from "lodash"
 import { message as msg } from "ant-design-vue"
 
 import Pagination from "components/Pagination.vue"
@@ -99,6 +103,16 @@ import { commonMixin, tableListMixin } from "mixins"
 
 const { getAlarmCount, getAlarmList, getAlarmDetail, processAlarm, realTimeData, exportAlarmListData } = apis
 const { alarmLevelOptions, handleStatusOptions } = allOptionsData
+const searchFromInitial = {
+	unit: "",
+	deviceSnName: "",
+	alarmType: "",
+	alarmLevel: "",
+	deviceTypeId: "",
+	status: "",
+	startDate: "",
+	endDate: "",
+}
 
 export default {
 	name: "AlarmCenter",
@@ -116,16 +130,7 @@ export default {
 				{ title: "累计处理", num: "-", afterHasDivider: false, key: "addUpNum" },
 			],
 			showAlert: false,
-			searchForm: {
-				unit: "",
-				deviceSnName: "",
-				alarmType: "",
-				alarmLevel: "",
-				deviceTypeId: "",
-				status: "",
-				startDate: "",
-				endDate: "",
-			},
+			searchForm: cloneDeep(searchFromInitial),
 			groupTypeOptions: [],
 			alarmTypeOptions: [],
 			alarmLevelOptions,
@@ -229,6 +234,25 @@ export default {
 				...this.paginationData,
 			}
 			exportAlarmListData(params).then(() => msg.success("正在导出...可在右上角-个人中心-下载中心页面查看"))
+		},
+		searchByType(type) {
+			this.searchForm = cloneDeep(searchFromInitial)
+			if (type === "highRiskNum") {
+				this.searchForm.status = 1
+			} else if (type === "warningNum") {
+				this.searchForm.status = 1
+			} else if (type === "faultNum") {
+				this.searchForm.status = 1
+			} else if (type === "unTreatedNum") {
+				this.searchForm.status = 1
+			} else if (type === "todayAddNum") {
+				const today = moment().format("YYYY-MM-DD")
+				this.searchForm.startDate = today
+				this.searchForm.endDate = today
+			} else if (type === "addUpNum") {
+				this.searchForm.status = 3
+			}
+			type && this.search()
 		},
 	},
 }
