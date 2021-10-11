@@ -155,7 +155,6 @@ export default {
     },
     computed: {
         groupOptions() {
-            console.log('65656', this.treeData)
             return this.treeData;
         },
         sourcesType() {

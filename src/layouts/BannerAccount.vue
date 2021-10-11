@@ -39,7 +39,7 @@
 						<a-input v-model="changePasswordForm.enterNewPassword" type="password" placeholder="请再次输入新密码" />
 					</a-form-model-item>
 				</a-form-model>
-				<div class="btn-group">
+				<div class="btn-group btn-group-for-modal">
 					<a-button type="primary" @click="updatePassword">确定</a-button>
 					<a-button ghost @click="cancelChangePassword">取消</a-button>
 				</div>
@@ -186,8 +186,6 @@ export default {
 .change-password-dialog {
 	padding: 2.75rem 8.67rem;
 	.btn-group {
-		display: flex;
-		justify-content: center;
 		> button {
 			margin: 0 0.5rem;
 		}

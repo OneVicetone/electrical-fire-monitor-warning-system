@@ -7,7 +7,7 @@
 		:centered="centered"
 		@cancel="closeDialog"
 	>
-		<header>
+		<header v-if="title">
 			<div>{{ title }}</div>
 		</header>
 		<slot></slot>
@@ -92,7 +92,7 @@ export default {
 	//     }
 	// }
 	.ant-modal-content {
-		min-height: 60vh;
+		// min-height: 60vh;
 		position: relative;
 		background-position: -0.5rem 0;
 		background-color: #090d18;
@@ -111,7 +111,7 @@ export default {
 		// }
 	}
 	header {
-		width: 54.58rem;
+		width: 100%;
 		height: 1.83rem;
 		margin: 0 0 0 1.68rem;
 		background: linear-gradient(90deg, #0096ff 0%, rgba(0, 150, 255, 0) 100%);

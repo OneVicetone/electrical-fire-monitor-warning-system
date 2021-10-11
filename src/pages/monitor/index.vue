@@ -220,10 +220,11 @@ export default {
 	.data-count {
 		position: fixed;
 		top: calc(@banner-no-include-logo-height + 4.42rem);
-		background-color: rgba(18, 34, 61, 0.6);
+		background-color: rgba(18, 34, 61, 0.8);
 		border: 0.08px solid rgba(0, 0, 0, 0.5);
 		// opacity: 0.6;
 		z-index: 2;
+		box-shadow: inset 0 0 8px #0ff;
 	}
 	.network-group,
 	.device-status {
@@ -245,7 +246,7 @@ export default {
 				align-items: center;
 				justify-content: center;
 				margin: 1rem 0.6rem 0;
-				background-color: #3f4a77;
+				background-color: rgba(63, 74, 119, 0.3);
 				color: #aaddff;
 				cursor: pointer;
 				> span:first-child {

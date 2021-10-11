@@ -44,7 +44,6 @@ import { LOGIN, GET_MENU_LIST, GET_ROUTES_BY_MENU_LIST, SET_ROUTES } from "store
 const { mapGetters, mapMutations, mapActions } = createNamespacedHelpers("account")
 export default {
 	name: "Login",
-
 	mixins: [commonMixin],
 	components: { dragVerify },
 	data() {
@@ -170,7 +169,7 @@ export default {
 			margin: 2.75rem 0 2.92rem;
 			// background: transparent !important;
 			// color: #0096ff;
-			border: 1px solid #0096FF;
+			border: 1px solid #0096ff;
 		}
 		.ant-btn-primary[disabled] {
 			background-color: transparent;
