@@ -35,7 +35,6 @@
                 <a-form-model-item label="单位地址" prop="unitAddress">
                     <a-input
                         v-model="unitForm.unitAddress"
-                        class="ipt-disabled__color"
                         placeholder="请选择单位地址"
                         disabled>
                         <a-icon slot="suffix" type="bulb" @click="alertMap" />

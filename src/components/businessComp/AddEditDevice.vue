@@ -36,6 +36,7 @@
                 </a-form-model-item>
                 <a-form-model-item label="关联分组" prop="linkGroup">
                     <a-cascader :options="groupOptions"
+                        :disabled="sourcesType"
                         change-on-select v-model="unitForm.linkGroup"
                         :fieldNames="{ label: 'title', value: 'key', children: 'children' }"
                         placeholder="请选择设备分组"/>
@@ -53,7 +54,6 @@
                     <a-input
                         v-model="unitForm.location"
                         disabled
-                        class="ipt-disabled__color"
                         placeholder="请输入设备定位地址">
                         <a-icon slot="suffix" type="bulb" @click="alertMap" />
                     </a-input>
