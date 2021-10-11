@@ -1,18 +1,18 @@
 <template>
 	<ChildLayout :siderList="siderList">
-        <RouterView />
-    </ChildLayout>
+		<RouterView />
+	</ChildLayout>
 </template>
 
 <script>
-import ChildLayout from 'layouts/ChildLayout.vue'
+import ChildLayout from "layouts/ChildLayout.vue"
 import { commonMixin } from "mixins"
 
 export default {
 	name: "SystemSetting",
 	mixins: [commonMixin],
-    components: {
-        ChildLayout
-    }
+	components: {
+		ChildLayout,
+	},
 }
 </script>

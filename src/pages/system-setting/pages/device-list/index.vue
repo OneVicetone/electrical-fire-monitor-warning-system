@@ -68,7 +68,7 @@
 				<div slot="operate" slot-scope="text">
 					<a @click="editCell(text)">编辑</a>
 					<a-divider type="vertical" />
-					<a>监控</a>
+					<a @click="toPath(`/device-manage/device-info/${text.id}`)">监控</a>
 					<a-divider type="vertical" />
 					<a>更换</a>
 				</div>
@@ -87,6 +87,29 @@
 			:formCell="formCell"
 			@on-fresh-data="getTableData"
 		></AddEditDevice>
+
+		<!-- 需要更改设备号吗 -->
+		<a-modal v-model="isShowChangeDeviceModal" title="更换设备" :footer="null">
+			<div class="change-device-container">
+				<p>原设备号:</p>
+				<a-form-model layout="inline">
+					<a-form-model-item label="目标分组" required>
+						<a-cascader
+							:options="groupOptions"
+							change-on-select
+							v-model="groupId"
+							:fieldNames="{ label: 'title', value: 'key', children: 'children' }"
+							placeholder="请选择设备分组"
+							:allowClear="false"
+						/>
+					</a-form-model-item>
+				</a-form-model>
+				<div class="btn-group">
+					<a-button @click="changeDevice">确定</a-button>
+					<a-button type="primary" @click="changeShowChangeDeviceModal">取消</a-button>
+				</div>
+			</div>
+		</a-modal>
 	</div>
 </template>
 
@@ -102,7 +125,7 @@ import apis from "apis"
 import { commonMixin, tableListMixin } from "mixins"
 import { TRANSFER, SHIP, IMPORT } from "utils/baseData"
 
-const { getDeviceListForSystemSettiing, getGroupTree, exportDeviceList, getDeviceInfoDetail } = apis
+const { getDeviceListForSystemSettiing, getGroupTree, exportDataForDeviceList, getDeviceInfoDetail } = apis
 const searchFromInitial = {
 	deviceTypeId: "",
 	deviceModelId: "",
@@ -166,6 +189,9 @@ export default {
 			formCell: {},
 			// buttonType: '',
 			eventType: "",
+			isShowChangeDeviceModal: false,
+			newDeviceSn: "",
+			nowEditDevice: "",
 		}
 	},
 	watch: {
@@ -211,7 +237,6 @@ export default {
 		},
 		delete(id) {},
 		async editCell(text) {
-			console.log("编辑", text)
 			this.eventType = "编辑设备"
 			// this.formCell = text
 			const getPhone = await getDeviceInfoDetail(text.id)
@@ -225,7 +250,6 @@ export default {
 			} = this
 			this.getTableData(current, size)
 		},
-		exportDeviceList() {},
 		changePageHandle(page, pageSize) {
 			this.getTableData(page, pageSize)
 		},
@@ -241,12 +265,16 @@ export default {
 				...this.searchForm,
 				...(this.deviceStatusRadio !== "0" && { status: this.deviceStatusRadio }),
 			}
-			exportDeviceList(params).then(() => msg.success("正在导出...可在右上角-个人中心-下载中心页面查看"))
+			exportDataForDeviceList(params).then(() => msg.success("正在导出...可在右上角-个人中心-下载中心页面查看"))
 		},
 		reset() {
 			this.searchForm = cloneDeep(searchFromInitial)
 			this.search()
 		},
+		changeShowChangeDeviceModal() {
+			this.isShowChangeDeviceModal = !this.isShowChangeDeviceModal
+		},
+		changeDevice() {},
 	},
 }
 </script>

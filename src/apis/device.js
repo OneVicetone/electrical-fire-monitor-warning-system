@@ -57,8 +57,8 @@ const setupDeviceApis = (http, BASE_URL) => ({
 			gateway,
 		}),
 
-	updateDeviceTypeById: ({ id, supplier, model, protocol, network, productImgPath, deviceTypeId }) =>
-		http.get(`${BASE_URL}/api-device/deviceType/add`, {
+	updateDeviceTypeById: ({ id, supplier, model, protocol, network, productImgPath, deviceTypeId, gateway }) =>
+		http.get(`${BASE_URL}/api-device/deviceType/modify`, {
 			id,
 			supplier,
 			model,
@@ -66,6 +66,7 @@ const setupDeviceApis = (http, BASE_URL) => ({
 			network,
 			productImgPath,
 			deviceTypeId,
+			gateway,
 		}),
 
 	deleteDeviceType: id => http.get(`${BASE_URL}/api-device/deviceType/remove`, { id }),
@@ -132,6 +133,9 @@ const setupDeviceApis = (http, BASE_URL) => ({
 	batchChangeGroup: form => http.formPost(`${BASE_URL}/api-device/device/batchChangeGroup`, form),
 
 	batchImportDevice: form => http.formPost(`${BASE_URL}/api-device/device/batchImport`, form),
+
+	exportDataForDeviceList: ({ groupId, deviceTypeId, deviceModelId, sn, status, iccid }) =>
+		http.get(`${BASE_URL}/api-device/deviceMgr/export`, { groupId, deviceTypeId, deviceModelId, sn, status, iccid }),
 })
 
 export default setupDeviceApis

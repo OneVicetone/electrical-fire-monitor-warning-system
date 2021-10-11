@@ -49,6 +49,18 @@
 			:formCell="formCell"
 			@on-fresh-data="$emit('re-request-list')"
 		></AddEditDevice>
+
+		<a-modal v-model="isShowTransferModal" title="更换设备" :footer="null">
+			<div class="device-transfer">
+				<p>原所属分组:</p>
+				<a-input placeholder="请输入新设备号" />
+				<div class="btn-group">
+					<a-button @click="changeDevice">确定</a-button>
+					<a-button type="primary" @click="changeShowChangeDeviceModal">取消</a-button>
+				</div>
+			</div>
+		</a-modal>
+
 	</div>
 </template>
 
@@ -80,8 +92,8 @@ export default {
 		},
 		treeData: {
 			type: Array,
-			default: () => ([])
-		}
+			default: () => [],
+		},
 	},
 	data() {
 		return {
@@ -89,7 +101,7 @@ export default {
 				{
 					name: "详情",
 					operate: () => {
-						this.toPath(`/device-manage/device-info/${this.deviceInfoObj.id || 2}`)
+						this.toPath(`/device-manage/device-info/${this.deviceInfoObj.id}`)
 					},
 				},
 				{
@@ -97,9 +109,9 @@ export default {
 					operate: () => {
 						console.log("详情", this)
 						getDeviceInfoDetail(this.deviceInfoObj.id).then(res => {
-							console.log('编辑',res)
-							this.formCell = res.data || {};
-							this.isShowDialog = true;
+							console.log("编辑", res)
+							this.formCell = res.data || {}
+							this.isShowDialog = true
 						})
 					},
 				},
@@ -123,7 +135,8 @@ export default {
 				{ name: "电量(度)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
 			],
 			isShowDialog: false,
-			formCell: {}
+			formCell: {},
+			isShowTransferModal: false
 		}
 	},
 	computed: {

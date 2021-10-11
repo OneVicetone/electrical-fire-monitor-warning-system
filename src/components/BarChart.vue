@@ -32,14 +32,12 @@ export default {
 					]),
 				},
 			})
-			console.log(this.dataObj)
 			const seriesData = Object.values(this.dataObj)
 			const xAxisData = Object.keys(this.dataObj)
 			const series = getSeriesItemByData(seriesData)
 
-
-			const marginTopAndBottom = 20
-			const marginLeftAndRight = 30
+			// const marginTopAndBottom = 20
+			// const marginLeftAndRight = 30
 			return {
 				// grid: {
 				// 	left: marginLeftAndRight,

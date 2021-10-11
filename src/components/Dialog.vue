@@ -94,20 +94,21 @@ export default {
 	.ant-modal-content {
 		min-height: 60vh;
 		position: relative;
-		background: url("~assets/images/dialog-border.png") no-repeat;
 		background-position: -0.5rem 0;
 		background-color: #090d18;
 		border: 0.17rem #0096ff solid;
-		border-left: none;
 		border-radius: 0px !important;
-		&::after {
-			.bevel-pseudo-element();
-			left: -9px;
-			top: -7px;
-			border-width: 21px;
-			border-top-color: #090d18;
-			transform: rotate(6deg);
-		}
+		// 取消边框背景
+		// background: url("~assets/images/dialog-border.png") no-repeat;
+		// border-left: none;
+		// &::after {
+		// 	.bevel-pseudo-element();
+		// 	left: -9px;
+		// 	top: -7px;
+		// 	border-width: 21px;
+		// 	border-top-color: #090d18;
+		// 	transform: rotate(6deg);
+		// }
 	}
 	header {
 		width: 54.58rem;

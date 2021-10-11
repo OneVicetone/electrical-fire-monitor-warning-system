@@ -4,13 +4,14 @@
 	padding: @banner-no-include-logo-height 0 0;
 	// background-color: #12172a;
 	background-color: #0f1426;
+	overflow-y: auto;
 }
 .pages-container-no-child-layout {
-	height: 100vh;
+	min-height: 100vh;
 	.container-common();
 }
 .pages-container-has-child-layout {
-	height: @layout-height;
+	min-height: @layout-height;
 	.container-common();
 }
 .table-search-form {
@@ -175,15 +176,64 @@
 	}
 }
 
-//
+// Cascader
 div.ant-cascader-menus {
-	background-color: #3F4A77;
+	background-color: #3f4a77;
 	.ant-cascader-menus-content {
 		.ant-cascader-menu {
 			border-color: #152348;
 			.ant-cascader-menu-item-active:not(.ant-cascader-menu-item-disabled) {
 				background-color: #152348;
 			}
+		}
+	}
+}
+
+// CalendarPicker
+.ant-calendar-picker-container {
+	.ant-calendar {
+		border-color: #0188e8;
+		.ant-calendar-range-part {
+			background-color: #3f4a77;
+			.ant-calendar-ym-select > a {
+				color: #dcdcdc;
+			}
+			.ant-calendar-selected-end-date,
+			.ant-calendar-selected-start-date {
+				.ant-calendar-date {
+					background-color: #152348;
+				}
+			}
+			.ant-calendar-date {
+				&:hover {
+					background-color: #152348;
+				}
+			}
+		}
+	}
+}
+
+// MenuItem
+.ant-menu {
+	li.ant-menu-item {
+		transition: all 0.5s;
+		&.ant-menu-item-selected {
+			position: relative;
+			background-color: #0f1426;
+			> span {
+				color: #0096ff;
+			}
+			&::before {
+				content: "";
+				width: 3px;
+				height: 100%;
+				position: absolute;
+				left: 0;
+				background-color: #0096ff;
+			}
+		}
+		&:hover {
+			color: #0096ff;
 		}
 	}
 }

@@ -14,13 +14,14 @@
 					>
 						<img v-if="formData.productImgPath" :src="formData.productImgPath" />
 						<div v-else>
+							
 							<a-icon :type="uploading ? 'loading' : 'plus'" />
 							<div class="ant-upload-text">上传图片</div>
 						</div>
 					</a-upload>
 					<a-form-model :model="formData">
 						<a-form-model-item label="设备型号" required>
-							<a-input v-model="formData.model" placeholder="请输入设备类型" />
+							<a-input v-model="formData.model" :maxLength="20" placeholder="请输入设备类型" />
 						</a-form-model-item>
 						<a-form-model-item label="设备类型" required>
 							<a-select v-model="formData.deviceTypeId" :options="deviceTypeOptions" />
@@ -141,6 +142,7 @@ export default {
 				msg.success(`${this.isAdd ? "添加" : "修改"}成功`)
 				this.cancel()
 			}
+			debugger
 			isAdd ? addDeviceType(params).then(func) : updateDeviceTypeById(params).then(func)
 		},
 		cancel() {
