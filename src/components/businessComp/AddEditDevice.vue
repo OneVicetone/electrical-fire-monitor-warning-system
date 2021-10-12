@@ -5,8 +5,8 @@
                 ref="unitInfo"
                 :model="unitForm"
                 :rules="baseInfoRules"
-                :labelCol="{ style: 'width: 72px;float: left;' }"
-                :wrapper-col="{ span: 20 }"
+                :labelCol="{ span: 5 }"
+                :wrapper-col="{ span: 19 }"
                 class="form-right"
             >
                 <a-form-model-item ref="deviceNumber" label="设备编号" prop="deviceNumber">
@@ -40,15 +40,14 @@
                         :fieldNames="{ label: 'title', value: 'key', children: 'children' }"
                         placeholder="请选择设备分组"/>
                 </a-form-model-item>
-                <a-form-model class="mb form-right" layout="inline" :model="unitForm" :labelCol="{ style: 'width: 72px;float: left;' }"
-                    :wrapper-col="{ style: 'width: 22rem' }">
-                    <a-form-model-item label="关联SIM卡" class="mr0">
-                        <a-input v-model="unitForm.iccid" @change="iccidChange" :maxLength="50" placeholder="请输入ICCID号" />
-                    </a-form-model-item>
-                    <a-form-model-item label="安装位置" class="mr0">
-                        <a-input v-model="unitForm.installLocation" :maxLength="50" placeholder="请输入设备安装位置" />
-                    </a-form-model-item>
-                </a-form-model>
+                <a-form-model-item class="spc-item"  label="关联SIM卡">
+                    <a-form-model class="mb form-right spc-form-item" layout="inline" :model="unitForm" :labelCol="{ span: 9 }">
+                        <a-input v-model="unitForm.iccid" @change="iccidChange" :maxLength="50" :style="{width: iptWd}" placeholder="请输入ICCID号" />
+                        <a-form-model-item label="安装位置" class="mr0 spc-form-item">
+                            <a-input v-model="unitForm.installLocation" :maxLength="50" :style="{width: iptWd}" placeholder="请输入设备安装位置" />
+                        </a-form-model-item>
+                    </a-form-model>
+                </a-form-model-item>
                 <a-form-model-item label="定位地址" prop="location">
                     <a-input
                         v-model="unitForm.location"
@@ -65,8 +64,8 @@
                     ref="safe"
                     :model="safe"
                     labelAlign="right"
-                    :labelCol="{ style: 'width: 132px;float: left;' }"
-                    :wrapper-col="{ span: 18 }"
+                    :labelCol="{ span: 5 }"
+                    :wrapper-col="{ span: 19 }"
                     class="form-right"
                 >
                     <a-form-model-item label="安全负责人" prop="safePrincipal">
@@ -106,14 +105,14 @@ import Dialog from "components/Dialog.vue"
 import NavTitles from "components/NavTitles.vue"
 import MapModal from "components/MapModal.vue"
 import apis from "apis"
-import { dialogControl, form } from "mixins"
+import { dialogControl, form, commonMixin } from "mixins"
 
 const { createDevice, getSelectOptions, changeDeviceInfo } = apis
 
 export default {
     name:"AddUnit",
     components: { Dialog, NavTitles, MapModal },
-    mixins: [dialogControl, form],
+    mixins: [dialogControl, form, commonMixin],
     props: {
         treeData: {
             type: Array,
@@ -161,6 +160,12 @@ export default {
         },
         sourcesType() {
             return this.eventType === '编辑设备'
+        },
+        iptWd() {
+            // 此缩放依照弹窗的大小为依据，可能会存在一小点误差，修改22.2即可
+            let len = this.getBasePx() * 83.12 / 22.2;
+            if (len >= 22.2) len = 22.2
+            return `${len}rem`;
         }
     },
     watch: {
@@ -301,7 +306,9 @@ export default {
 </script>
 <style lang='less' scoped>
 .unit-base-info {
-    padding-left: calc(11.75rem - 35px);
+    /deep/ .little-nav__title {
+        padding-left: calc(11.75rem - 35px);
+    }
     padding-right: calc(11.58rem - 35px);
     .form-right {
         /deep/ .ant-form-item-label {
@@ -311,6 +318,17 @@ export default {
                 font-weight: 400;
             }
         }
+        .spc-item {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0;
+            .ant-col {
+                display: flex;
+                .spc-form-item {
+                    display: flex;
+                }
+            }
+        }
     }
 }
 .safe {
@@ -318,7 +336,7 @@ export default {
         padding-left: calc(11.75rem - 35px);
     }
     .form-content {
-        padding-left: calc(5.67rem - 35px);
+        // padding-left: calc(5.67rem - 35px);
         padding-right: calc(11.58rem - 35px);
         .form-right {
             /deep/ .ant-form-item-label {
