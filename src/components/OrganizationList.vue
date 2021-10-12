@@ -7,7 +7,6 @@
 			:expandedKeys.sync="nowExpandedKeys"
 			:key="treeElementKey"
 			:autoExpandParent="autoExpandParent"
-			multiple
 			showIcon
 			@select="handleSelectFunc"
 			@expand="onExpand"
