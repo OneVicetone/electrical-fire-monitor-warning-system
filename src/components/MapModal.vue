@@ -25,7 +25,7 @@
                 </el-autocomplete>
                 <div class="flex-yCenter">
                     <div class="flex">
-                        <div class="btn sure" @click="sures">确定</div>
+                        <div class="btn sure" @click="sures(true)">确定</div>
                         <div class="btn cancel" @click="cancelAddress">取消</div>
                     </div>
                     <img class="icons" @click="closeMap" src="@/assets/icons/close.png" alt="">
@@ -116,7 +116,7 @@ export default {
             this.map.enableScrollWheelZoom(true); 
             this.map.addOverlay(this.mk)
             this.mk.addEventListener('dragend', function(e) {
-                that.markClick = true;
+                // that.markClick = true;
                 that.getAddrByPoint(e.latlng)
             })
             console.log(!this.sources && !this.form.address)
@@ -126,7 +126,7 @@ export default {
             // 7、绑定点击地图任意点事件
             this.map.addEventListener('click', function(e) {
                 console.log('点击', e)
-                that.markClick = true;
+                // that.markClick = true;
                 that.getAddrByPoint(e.latlng);
             })
         },
@@ -156,11 +156,10 @@ export default {
                 that.map.panTo(point)
                 const listOne = res.surroundingPois.length && res.surroundingPois[0].title;
                 console.log('listOne', listOne)
-                // that.form.address = res && `${res.address}${res.surroundingPois &&res.surroundingPois[0].title}`
                 that.form.address = res && listOne ? `${res.address}${listOne}` : res.address;
                 that.form.addrPoint = point
-                that.markClick && that.$emit('save-select-point', { point, address: that.form.address });
-                that.markClick = false;
+                // that.markClick && that.$emit('save-select-point', { point, address: that.form.address });
+                // that.markClick = false;
             })
         },
         // 8-1、地址搜索
@@ -197,7 +196,7 @@ export default {
         closeMap() {
             this.$emit('input', false);
         },
-        sures() {
+        sures(type) {
             console.log(1)
             const that = this;
             const localSearch = new BMapGL.LocalSearch(this.map);
@@ -211,6 +210,7 @@ export default {
                 }
             })
             localSearch.search(this.form.address);
+            type && this.$emit('save-select-point', { point: this.form.addrPoint, address: this.form.address });
         },
         cancelAddress() {
             this.$emit('input', false);
