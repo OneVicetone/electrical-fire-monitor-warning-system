@@ -135,13 +135,18 @@ const setupDeviceApis = (http, BASE_URL) => ({
 	batchImportDevice: form => http.formPost(`${BASE_URL}/api-device/device/batchImport`, form),
 
 	exportDataForDeviceList: ({ groupId, deviceTypeId, deviceModelId, sn, status, iccid }) =>
-		http.get(`${BASE_URL}/api-device/deviceMgr/export`, { groupId, deviceTypeId, deviceModelId, sn, status, iccid }),
+		http.get(`${BASE_URL}/api-device/device/export`, { groupId, deviceTypeId, deviceModelId, sn, status, iccid }),
 
 	changeWorkStatus: form => http.formPost(`${BASE_URL}/api-device/deviceCmd/changeWorkStatus`, form),
 
 	getCmdSendStatus: cmdId => http.post(`${BASE_URL}/api-device/deviceCmd/getCmdSendStatus`, cmdId),
 
 	deviceChangeGroup: form => http.formPost(`${BASE_URL}/api-device/device/changeGroup`, form),
+
+	getHistoryElectricityCountData: deviceId => http.get(`${BASE_URL}/api-device/electricEnergy/device/statistics`, { deviceId }),
+
+	getHistoryElectricityList: ({ deviceId, startDate, endDate }) =>
+		http.get(`${BASE_URL}/api-device/electricEnergy/device/list`, { deviceId, startDate, endDate }),
 })
 
 export default setupDeviceApis

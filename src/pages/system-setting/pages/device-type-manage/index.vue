@@ -20,10 +20,10 @@
 				<img class="tabel-img" :src="text.productImgPath" />
 			</div>
 			<div slot="createTime" slot-scope="text">
-				{{ text.createTime | filterTimeToYYYYMMDD }}
+				{{ text.createTime | filterTimeToYYYYMMDDHHmmss }}
 			</div>
 			<div slot="updateTime" slot-scope="text">
-				{{ text.updateTime | filterTimeToYYYYMMDD }}
+				{{ text.updateTime | filterTimeToYYYYMMDDHHmmss }}
 			</div>
 			<div slot="operate" slot-scope="text">
 				<a @click="addAndEdit(text.id)">编辑</a>

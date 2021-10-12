@@ -1,5 +1,5 @@
 <template>
-	<div id="line_chart_container" :style="`height: ${height}`"></div>
+	<div :id="containerId" :style="`height: ${height}`"></div>
 </template>
 
 <script>
@@ -15,6 +15,10 @@ export default {
 		height: {
 			type: [Number, String],
 			default: "20rem",
+		},
+		chartKey: {
+			type: String,
+			default: "",
 		},
 	},
 	data() {
@@ -103,6 +107,9 @@ export default {
 				series: series,
 			}
 		},
+		containerId() {
+			return `line_chart_container${this.chartKey ? `_${this.chartKey}` : ""}`
+		},
 	},
 	watch: {
 		seriesData() {
@@ -117,7 +124,7 @@ export default {
 	methods: {
 		initChart() {
 			if (!this.chartInstance) {
-				const chart = echarts.init(document.querySelector("#line_chart_container"))
+				const chart = echarts.init(document.querySelector(`#${this.containerId}`))
 				this.chartInstance = chart
 			}
 			this.chartInstance.setOption(this.chartOptions)
