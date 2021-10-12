@@ -36,11 +36,7 @@
 				</div>
 				<div class="device-detailed-info">
 					<ContentTitle title="设备详细信息" />
-					<LabelAndValue
-						:labels="deviceDetailedLabel"
-						:values="deviceInfoObj"
-						@on-view-pic="seeInstallImg"
-					/>
+					<LabelAndValue :labels="deviceDetailedLabel" :values="deviceInfoObj" @on-view-pic="seeInstallImg" />
 				</div>
 			</div>
 			<div class="device-info-right">
@@ -71,14 +67,14 @@
 									<a-range-picker format="YYYY-MM-DD" @change="getTimePickerDate" />
 								</a-form-model-item>
 								<a-form-model-item>
-									<a-button type="primary" size="small" @click="getChartData">查询</a-button>
+									<a-button type="primary" @click="getChartData">查询</a-button>
 								</a-form-model-item>
 								<a-form-model-item>
-									<a-button type="primary" ghost size="small">导出</a-button>
+									<a-button type="primary" ghost>导出</a-button>
 								</a-form-model-item>
 							</a-form-model>
 						</div>
-						<LineChart :xAxisData="electricityChartXAxisData" :seriesData="nowChartData" showXAxisLabel showXAxisLine />
+						<LineChart :seriesData="nowChartData" showXAxisLabel :key="chartModel" />
 					</div>
 					<div v-show="chartModel === 'electricity'">
 						<div class="electricity-filter-chart">
@@ -104,13 +100,7 @@
 								</div>
 							</div>
 							<div class="electricity-chart">
-								<LineChart
-									chartKey="electricity"
-									:xAxisData="chartXAxisData"
-									:seriesData="nowChartData"
-									showXAxisLabel
-									showXAxisLine
-								/>
+								<LineChart chartKey="electricity" :seriesData="electricityChartData" showXAxisLabel :key="chartModel" />
 							</div>
 						</div>
 					</div>
@@ -122,7 +112,9 @@
 							{{ getListIdx(paginationData, index) }}
 						</div>
 
-						<!-- <div slot="alarmTypeName" slot-scope="text, record"></div> -->
+						<div slot="alarmTypeName" slot-scope="text" :style="{ color: computeColor(text.alarmLevel) }">
+							{{ text.alarmTypeName }}
+						</div>
 						<div slot="alarmTime" slot-scope="text">
 							{{ text.alarmTime | filterTimeToYYYYMMDDHHmmss }}
 						</div>
@@ -264,7 +256,7 @@ export default {
 			],
 			columns: [
 				{ title: "序号", scopedSlots: { customRender: "idx" } },
-				{ title: "报警类型", dataIndex: "alarmTypeName" },
+				{ title: "报警类型", scopedSlots: { customRender: "alarmTypeName" } },
 				{ title: "报警级别", scopedSlots: { customRender: "alarmLevel" } },
 				{ title: "报警详情", dataIndex: "alarmValue" },
 				{ title: "报警时间", scopedSlots: { customRender: "alarmTime" } },
@@ -335,7 +327,6 @@ export default {
 			return this.computeXAxisData(this.electricityFilterForm)
 		},
 		installImg() {
-			console.log(this.deviceInfoObj)
 			const keys = Object.keys(this.deviceInfoObj)
 			return (
 				(keys.length && this.deviceInfoObj.installPositionImg && this.deviceInfoObj.installPositionImg.split(",")) || []
@@ -480,7 +471,7 @@ export default {
 			this.filterForm.endDate = endDate
 		},
 		seeInstallImg() {
-			this.picLog = true;
+			this.picLog = true
 		},
 		delImgSource(url) {
 			const params = {
@@ -521,6 +512,7 @@ export default {
 				endDate: endDate.format("YYYY-MM-DD"),
 			}
 			return getHistoryElectricityList(params).then(({ data }) => {
+				console.log(data)
 				this.electricityChartData = data
 			})
 		},
@@ -543,6 +535,10 @@ export default {
 			}
 			xAxis.push(endTime.format("MM-DD HH:mm"))
 			return xAxis
+		},
+		computeColor(value) {
+			const color = { 1: "#FCBE0B", 2: "#FB5E4F" }
+			return color[value] || "#dcdcdc"
 		},
 	},
 }
@@ -732,7 +728,8 @@ export default {
 						}
 					}
 					.electricity-chart {
-						flex: 8;
+						flex: 0 0 auto;
+						width: 90%;
 					}
 				}
 			}

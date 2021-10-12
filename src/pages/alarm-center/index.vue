@@ -15,34 +15,37 @@
 		</div>
 		<a-form-model class="table-search-form" layout="inline" :model="searchForm">
 			<a-form-model-item>
-				<a-cascader :options="unitTree"
-					change-on-select v-model="searchForm.unit"
+				<a-cascader
+					:options="unitTree"
+					change-on-select
+					v-model="searchForm.unit"
 					:fieldNames="{ label: 'title', value: 'key', children: 'children' }"
-					placeholder="请选择单位"/>
+					placeholder="请选择单位"
+				/>
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-input v-model="searchForm.deviceSnName" placeholder="请输入设备编码/名称"  />
+				<a-input v-model="searchForm.deviceSnName" placeholder="请输入设备编码/名称" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-select v-model="searchForm.alarmType" :options="alarmTypeOptions"  />
+				<a-select v-model="searchForm.alarmType" :options="alarmTypeOptions" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-select v-model="searchForm.alarmLevel" :options="alarmLevelOptions"  />
+				<a-select v-model="searchForm.alarmLevel" :options="alarmLevelOptions" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-select v-model="searchForm.deviceTypeId" :options="deviceIdOptions"  />
+				<a-select v-model="searchForm.deviceTypeId" :options="deviceIdOptions" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-select v-model="searchForm.status" :options="handleStatusOptions"  />
+				<a-select v-model="searchForm.status" :options="handleStatusOptions" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-range-picker  format="YYYY-MM-DD" @change="getTimePickerDate" style="width: 25rem"/>
+				<a-range-picker format="YYYY-MM-DD" @change="getTimePickerDate" style="width: 25rem" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-button type="primary"  @click="search">搜索</a-button>
+				<a-button type="primary" @click="search">搜索</a-button>
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-button type="primary"  @click="exportData">导出</a-button>
+				<a-button type="primary" @click="exportData">导出</a-button>
 			</a-form-model-item>
 		</a-form-model>
 
@@ -63,7 +66,7 @@
 			<div slot="alarmLevel" slot-scope="text">
 				{{ text.alarmLevel | filterAlarmLevel }}
 			</div>
-			<div slot="alarmTypeName" slot-scope="text" :style="{color: computeColor(text.alarmLevel)}">
+			<div slot="alarmTypeName" slot-scope="text" :style="{ color: computeColor(text.alarmLevel) }">
 				{{ text.alarmTypeName }}
 			</div>
 			<div slot="status" slot-scope="text">
@@ -107,10 +110,11 @@ import apis from "apis"
 import allOptionsData from "utils/optionsData"
 import { commonMixin, tableListMixin } from "mixins"
 
-import dangerIcon from '@/assets/icons/danger-icon.png'
-import warnIcon from '@/assets/icons/warn-icon.png'
+import dangerIcon from "@/assets/icons/danger-icon.png"
+import warnIcon from "@/assets/icons/warn-icon.png"
 
-const { getGroupTree, getAlarmCount, getAlarmList, getAlarmDetail, processAlarm, realTimeData, exportAlarmListData } = apis
+const { getGroupTree, getAlarmCount, getAlarmList, getAlarmDetail, processAlarm, realTimeData, exportAlarmListData } =
+	apis
 const { alarmLevelOptions, handleStatusOptions } = allOptionsData
 const searchFromInitial = {
 	unit: [],
@@ -200,8 +204,8 @@ export default {
 	},
 	methods: {
 		searchUnitTree() {
-			getGroupTree().then(({data}) => {
-				this.unitTree = data;
+			getGroupTree().then(({ data }) => {
+				this.unitTree = data
 			})
 		},
 		getTableData(current = 1, size = 10) {
@@ -209,7 +213,7 @@ export default {
 				current,
 				size,
 				...this.searchForm,
-				groupId: this.searchForm.unit[this.searchForm.unit.length - 1]
+				groupId: this.searchForm.unit[this.searchForm.unit.length - 1],
 			}
 			console.log(params)
 			return getAlarmList(params).then(({ data: { records, total, current, size } }) => {
@@ -274,9 +278,9 @@ export default {
 			type && this.search()
 		},
 		computeColor(value) {
-			const color = { 1: '#FCBE0B', 2: '#FB5E4F' };
-			return color[value] || '#dcdcdc'
-		}
+			const color = { 1: "#FCBE0B", 2: "#FB5E4F" }
+			return color[value] || "#dcdcdc"
+		},
 	},
 }
 </script>

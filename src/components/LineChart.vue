@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import moment from "moment"
 import * as echarts from "echarts"
 
 export default {
@@ -28,10 +29,40 @@ export default {
 	},
 	computed: {
 		chartOptions() {
-			const { xAxisData, seriesData, showXAxisLabel, showXAxisLine } = this
-			const getSeriesItemByData = (data, color) => ({
+			const { seriesData, showXAxisLabel, showXAxisLine } = this
+			let xAxis = null
+			if (Array.isArray(seriesData[0])) {
+				xAxis = seriesData[0].map(i => moment(i.updateTime).format("YYYY-MM-DD HH:mm"))
+			} else {
+				xAxis = seriesData.map(i => i.statisticDate)
+			}
+			// channelName N相 A相 B相 C相
+			const lineNameAndColor = [
+				{
+					name: "N相",
+					color: "#FB5E4F",
+				},
+				{
+					name: "A相",
+					color: "#0096FF",
+				},
+				{
+					name: "B相",
+					color: "#35D4AC",
+				},
+				{
+					name: "C相",
+					color: "#3F4A77",
+				},
+			]
+			const getSeriesItemByData = (data, color = "#0087FF", name) => ({
+				name,
 				data,
 				type: "line",
+				smooth: true,
+				lineStyle: {
+					color,
+				},
 				areaStyle: {
 					color: {
 						type: "linear",
@@ -42,7 +73,7 @@ export default {
 						colorStops: [
 							{
 								offset: 0,
-								color: "#0087FF",
+								color: color,
 							},
 							{
 								offset: 1,
@@ -55,16 +86,34 @@ export default {
 				// symbolOffset: ["-100%", "-50%"],
 			})
 			const series = []
+			const legendData = []
+			let xAxisLabelInterval = 0
 			if (seriesData && Array.isArray(seriesData[0])) {
-				seriesData.forEach(i => {
-					series.push(getSeriesItemByData(i))
+				seriesData.forEach((i, idx) => {
+					const { color, name } = lineNameAndColor[idx]
+					series.push(getSeriesItemByData(i, color, name))
+					legendData.push(name)
 				})
+				xAxisLabelInterval = 4
 			} else {
-				series.push(getSeriesItemByData(seriesData))
+				series.push(getSeriesItemByData(seriesData.map(i => i.energyValue)))
 			}
 			const marginTopAndBottom = 20
 			const marginLeftAndRight = 35
 			return {
+				tooltip: {
+					trigger: "axis",
+					backgroundColor: "#172037",
+					borderColor: "#172037",
+					textStyle: {
+						color: "#fff",
+					},
+					axisPointer: {
+						lineStyle: {
+							color: "#0672B2",
+						},
+					},
+				},
 				grid: {
 					left: marginLeftAndRight,
 					top: marginTopAndBottom,
@@ -72,13 +121,18 @@ export default {
 					bottom: marginTopAndBottom,
 				},
 				legend: {
-					data: ["Email", "Union Ads", "Video Ads", "Direct", "Search Engine"],
+					data: legendData,
+					left: marginLeftAndRight + 10,
+					textStyle: {
+						color: "#DCDCDC",
+					},
 				},
 				xAxis: {
 					type: "category",
 					axisLabel: {
 						show: showXAxisLabel,
 						color: "#81899C",
+						interval: xAxisLabelInterval,
 					},
 					axisLine: {
 						show: showXAxisLabel,
@@ -90,7 +144,7 @@ export default {
 						},
 					},
 					boundaryGap: false,
-					data: xAxisData,
+					data: xAxis,
 				},
 				yAxis: {
 					type: "value",
@@ -98,7 +152,7 @@ export default {
 						show: false,
 					},
 					splitLine: {
-						show: true,
+						show: false,
 						lineStyle: {
 							color: ["#385982"],
 						},
@@ -118,8 +172,6 @@ export default {
 	},
 	mounted() {
 		this.$nextTick(() => this.initChart())
-		console.log(this.xAxisData)
-		console.log(this.seriesData)
 	},
 	methods: {
 		initChart() {
