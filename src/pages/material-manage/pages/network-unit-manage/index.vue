@@ -1,7 +1,14 @@
 <template>
 	<div class="network-unit-manage-container">
 		<div class="organization">
-			<OrganizationList :treeData="treeData" @handleSelectFunc="handleSelectTreeNode" />
+			<OrganizationList
+				:treeData="treeData"
+				@handleSelectFunc="handleSelectTreeNode"
+				showRightMenu
+				@treeNodeAdd="addChildGroup"
+				@treeNodeEdit="getGroupDetailAndEdit"
+				@treeNodeDelete="deleteGroup"
+			/>
 		</div>
 		<div class="network-unit-manage-content">
 			<a-form-model class="table-search-form" layout="inline" :model="searchForm">
@@ -52,7 +59,7 @@
 			:headerName="eventSource"
 			:editForm="editForm"
 			:groupOptions="treeData"
-			@refresh-table="getTableData"
+			@refresh-table="getPageData"
 		></new-add-unit>
 	</div>
 </template>
@@ -67,7 +74,7 @@ import Pagination from "components/Pagination.vue"
 import { commonMixin, tableListMixin } from "mixins"
 import apis from "apis"
 
-const { getUnitList, disableByUserId, enableByUserId, getGroupTree, resetPassword } = apis
+const { getUnitList, disableByUserId, enableByUserId, getGroupTree, resetPassword, getUnitDetailById } = apis
 
 export default {
 	name: "NetworkUnitManage",
@@ -103,8 +110,7 @@ export default {
 		}
 	},
 	mounted() {
-		const { getGroupTreeData, getTableData } = this
-		Promise.allSettled([getGroupTreeData(), getTableData()])
+		this.getPageData()
 	},
 	methods: {
 		getTableData(current = 1, size = 10) {
@@ -130,12 +136,13 @@ export default {
 				this.treeData = data
 			})
 		},
-		add() {
+		add(data = {}) {
 			this.eventSource = "新增单位"
-			this.editForm = {}
+			this.editForm = {
+				...data,
+			}
 			this.isShowDialog = true
 		},
-		delete(id) {},
 		editCell(text) {
 			console.log(text)
 			this.eventSource = "编辑单位"
@@ -194,6 +201,21 @@ export default {
 		handleSelectTreeNode(key) {
 			this.parentId = key
 			this.search()
+		},
+		getPageData() {
+			const { getGroupTreeData, search } = this
+			Promise.allSettled([getGroupTreeData(), search()])
+		},
+		getGroupDetailAndEdit(treeKey) {
+			getUnitDetailById(treeKey).then(({ data }) => {
+				this.editCell(data)
+			})
+		},
+		addChildGroup(fatherKey) {
+			this.add({ parentId: fatherKey })
+		},
+		deleteGroup(key) {
+			// TODO: 没有删除接口
 		},
 	},
 }
