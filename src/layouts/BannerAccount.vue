@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import md5 from "md5"
 import { cloneDeep } from "lodash"
 import { message as msg } from "ant-design-vue"
 
@@ -130,8 +131,8 @@ export default {
 			// 	...this.changePasswordForm,
 			// }
 			const form = new FormData()
-			form.append("password", password)
-			form.append("newPassword", newPassword)
+			form.append("password", md5(password))
+			form.append("newPassword", md5(newPassword))
 			form.append("userId", this.userInfo.sub)
 
 			changePassword(form).then(() => {

@@ -62,7 +62,7 @@
 			@on-fresh-data="$emit('re-request-list')"
 		></AddEditDevice>
 
-		<Dialog v-model="isShowTransferModal" title="更换设备" :width="40">
+		<Dialog v-model="isShowTransferModal" title="设备转移" :width="40">
 			<div class="device-transfer-container">
 				<p>原所属分组: {{ deviceInfoObj.groupName }}</p>
 				<a-form-model layout="inline">
@@ -203,6 +203,7 @@ export default {
 		// 	this.$emit("changeDeviceWorkStatus")
 		// },
 		changeShowChangeWorkStatusModal() {
+			if (this.deviceInfoObj.online === "离线") return msg.error("设备当前你不在线，无法远程发送开合闸指令")
 			this.enterPassword = ""
 			this.switchLoading = !this.switchLoading
 			this.isShowChangeWorkStatusModal = !this.isShowChangeWorkStatusModal
@@ -251,7 +252,10 @@ export default {
 			const form = new FormData()
 			form.append("deviceId", deviceId)
 			form.append("groupId", groupId.pop())
-			deviceChangeGroup(form)
+			deviceChangeGroup(form).then(() => {
+				msg.success("转移成功")
+				this.changeShowTransferModal()
+			})
 		},
 	},
 }

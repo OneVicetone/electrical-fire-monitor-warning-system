@@ -112,7 +112,7 @@ const setTokenByCookie = () => {
 
 const showTokenInvalidationModal = () => {
 	const vueInstance = getVueInstance()
-	const errorModal = vueInstance.$error({
+	vueInstance.$error({
 		centered: true,
 		class: "token-inalidation-modal",
 		content: "您已超过60分钟未操作平台，为保护您的数据安全。3秒后自动跳转到登录页，请您重新登录！",
@@ -122,6 +122,10 @@ const showTokenInvalidationModal = () => {
 			vueInstance.$destroyAll()
 		},
 	})
+	setTimeout(() => {
+		vueInstance.$router.replace("/login")
+		vueInstance.$destroyAll()
+	}, 3000)
 }
 
 export {

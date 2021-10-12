@@ -71,14 +71,15 @@ export default {
 		}),
 		async toLogin() {
 			this.isLogining = true
+			const cancelLoading = message => {
+				message && msg.error({ content: message, duration: 1 })
+				setTimeout(() => {
+					this.isLogining = false
+				}, 1500)
+			}
 			try {
 				const { username, password, source, $router, setRoutes, login, addRoutes } = this
-				const cancelLoading = message => {
-					msg.error({ content: message, duration: 1 })
-					setTimeout(() => {
-						this.isLogining = false
-					}, 1500)
-				}
+
 				if (!username) {
 					return cancelLoading("用户名不能为空")
 				}
@@ -95,7 +96,7 @@ export default {
 				msg.success("登录成功")
 				$router.replace("/monitor")
 			} catch (err) {
-				this.isLogining = false
+				cancelLoading()
 				console.error(err)
 			}
 		},

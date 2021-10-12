@@ -1,7 +1,7 @@
 import axios from "axios"
 import { message } from "ant-design-vue"
 
-import { showTokenInvalidationModal } from 'utils/commonFunctions'
+import { showTokenInvalidationModal } from "utils/commonFunctions"
 import { TOKEN } from "utils/storageConstant"
 
 const getRequestHeader = (type = "json") => {
@@ -15,13 +15,11 @@ const getRequestHeader = (type = "json") => {
 	}
 }
 
-
 const successCode = 1
 
 const axiosInstance = axios.create({
 	timeout: 10000,
 	headers: getRequestHeader(),
-	
 })
 const requestInterceptFunc = req => req
 
@@ -50,7 +48,7 @@ const responseInterceptFunc = res => {
 		throw new ReferenceError("token error")
 	}
 	if (data.code !== successCode) {
-		message.error(data.message)
+		message.error({ content: data.message, duration: 1 })
 		throw new Error(data.message)
 	}
 	if (url.includes("/login")) {

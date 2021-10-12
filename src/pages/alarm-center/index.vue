@@ -101,6 +101,9 @@ import apis from "apis"
 import allOptionsData from "utils/optionsData"
 import { commonMixin, tableListMixin } from "mixins"
 
+import dangerIcon from '@/assets/icons/danger-icon.png'
+import warnIcon from '@/assets/icons/warn-icon.png'
+
 const { getAlarmCount, getAlarmList, getAlarmDetail, processAlarm, realTimeData, exportAlarmListData } = apis
 const { alarmLevelOptions, handleStatusOptions } = allOptionsData
 const searchFromInitial = {
@@ -122,8 +125,8 @@ export default {
 		return {
 			alarmCountData: [
 				{ title: "全部预警", num: "-", key: "total" },
-				{ title: "高危", num: "-", icon: "@/assets/icons/danger-icon.png", key: "highRiskNum" },
-				{ title: "预警", num: "-", icon: "@/assets/icons/warn-icon.png", key: "warningNum" },
+				{ title: "高危", num: "-", icon: dangerIcon, key: "highRiskNum" },
+				{ title: "预警", num: "-", icon: warnIcon, key: "warningNum" },
 				{ title: "设备故障", num: "-", key: "faultNum" },
 				{ title: "未处理", num: "-", key: "unTreatedNum" },
 				{ title: "今日新增", num: "-", key: "todayAddNum" },
