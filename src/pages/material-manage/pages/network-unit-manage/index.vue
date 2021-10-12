@@ -33,7 +33,7 @@
 					{{ text.updateTime | filterTimeToYYYYMMDD }}
 				</div>
 				<div slot="operate" slot-scope="text">
-					<a @click="resetPassword(text.id, text.name)">重置密码</a>
+					<a @click="resetPassword(text.principalUserId, text.name)">重置密码</a>
 					<a-divider type="vertical" />
 					<a @click="editCell(text)">编辑</a>
 					<a-divider type="vertical" />

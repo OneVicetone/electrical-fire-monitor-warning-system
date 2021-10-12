@@ -27,8 +27,10 @@
 						type="circle"
 						:percent="getDevicePercent(device.key)"
 						:width="80"
+						:strokeWidth="10"
 						:strokeColor="device.color"
 						:format="formatProcess"
+						strokeLinecap="square"
 						@click="jumpToOtherPageByKey(device.key)"
 					/>
 					<span>{{ `${device.name}(${deviceStatus[device.key]})` }}</span>
