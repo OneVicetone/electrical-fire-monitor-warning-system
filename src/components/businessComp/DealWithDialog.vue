@@ -10,7 +10,7 @@
                             <div class="yahei">{{ mapValue(showList.alarmLevel, 'alarmLevel') }}</div> 
                         </div>
                         <div class="ml225 display-ib">
-                            <div class="yahei-bold size133 mb58">过温报警</div>
+                            <div class="yahei-bold size133 mb58">{{showList.alarmTypeName}}</div>
                             <div class="yahei">{{ showList.alarmTime }}</div>
                         </div>
                     </div>

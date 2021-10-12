@@ -208,7 +208,7 @@ export default {
     methods: {
         limintChange() {
             // 字母加数字
-            this.unitForm.deviceNumber = this.unitForm.deviceNumber.replace(/[^a-z0-9_]/g,'')
+            this.unitForm.deviceNumber = this.unitForm.deviceNumber.replace(/[\W]/g,'')
         },
         iccidChange() {
             this.unitForm.iccid = this.unitForm.iccid.replace(/[^a-z0-9_]/g,'')

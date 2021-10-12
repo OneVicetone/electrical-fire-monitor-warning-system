@@ -143,10 +143,13 @@ const setupDeviceApis = (http, BASE_URL) => ({
 
 	deviceChangeGroup: form => http.formPost(`${BASE_URL}/api-device/device/changeGroup`, form),
 
-	getHistoryElectricityCountData: deviceId => http.get(`${BASE_URL}/api-device/electricEnergy/device/statistics`, { deviceId }),
+	getHistoryElectricityCountData: deviceId =>
+		http.get(`${BASE_URL}/api-device/electricEnergy/device/statistics`, { deviceId }),
 
 	getHistoryElectricityList: ({ deviceId, startDate, endDate }) =>
 		http.get(`${BASE_URL}/api-device/electricEnergy/device/list`, { deviceId, startDate, endDate }),
+
+	deviceCondition: () => http.get(`${BASE_URL}/api-device/deviceMgr/statistics`),
 })
 
 export default setupDeviceApis

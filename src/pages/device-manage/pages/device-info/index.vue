@@ -39,10 +39,7 @@
 					<LabelAndValue
 						:labels="deviceDetailedLabel"
 						:values="deviceInfoObj"
-						:picList="installImg"
-						@on-get-pic="getDeviceInfoDetail"
-						@delete-img-source="delImgSource"
-						@add-img-source="addImgSource"
+						@on-view-pic="seeInstallImg"
 					/>
 				</div>
 			</div>
@@ -481,6 +478,9 @@ export default {
 			const [startDate, endDate] = dates
 			this.filterForm.startDate = startDate
 			this.filterForm.endDate = endDate
+		},
+		seeInstallImg() {
+			this.picLog = true;
 		},
 		delImgSource(url) {
 			const params = {

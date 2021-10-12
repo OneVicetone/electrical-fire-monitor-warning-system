@@ -18,7 +18,7 @@
                 </a-radio-group>
                 <section class="btns paddings">
                     <a-button type="primary" v-if="showComp" class="mr125" @click="doSure">确定</a-button>
-                    <a-button type="primary" v-else class="mr125" @click="sendDev">发送指令</a-button>
+                    <a-button type="primary" v-else class="mr125" @click="sendDev('820')">发送指令</a-button>
                     <a-button class="bg-none" @click="$emit('input', false)">取消</a-button>
                 </section>
             </div>
@@ -129,7 +129,9 @@ export default {
     data() {
         return {
             tabModel: '1',
-            formData: {},
+            formData: {
+                control: 'quiet'
+            },
             threshold: [
                 {label: '漏电阈值：', model: 'iz', desc: '（建议设置80~1000mA）'},
                 {label: '温度阈值：', model: 'temp', desc: '（建议设置55~140℃）'},
@@ -162,8 +164,6 @@ export default {
             selectOpt: [
                 { name: '数据阈值', value: '1' },
                 { name: '消音&复位', value: '2' },
-                // { name: '合闸开闸', value: '3' },
-                // { name: '路由绑定', value: '4' },
             ],
             records: [],
             total: 0,
@@ -184,7 +184,7 @@ export default {
             if (v) {
                 this.getList()
                 if (this.defaultValue && this.defaultValue.protocolType === '820') {
-                    this.formData = this.defaultValue && this.defaultValue.threshold;
+                    this.formData = {...this.formData, ...this.defaultValue && this.defaultValue.threshold};
                     this.B9SForm = {}
 
                 } else {
@@ -259,7 +259,10 @@ export default {
             this.$emit('on-res');
             this.$emit('input', false);
         },
-        async sendDev() {
+        async sendDev(type) {
+            if (type === '820' && !this.formData.control) {
+                this.$message.warning('请选择指令内容');
+            }
             const {
                 tabModel,
                 formData,
