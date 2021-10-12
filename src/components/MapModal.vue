@@ -119,6 +119,7 @@ export default {
                 that.markClick = true;
                 that.getAddrByPoint(e.latlng)
             })
+            console.log(!this.sources && !this.form.address)
             // 6、浏览器定位(新增并且没有选择过位置才会开启定位)
             !this.sources && !this.form.address && this.geolocation()
             this.sures()
@@ -154,6 +155,7 @@ export default {
                 that.mk.setPosition(point)
                 that.map.panTo(point)
                 const listOne = res.surroundingPois.length && res.surroundingPois[0].title;
+                console.log('listOne', listOne)
                 // that.form.address = res && `${res.address}${res.surroundingPois &&res.surroundingPois[0].title}`
                 that.form.address = res && listOne ? `${res.address}${listOne}` : res.address;
                 that.form.addrPoint = point

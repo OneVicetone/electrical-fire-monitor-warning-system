@@ -30,13 +30,12 @@
                 <a-form-model-item label="设备型号" prop="deviceType">
                     <a-select v-model="unitForm.deviceType" placeholder="请选择设备型号">
                         <a-select-option v-for="item in deviceTypeOption" :key="item.value" :value="item.value">
-                            {{item.name}}
+                            {{item.label}}
                         </a-select-option>
                     </a-select>
                 </a-form-model-item>
                 <a-form-model-item label="关联分组" prop="linkGroup">
                     <a-cascader :options="groupOptions"
-                        :disabled="sourcesType"
                         change-on-select v-model="unitForm.linkGroup"
                         :fieldNames="{ label: 'title', value: 'key', children: 'children' }"
                         placeholder="请选择设备分组"/>
@@ -124,11 +123,14 @@ export default {
             type: Object,
             default: () => ({})
         },
-        eventType: String
+        eventType: String,
+        deviceTypeOption: {
+            type: Array,
+            default: () => ([])
+        }
     },
     data() {
         return {
-            deviceTypeOption: [],
             unitForm: {
                 deviceNumber: '',
                 deviceName: '',
@@ -165,7 +167,6 @@ export default {
         visibles(v) {
             if (v) {
                 console.log(this.formCell)
-                this.getOptions();
                 const { treeShow, groupOptions } = this;
                 const {
                     sn = '',
@@ -224,15 +225,6 @@ export default {
                 const res = this.treeShow(item.children, id);
                 if(res)return [item.key, ...res];
             }
-        },
-        getOptions() {
-            getSelectOptions('deviceType').then(option => {
-                const data = option.data;
-                this.deviceTypeOption = data.map(item => ({
-                    value: item.code,
-                    name: item.name
-                }))
-            })
         },
         treeChange(value) {
             console.log(value)

@@ -83,6 +83,7 @@
 		<AddEditDevice
 			v-model="isShowDialog"
 			:treeData="treeData"
+			:deviceTypeOption="deviceIdOptions"
 			:eventType="eventType"
 			:formCell="formCell"
 			@on-fresh-data="getTableData"
@@ -227,7 +228,6 @@ export default {
 		delete(id) {},
 		async editCell(text) {
 			this.eventType = "编辑设备"
-			// this.formCell = text
 			const getPhone = await getDeviceInfoDetail(text.id)
 			console.log("获取联系人", getPhone)
 			this.formCell = getPhone.data || {}
