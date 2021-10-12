@@ -57,27 +57,63 @@
 				</div>
 				<div class="history-data-chart">
 					<ContentTitle :title="historyChartTitle" @changeTitleContent="changeTitleContent" />
-					<div class="filter-chart">
-						<a-form-model layout="inline" :model="filterForm">
-							<a-form-model-item>
-								<a-radio-group v-model="filterForm.chartRadioValue">
-									<a-radio-button v-for="radio of chartRadioOptions" :key="radio.value" :value="radio.value">
-										{{ radio.label }}
-									</a-radio-button>
-								</a-radio-group>
-							</a-form-model-item>
-							<a-form-model-item>
-								<a-range-picker format="YYYY-MM-DD" @change="getTimePickerDate" />
-							</a-form-model-item>
-							<a-form-model-item>
-								<a-button type="primary" size="small" @click="getChartData">查询</a-button>
-							</a-form-model-item>
-							<a-form-model-item>
-								<a-button type="primary" ghost size="small">导出</a-button>
-							</a-form-model-item>
-						</a-form-model>
+					<div v-show="chartModel === 'historyData'">
+						<div class="history-data-filter-chart">
+							<a-form-model layout="inline" :model="filterForm">
+								<a-form-model-item>
+									<a-radio-group v-model="filterForm.chartRadioValue">
+										<a-radio-button v-for="radio of chartRadioOptions" :key="radio.value" :value="radio.value">
+											{{ radio.label }}
+										</a-radio-button>
+									</a-radio-group>
+								</a-form-model-item>
+								<a-form-model-item>
+									<a-range-picker format="YYYY-MM-DD" @change="getTimePickerDate" />
+								</a-form-model-item>
+								<a-form-model-item>
+									<a-button type="primary" size="small" @click="getChartData">查询</a-button>
+								</a-form-model-item>
+								<a-form-model-item>
+									<a-button type="primary" ghost size="small">导出</a-button>
+								</a-form-model-item>
+							</a-form-model>
+						</div>
+						<LineChart :xAxisData="electricityChartXAxisData" :seriesData="nowChartData" showXAxisLabel showXAxisLine />
 					</div>
-					<LineChart :xAxisData="chartXAxisData" :seriesData="nowChartData" showXAxisLabel showXAxisLine />
+					<div v-show="chartModel === 'electricity'">
+						<div class="electricity-filter-chart">
+							<a-radio-group v-model="electricityFilterForm.electricityChartRadioValue">
+								<a-radio-button v-for="radio of electricityChartRadioOptions" :key="radio.value" :value="radio.value">
+									{{ radio.label }}
+								</a-radio-button>
+							</a-radio-group>
+						</div>
+						<div class="electricity-content">
+							<div class="electricity-count">
+								<div>
+									<p>今年累计（度）</p>
+									<p>{{ electricityCountData.yearValue }}</p>
+								</div>
+								<div>
+									<p>本月累计（度）</p>
+									<p>{{ electricityCountData.monthValue }}</p>
+								</div>
+								<div>
+									<p>本周累计（度）</p>
+									<p>{{ electricityCountData.weekValue }}</p>
+								</div>
+							</div>
+							<div class="electricity-chart">
+								<LineChart
+									chartKey="electricity"
+									:xAxisData="chartXAxisData"
+									:seriesData="nowChartData"
+									showXAxisLabel
+									showXAxisLine
+								/>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="history-alarm-log">
 					<ContentTitle title="历史报警记录" />
@@ -164,6 +200,8 @@ const {
 	deletePositionImg,
 	addPositionImg,
 	getDeviceConfig,
+	getHistoryElectricityCountData,
+	getHistoryElectricityList,
 } = apis
 
 export default {
@@ -198,6 +236,17 @@ export default {
 				startDate: moment().subtract(3, "days"),
 				endDate: moment(),
 			},
+			electricityFilterForm: {
+				electricityChartRadioValue: "week",
+				startDate: moment().startOf("week"),
+				endDate: moment().endOf("week"),
+			},
+			electricityCountData: {
+				weekValue: 0,
+				monthValue: 0,
+				yearValue: 0,
+			},
+			electricityChartData: [],
 			historyChartTitle: [
 				{ name: "历史数据走势图", key: "historyData" },
 				{ name: "历史用电统计", key: "electricity" },
@@ -208,6 +257,10 @@ export default {
 				{ label: "电压", value: "voltage" },
 				{ label: "功率", value: "power" },
 				{ label: "电能", value: "electricEnergy" },
+			],
+			electricityChartRadioOptions: [
+				{ label: "本周", value: "week" },
+				{ label: "本月", value: "month" },
 			],
 			columns: [
 				{ title: "序号", scopedSlots: { customRender: "idx" } },
@@ -264,6 +317,7 @@ export default {
 			handAlarm: {},
 			picLog: false,
 			deviceDetaiCommandlValue: {},
+			chartModel: "historyData",
 		}
 	},
 	computed: {
@@ -275,19 +329,10 @@ export default {
 			return chartData[chartRadioValue] ? Object.values(chartData[chartRadioValue]).map(i => i) : []
 		},
 		chartXAxisData() {
-			const { startDate, endDate } = this.filterForm
-			const xAxisLength = 7
-			const startTime = startDate.startOf("day")
-			const endTime = endDate.endOf("day")
-			const startTimestamp = startTime.valueOf()
-			const xAxis = [startTime.format("MM-DD HH:mm")]
-			const timestampDiff = endTime.valueOf() - startTimestamp
-			const interval = timestampDiff / (xAxisLength - 2)
-			for (let i = 1; i < xAxisLength - 1; i++) {
-				xAxis.push(moment(startTimestamp + interval * i).format("MM-DD HH:mm"))
-			}
-			xAxis.push(endTime.format("MM-DD HH:mm"))
-			return xAxis
+			return this.computeXAxisData(this.filterForm)
+		},
+		electricityChartXAxisData() {
+			return this.computeXAxisData(this.electricityFilterForm)
 		},
 		installImg() {
 			console.log(this.deviceInfoObj)
@@ -301,18 +346,39 @@ export default {
 			return str && str.remark
 		},
 	},
+	watch: {
+		"electricityFilterForm.electricityChartRadioValue": {
+			deep: true,
+			handler(val) {
+				const { startDate, endDate } = this.getStartAndEndDateOfWeekOrMonth(val)
+				this.electricityFilterForm.startDate = startDate
+				this.electricityFilterForm.endDate = endDate
+				this.getElectricityChartData()
+			},
+		},
+	},
 	mounted() {
 		this.allRequest()
 	},
 	methods: {
 		allRequest() {
-			const { getDeviceInfoDetail, getDeviceCount, getTableData, getChartData, getDeviceStatusTableData } = this
+			const {
+				getDeviceInfoDetail,
+				getDeviceCount,
+				getTableData,
+				getChartData,
+				getDeviceStatusTableData,
+				getElectricityCount,
+				getElectricityChartData,
+			} = this
 			Promise.allSettled([
 				getDeviceInfoDetail(),
 				getDeviceCount(),
 				getTableData(),
 				getChartData(),
 				getDeviceStatusTableData(),
+				getElectricityCount(),
+				getElectricityChartData(),
 			])
 		},
 		async sendCommand() {
@@ -359,7 +425,7 @@ export default {
 				}
 			})
 		},
-		getChartData(type = "historyData") {
+		getChartData() {
 			const {
 				id,
 				filterForm: { startDate, endDate },
@@ -435,7 +501,48 @@ export default {
 			})
 		},
 		changeTitleContent(key) {
-			this.getChartData(key)
+			if (this.chartModel === key) return
+			this.chartModel = key
+			// this.getChartData(key)
+		},
+		getElectricityCount() {
+			return getHistoryElectricityCountData(this.id).then(({ data }) => {
+				this.electricityCountData = data
+			})
+		},
+		getElectricityChartData() {
+			const {
+				id,
+				electricityFilterForm: { startDate, endDate },
+			} = this
+			const params = {
+				deviceId: id,
+				startDate: startDate.format("YYYY-MM-DD"),
+				endDate: endDate.format("YYYY-MM-DD"),
+			}
+			return getHistoryElectricityList(params).then(({ data }) => {
+				this.electricityChartData = data
+			})
+		},
+		getStartAndEndDateOfWeekOrMonth(type) {
+			return {
+				startDate: moment().startOf(type),
+				endDate: moment().endOf(type),
+			}
+		},
+		computeXAxisData({ startDate, endDate }) {
+			const xAxisLength = 7
+			const startTime = startDate.startOf("day")
+			const endTime = endDate.endOf("day")
+			const startTimestamp = startTime.valueOf()
+			const xAxis = [startTime.format("MM-DD HH:mm")]
+			const timestampDiff = endTime.valueOf() - startTimestamp
+			const interval = timestampDiff / (xAxisLength - 2)
+			for (let i = 1; i < xAxisLength - 1; i++) {
+				xAxis.push(moment(startTimestamp + interval * i).format("MM-DD HH:mm"))
+			}
+			xAxis.push(endTime.format("MM-DD HH:mm"))
+			return xAxis
 		},
 	},
 }
@@ -593,12 +700,40 @@ export default {
 				}
 			}
 			.history-data-chart {
-				.filter-chart {
+				.history-data-filter-chart {
 					margin: 2.5rem;
 				}
 				#chart_container {
 					width: 100%;
 					height: 20rem;
+				}
+				.electricity-filter-chart {
+					display: flex;
+					justify-content: flex-end;
+				}
+				.electricity-content {
+					display: flex;
+					padding: 1rem 1.67rem 0 3rem;
+					.electricity-count {
+						flex: 1;
+						> div {
+							margin-bottom: 3rem;
+							> p {
+								margin: 0;
+							}
+							> p:first-child {
+								font-size: 1.17rem;
+								color: #81899c;
+							}
+							> p:last-child {
+								font-size: 2.17rem;
+								color: #dcdcdc;
+							}
+						}
+					}
+					.electricity-chart {
+						flex: 8;
+					}
 				}
 			}
 			.history-alarm-log {

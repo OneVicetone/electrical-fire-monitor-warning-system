@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import md5 from "md5"
+import { message as msg } from "ant-design-vue"
 
 import newAddUnit from "./AddUnit.vue"
 import OrganizationList from "components/OrganizationList.vue"
@@ -67,8 +67,7 @@ import Pagination from "components/Pagination.vue"
 import { commonMixin, tableListMixin } from "mixins"
 import apis from "apis"
 
-const { getUnitList, createUnit, disableByUserId, enableByUserId, getUnitDetailById, getGroupTree, changePassword } =
-	apis
+const { getUnitList, disableByUserId, enableByUserId, getGroupTree, resetPassword } = apis
 
 export default {
 	name: "NetworkUnitManage",
@@ -133,7 +132,7 @@ export default {
 		},
 		add() {
 			this.eventSource = "新增单位"
-			this.editForm = {};
+			this.editForm = {}
 			this.isShowDialog = true
 		},
 		delete(id) {},
@@ -161,12 +160,16 @@ export default {
 				content: `确定要重置用户账号:[${name}]密码吗？
 							重制后初始密码为: ${initialPassword}`,
 				onOk() {
-					const params = {
-						userId,
-						password: "",
-						newPassword: md5(initialPassword),
-					}
-					return new Promise(resolve => resolve(changePassword(params)))
+					const form = new FormData()
+					form.append("userId", userId)
+					return new Promise(resolve =>
+						resolve(
+							resetPassword(form).then(() => {
+								msg.success("重置成功")
+								return true
+							})
+						)
+					)
 				},
 			})
 		},
