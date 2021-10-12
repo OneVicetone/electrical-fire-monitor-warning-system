@@ -11,14 +11,13 @@
 			</a-radio-group>
 			<a-form-model class="table-search-form" layout="inline" :model="searchForm">
 				<a-form-model-item>
-					<a-input v-model="searchForm.sn" placeholder="请输入设备编码/名称" size="small" />
+					<a-input v-model="searchForm.sn" placeholder="请输入设备编码/名称" />
 				</a-form-model-item>
 				<a-form-model-item>
 					<a-select
 						v-model="searchForm.deviceTypeId"
 						:options="deviceTypeOptions"
 						placeholder="请选择设备类型"
-						size="small"
 					/>
 				</a-form-model-item>
 				<a-form-model-item>
@@ -26,28 +25,27 @@
 						v-model="searchForm.deviceModelId"
 						:options="deviceIdOptions"
 						placeholder="请选择设备型号"
-						size="small"
 					/>
 				</a-form-model-item>
 				<a-form-model-item>
-					<a-input v-model="searchForm.iccid" placeholder="请输入ICCID号" size="small" />
+					<a-input v-model="searchForm.iccid" placeholder="请输入ICCID号" />
 				</a-form-model-item>
 				<a-form-model-item>
-					<a-button type="primary" size="small" @click="search">搜索</a-button>
+					<a-button type="primary" @click="search">搜索</a-button>
 				</a-form-model-item>
 				<a-form-model-item>
-					<a-button type="primary" size="small" @click="reset">重置</a-button>
+					<a-button type="primary" @click="reset">重置</a-button>
 				</a-form-model-item>
 				<div class="other-btns">
 					<a-popover trigger="click" placement="bottomRight">
-						<a-list slot="content" size="small" :data-source="batchOperationOptions">
+						<a-list slot="content" :data-source="batchOperationOptions">
 							<a-list-item slot="renderItem" slot-scope="item" @click="item.operate.call($router)">
 								{{ item.name }}
 							</a-list-item>
 						</a-list>
-						<a-button type="primary" size="small">批量操作<a-icon type="down" /></a-button>
+						<a-button type="primary">批量操作<a-icon type="down" /></a-button>
 					</a-popover>
-					<a-button type="primary" size="small" @click="exportData">导出</a-button>
+					<a-button type="primary" @click="exportData">导出</a-button>
 				</div>
 			</a-form-model>
 			<div class="device-list">
@@ -247,7 +245,7 @@ export default {
 	}
 	.device-manage {
 		width: 100%;
-		padding: 4.08rem 1.75rem 1rem;
+		padding: 5rem 1.75rem 1rem;
 		overflow-x: auto;
 		border-left: 1px solid #3f4a77;
 		.table-search-form {

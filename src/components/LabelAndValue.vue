@@ -15,7 +15,6 @@
 </template>
 
 <script>
-
 export default {
 	name: "LabelAndValue",
 	props: {
@@ -43,6 +42,7 @@ export default {
 	display: flex;
 	font-size: 1.2rem;
 	padding: 0 1.83rem 2.25rem;
+	position: relative;
 	> div {
 		line-height: 12px;
 	}
@@ -51,10 +51,9 @@ export default {
 	}
 	.value-list {
 		> p {
-			position: relative;
 			button {
 				position: absolute;
-				right: -8rem;
+				right: 0;
 				top: -0.5rem;
 			}
 		}

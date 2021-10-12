@@ -6,16 +6,16 @@
 		<div class="network-unit-manage-content">
 			<a-form-model class="table-search-form" layout="inline" :model="searchForm">
 				<a-form-model-item>
-					<a-input v-model="searchForm.name" placeholder="请输入机构名称" size="small" />
+					<a-input v-model="searchForm.name" placeholder="请输入机构名称" />
 				</a-form-model-item>
 				<a-form-model-item>
-					<a-input v-model="searchForm.principalUserName" placeholder="请输入安全负责人名称" size="small" />
+					<a-input v-model="searchForm.principalUserName" placeholder="请输入安全负责人名称" />
 				</a-form-model-item>
 				<a-form-model-item>
-					<a-button type="primary" size="small" @click="search">搜索</a-button>
+					<a-button type="primary" @click="search">搜索</a-button>
 				</a-form-model-item>
 				<a-form-model-item>
-					<a-button type="primary" size="small" @click="add"><a-icon type="plus" />新增单位</a-button>
+					<a-button type="primary" @click="add"><a-icon type="plus" />新增单位</a-button>
 				</a-form-model-item>
 			</a-form-model>
 

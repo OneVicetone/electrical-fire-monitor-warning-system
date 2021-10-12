@@ -2,13 +2,13 @@
 	<div>
 		<a-form-model class="table-search-form" layout="inline" :model="searchForm">
 			<a-form-model-item>
-				<a-input v-model="searchForm.model" placeholder="请输入设备型号" size="small" />
+				<a-input v-model="searchForm.model" placeholder="请输入设备型号" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-button type="primary" size="small" @click="search">搜索</a-button>
+				<a-button type="primary" @click="search">搜索</a-button>
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-button type="primary" size="small" @click="addAndEdit('add')"><a-icon type="plus" />新增型号</a-button>
+				<a-button type="primary" @click="addAndEdit('add')"><a-icon type="plus" />新增型号</a-button>
 			</a-form-model-item>
 		</a-form-model>
 

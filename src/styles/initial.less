@@ -10,12 +10,20 @@ body,
 
 .ant-form.table-search-form {
 	padding: 0 0 1.92rem 0;
-    // TODO: 贴标搜索栏高度设置为 2.5rem
+	// TODO: 贴标搜索栏高度设置为 2.5rem
 	// .ant-input,
 	// .ant-select-selection,
 	// .ant-btn {
 	// 	height: 2.5rem;
 	// }
+	.ant-form-item {
+		div.ant-select {
+			// vertical-align: text-bottom;
+			.ant-select-selection-selected-value {
+				font-size: 1.17rem;
+			}
+		}
+	}
 }
 
 *::-webkit-scrollbar {

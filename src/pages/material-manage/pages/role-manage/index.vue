@@ -2,13 +2,13 @@
 	<div>
 		<a-form-model class="table-search-form" layout="inline" :model="searchForm">
 			<a-form-model-item>
-				<a-input v-model="searchForm.roleName" placeholder="请输入角色名称" size="small" />
+				<a-input v-model="searchForm.roleName" placeholder="请输入角色名称" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-button type="primary" size="small">搜索</a-button>
+				<a-button type="primary">搜索</a-button>
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-button type="primary" size="small" @click="add"><a-icon type="plus" />新增角色</a-button>
+				<a-button type="primary" @click="add"><a-icon type="plus" />新增角色</a-button>
 			</a-form-model-item>
 		</a-form-model>
 
@@ -26,13 +26,13 @@
 			<div class="form-container">
 				<a-form-model :model="addAndEditForm" layout="horizontal" :labelCol="formLabelCol" :wrapperCol="formWrapperCol">
 					<a-form-model-item label="角色名称" prop="roleName">
-						<a-input v-model="addAndEditForm.roleName" placeholder="请输入角色名称" size="small" />
+						<a-input v-model="addAndEditForm.roleName" placeholder="请输入角色名称" />
 					</a-form-model-item>
 					<a-form-model-item label="角色描述" prop="roleDescribe">
-						<a-input v-model="addAndEditForm.roleDescribe" placeholder="请输入角色名称" size="small" />
+						<a-input v-model="addAndEditForm.roleDescribe" placeholder="请输入角色名称" />
 					</a-form-model-item>
 					<a-form-model-item label="角色分类" prop="roleClass">
-						<a-select v-model="addAndEditForm.roleClass" placeholder="请输入角色名称" size="small" />
+						<a-select v-model="addAndEditForm.roleClass" placeholder="请输入角色名称" />
 					</a-form-model-item>
 					<a-form-model-item label="角色权限" prop="roleClass">
 						<a-radio-group v-model="purviewType">
