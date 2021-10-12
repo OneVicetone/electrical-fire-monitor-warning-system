@@ -15,31 +15,31 @@
 		</div>
 		<a-form-model class="table-search-form" layout="inline" :model="searchForm">
 			<a-form-model-item>
-				<a-select v-model="searchForm.unit" :options="groupTypeOptions" placeholder="请选择单位" size="small" />
+				<a-select v-model="searchForm.unit" :options="groupTypeOptions" placeholder="请选择单位" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-input v-model="searchForm.deviceSnName" placeholder="请输入设备编码/名称" size="small" />
+				<a-input v-model="searchForm.deviceSnName" placeholder="请输入设备编码/名称"  />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-select v-model="searchForm.alarmType" :options="alarmTypeOptions" size="small" />
+				<a-select v-model="searchForm.alarmType" :options="alarmTypeOptions"  />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-select v-model="searchForm.alarmLevel" :options="alarmLevelOptions" size="small" />
+				<a-select v-model="searchForm.alarmLevel" :options="alarmLevelOptions"  />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-select v-model="searchForm.deviceTypeId" :options="deviceIdOptions" size="small" />
+				<a-select v-model="searchForm.deviceTypeId" :options="deviceIdOptions"  />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-select v-model="searchForm.status" :options="handleStatusOptions" size="small" />
+				<a-select v-model="searchForm.status" :options="handleStatusOptions"  />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-range-picker size="small" format="YYYY-MM-DD" @change="getTimePickerDate" />
+				<a-range-picker  format="YYYY-MM-DD" @change="getTimePickerDate" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-button type="primary" size="small" @click="search">搜索</a-button>
+				<a-button type="primary"  @click="search">搜索</a-button>
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-button type="primary" size="small" @click="exportData">导出</a-button>
+				<a-button type="primary"  @click="exportData">导出</a-button>
 			</a-form-model-item>
 		</a-form-model>
 

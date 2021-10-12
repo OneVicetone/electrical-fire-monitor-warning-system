@@ -80,7 +80,7 @@ import { TRANSFER, SHIP, IMPORT } from "utils/baseData"
 import { commonMixin, tableListMixin } from "mixins"
 import apis from "apis"
 
-const { getDeviceList, exportDeviceList, getGroupTree } = apis
+const { getDeviceList, exportDeviceList, getGroupTree, deviceCondition } = apis
 
 const searchFromInitial = {
 	sn: "",
@@ -97,11 +97,11 @@ export default {
 	data() {
 		return {
 			deviceStatusOptions: [
-				{ label: "全部设备", value: "0" },
-				{ label: "在线", value: "1" },
-				{ label: "离线", value: "2" },
-				{ label: "报警", value: "3" },
-				{ label: "故障", value: "4" },
+				{ label: "全部设备", value: "0", Eg: 'total' },
+				{ label: "在线", value: "1", Eg: 'online' },
+				{ label: "离线", value: "2", Eg: 'offline' },
+				{ label: "报警", value: "3", Eg: 'alarm' },
+				{ label: "故障", value: "4", Eg: 'fault' },
 			],
 			deviceStatusRadio: deviceStatusRadioInitial,
 			searchForm: cloneDeep(searchFromInitial),
@@ -158,14 +158,24 @@ export default {
 				getGroupTreeData,
 				getOptionsListPromiseArr,
 				getDeviceId,
+				getDeviceCondition,
 				paginationData: { current, size },
 			} = this
 			Promise.allSettled([
 				getDeviceListData(current, size),
 				getGroupTreeData(),
 				getDeviceId(),
+				getDeviceCondition(),
 				...getOptionsListPromiseArr(optionsTypes),
 			])
+		},
+		getDeviceCondition() {
+			deviceCondition().then(({ data }) => {
+				this.deviceStatusOptions.map(item => {
+					item.label = `${item.label}(${data[item.Eg]})`;
+					return item;
+				})
+			})
 		},
 		getDeviceListData(current = 1, size = 10) {
 			const params = {
@@ -233,12 +243,13 @@ export default {
 		height: 100%;
 		flex: 0 0 auto;
 		padding: 0 1.5rem;
-		border-right: 1px solid #3f4a77;
+		// border-right: 1px solid #3f4a77;
 	}
 	.device-manage {
 		width: 100%;
 		padding: 4.08rem 1.75rem 1rem;
 		overflow-x: auto;
+		border-left: 1px solid #3f4a77;
 		.table-search-form {
 			margin: 1.25rem 0 0;
 			position: relative;

@@ -36,7 +36,9 @@
 		</header>
 		<section>
 			<div class="device-info">
-				<div class="img" alt="设备图片" />
+				<div class="img"
+					:style="{background: `url(${deviceInfoObj.deviceModelImgPath}) no-repeat`}"
+					alt="设备图片" />
 				<div class="info">
 					<p>设备ID：{{ deviceInfoObj.sn }}</p>
 					<p>设备类型：{{ deviceInfoObj.deviceTypeName }}</p>
@@ -306,7 +308,7 @@ export default {
 			.img {
 				width: 6.5rem;
 				height: 6.5rem;
-				background: url("~assets/images/device-default.png") no-repeat;
+				// background: url("~assets/images/device-default.png") no-repeat;
 				background-color: #122849;
 				background-size: 70%;
 				background-position: 50% 50%;

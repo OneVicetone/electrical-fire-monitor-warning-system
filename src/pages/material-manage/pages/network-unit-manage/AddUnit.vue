@@ -235,7 +235,6 @@ export default {
                     designPicPath = ''
                 } = this.editForm || {};
                 console.log('---', this.unitForm, this.upload )
-                console.log('级联', this.groupOptions, parentId, this.treeShow(this.groupOptions, parentId))
                 this.unitForm = {
                     unitName: name,
                     upUnit: this.treeShow(this.groupOptions, parentId),

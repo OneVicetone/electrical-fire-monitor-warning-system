@@ -177,7 +177,6 @@ export default {
 			treeData: [],
 			isShowDialog: false,
 			formCell: {},
-			// buttonType: '',
 			eventType: "",
 			isShowChangeDeviceModal: false,
 			newDeviceSn: "",

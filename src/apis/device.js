@@ -142,6 +142,9 @@ const setupDeviceApis = (http, BASE_URL) => ({
 	getCmdSendStatus: cmdId => http.post(`${BASE_URL}/api-device/deviceCmd/getCmdSendStatus`, cmdId),
 
 	deviceChangeGroup: form => http.formPost(`${BASE_URL}/api-device/device/changeGroup`, form),
+
+	deviceCondition: () =>
+		http.get(`${BASE_URL}/api-device/deviceMgr/statistics`),
 })
 
 export default setupDeviceApis
