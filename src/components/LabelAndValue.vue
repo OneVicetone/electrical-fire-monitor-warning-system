@@ -65,7 +65,7 @@ export default {
 <style lang="less" scoped>
 .label-and-value-container {
 	display: flex;
-	font-size: 1rem;
+	font-size: 1.2rem;
 	padding: 0 1.83rem 2.25rem;
 	> div {
 		line-height: 12px;
@@ -78,7 +78,7 @@ export default {
 			position: relative;
 			button {
 				position: absolute;
-				right: -10rem;
+				right: -8rem;
 				top: -0.5rem;
 			}
 		}
