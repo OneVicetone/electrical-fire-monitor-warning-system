@@ -38,7 +38,7 @@
 				</div>
 				<div class="history-chart">
 					<ContentTitle :title="historyChartTitle" @changeTitleContent="changeTitleContent" />
-					<LineChart :xAxisData="chartData.xAxisData" :seriesData="chartData.seriesData" />
+					<LineChart :seriesData="chartData" showXAxisLabel />
 				</div>
 			</div>
 
@@ -109,7 +109,7 @@ export default {
 			groupDetailObj: {},
 			designPicPath: "",
 			chartRadioValue: "",
-			chartData: {},
+			chartData: [],
 			devicePeriodData: {
 				totalNum: 0,
 				normalNum: 0,
@@ -123,7 +123,7 @@ export default {
 				{ name: "故障设备", num: 0, key: "faultNum" },
 				{ name: "离线设备", num: 0, key: "offLineNum" },
 			],
-			seePicLog: false
+			seePicLog: false,
 		}
 	},
 	mounted() {
@@ -156,8 +156,8 @@ export default {
 				size: 100,
 				groupId: this.id,
 			}
-			const func = ({ data }) => {
-				this.chartData = data
+			const func = ({ data: { records } }) => {
+				this.chartData = records
 			}
 			if (type === "electricity") {
 				return getGroupDetailHistoryElectricityList(params).then(func)
@@ -174,9 +174,8 @@ export default {
 				const nameMap = {
 					totalNum: "总数量",
 					normalNum: "正常设备数量",
-					offLineNum: "离线设备数量",
-					alarmNum: "报警设备数量",
-					faultNum: "故障设备数量",
+					expiredNum: "已到期设备数量",
+					dueNum: "即将到期设备数量",
 				}
 				const seriesData = Object.keys(data).map(i => ({
 					value: data[i],
@@ -188,15 +187,25 @@ export default {
 						position: [10, 80],
 					},
 					legend: {
-						top: "5%",
-						left: "center",
+						right: 40,
+						textStyle: {
+							color: "#fff",
+							fontSize: 12,
+						},
+						icon: "circle",
+						itemWidth: 4,
+						orient: "vertical",
+					},
+					grid: {
+						top: 70,
+						left: 0,
+						right: 0,
 					},
 					series: [
 						{
-							name: "Access From",
 							type: "pie",
-							radius: ["40%", "70%"],
-							avoidLabelOverlap: false,
+							radius: ["80%", "100%"],
+							left: -120,
 							label: {
 								show: false,
 								position: "center",
@@ -204,8 +213,7 @@ export default {
 							emphasis: {
 								label: {
 									show: true,
-									fontSize: "40",
-									fontWeight: "bold",
+									fontSize: 12,
 								},
 							},
 							labelLine: {
@@ -460,6 +468,7 @@ export default {
 				padding: @content-default-padding;
 				#device_service_time_count_chart {
 					height: 10rem;
+					margin-top: 2rem;
 				}
 			}
 			.alarm-type-count {

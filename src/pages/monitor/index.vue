@@ -39,7 +39,7 @@
 			<div class="alarm-type-count">
 				<ContentTitle title="报警类型统计" />
 				<!-- <div id="device_status_chart"></div> -->
-				<BarChart :dataObj="alarmTypeCountData" />
+				<BarChart :dataObj="alarmTypeCountData" height="16rem" />
 			</div>
 		</div>
 		<!-- <MarkerInfo v-model="showMarkerInfo" :markerInfoObj="markerInfo" :position="position" /> -->

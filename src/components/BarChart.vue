@@ -24,6 +24,12 @@ export default {
 			const getSeriesItemByData = (data, color) => ({
 				data,
 				type: "bar",
+				label: {
+					show: true,
+					position: "top",
+					color: "#26D3DD",
+					fontSize: 10
+				},
 				itemStyle: {
 					color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
 						{ offset: 0, color: "#2CDEDD" },
@@ -31,33 +37,33 @@ export default {
 						{ offset: 1, color: "#0895E0" },
 					]),
 				},
+				barWidth: 20,
 			})
-			const seriesData = Object.values(this.dataObj)
-			const xAxisData = Object.keys(this.dataObj)
+			// const seriesData = Object.values(this.dataObj)
+			const seriesData = [5, 7, 10, 15, 2]
+
+			const xAxisData = Object.keys(this.dataObj).map(i => ({
+				value: i,
+				textStyle: {
+					color: "#AADDFF",
+				},
+			}))
 			const series = getSeriesItemByData(seriesData)
 
 			// const marginTopAndBottom = 20
 			// const marginLeftAndRight = 30
 			return {
-				// grid: {
-				// 	left: marginLeftAndRight,
-				// 	top: marginTopAndBottom,
-				// 	right: marginLeftAndRight,
-				// 	bottom: 10,
-				// },
+				grid: {
+					// left: marginLeftAndRight,
+					top: 40,
+					// right: marginLeftAndRight,
+					bottom: 30,
+				},
 				xAxis: {
 					type: "category",
-					// axisLabel: false,
-					// axisLine: {
-					// 	show: false,
-					// },
-					// splitLine: {
-					// 	show: true,
-					// 	lineStyle: {
-					// 		color: ["#385982"],
-					// 	},
-					// },
-					// boundaryGap: false,
+					axisLabel: {
+						interval: 0,
+					},
 					data: xAxisData,
 				},
 				yAxis: {
