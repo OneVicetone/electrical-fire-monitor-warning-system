@@ -135,12 +135,12 @@ export default {
 				{ title: "4/N", key: "4n" },
 			],
             defaultTableData: [
-				{ name: "漏电(mA)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
-				{ name: "温度(℃)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
-				{ name: "电压(V)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
-				{ name: "电流(A)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
-				{ name: "功率(W)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
-				{ name: "电量(度)", "1a": "0", "2b": "0", "3c": "0", "4n": "0" },
+				{ name: "漏电(mA)", "1a": "-", "2b": "-", "3c": "-", "4n": "-" },
+				{ name: "温度(℃)", "1a": "-", "2b": "-", "3c": "-", "4n": "-" },
+				{ name: "电压(V)", "1a": "-", "2b": "-", "3c": "-", "4n": "-" },
+				{ name: "电流(A)", "1a": "-", "2b": "-", "3c": "-", "4n": "-" },
+				{ name: "功率(W)", "1a": "-", "2b": "-", "3c": "-", "4n": "-" },
+				{ name: "电量(度)", "1a": "-", "2b": "-", "3c": "-", "4n": "-" },
 			],
             uploadList: [{id: 1, comp: 'Upload'}],
             resultList: [],
@@ -160,11 +160,11 @@ export default {
             return Object.keys(this.alarmData).length && this.alarmData;
         },
         equipment() {
-            const { deviceAlias = '--', deviceSn = '--', groupName = '--', recoverTime = '--', address = '--',  installPosition = '--'} = this.showList;
+            const { alarmValue = '--', deviceAlias = '--', deviceSn = '--', groupName = '--', recoverTime = '--', address = '--',  installPosition = '--'} = this.showList;
             return {
-                address,
-				detail: '65℃',
-				reset: recoverTime,
+                address: address || '--',
+				detail: alarmValue || '--',
+				reset: recoverTime || '--',
 				equips: `${deviceAlias} ${deviceSn}`,
 				unit: groupName || '--',
 				place: installPosition || '--'
@@ -172,7 +172,7 @@ export default {
         },
         list() {
             console.log('this.handAlarmList', this.handAlarmList, Object.keys(this.handAlarmList).length)
-            if (!Object.keys(this.handAlarmList).length) return []; 
+            if (!Object.keys(this.handAlarmList).length) return this.defaultTableData; 
             return this.defaultTableData.map(i => {
 				Object.keys(i).forEach((j, idx) => {
 					const num = idx - 1
