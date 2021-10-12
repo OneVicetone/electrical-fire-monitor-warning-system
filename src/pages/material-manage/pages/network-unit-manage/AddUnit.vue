@@ -1,5 +1,5 @@
 <template>
-    <Dialog v-model="visibles" :title="headerName" :coefficient="1.2">
+    <Dialog v-model="visibles" :title="headerName">
         <Nav-titles class="unit-base-info" title="单位基本信息">
             <a-form-model
                 ref="unitInfo"
@@ -42,7 +42,7 @@
                 </a-form-model-item>
             </a-form-model>
             <a-form-model class="form-right" layout="inline" :model="unitForm" :labelCol="{ style: 'width: 72px;float: left;' }"
-                :wrapper-col="{ style: 'width: 29rem;' }">
+                :wrapper-col="{ style: 'width: 22rem;' }">
                 <a-form-model-item label="单位人数" class="mr0">
                     <a-input v-model="unitForm.unitCount" @change="unitForm.unitCount = unitForm.unitCount.replace(/\D/g, '')"
                     placeholder="请输入单位大概人数" :maxLength="10"/>
@@ -61,7 +61,7 @@
                     :rules="safeRules"
                     labelAlign="right"
                     :labelCol="{ style: 'width: 132px;float: left;' }"
-                    :wrapper-col="{ style: 'width: 65.5rem;float: left;' }"
+                    :wrapper-col="{ span: 18 }"
                     class="form-right"
                 >
                     <a-form-model-item ref="safePrincipal" label="安全负责人" prop="safePrincipal">
@@ -112,7 +112,7 @@
 							<div class="ant-upload-text">上传图片</div>
 						</div>
                     </a-upload>
-                    <div class="yahei-81899C t-center">公司处景观/效果图</div>
+                    <div class="yahei-81899C t-center">公司外景观/效果图</div>
                 </div>
                 <div class="content-wd design-diagram">
                     <a-upload
