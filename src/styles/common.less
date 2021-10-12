@@ -295,3 +295,88 @@ div.ant-cascader-menus {
 		}
 	}
 }
+
+// BMap InfoWindow
+.BMap_bubble_pop {
+	padding: 0 !important;
+	border: none !important;
+	.BMap_bubble_top {
+		display: none !important;
+	}
+	.BMap_bubble_center {
+		width: 0 !important;
+		height: 0 !important;
+		.BMap_bubble_content {
+			width: auto !important;
+			height: auto !important;
+		}
+	}
+	.BMap_bubble_bottom {
+		display: none !important;
+	}
+	> img {
+		display: none;
+	}
+}
+
+// MarkInfo
+.marker-info-container {
+	width: 30.83rem;
+	height: 17.33rem;
+	padding: 1.5rem 1.75rem;
+	background: url("~assets/images/marker-info-bg.png") no-repeat;
+	background-size: 100%;
+	background-color: transparent;
+	// opacity: 0.5;
+	transition: all 0.5s;
+	.title {
+		height: 2.58rem;
+		color: #0096ff;
+		font-size: 1.5rem;
+		font-weight: bold;
+		&::before {
+			content: "";
+			display: block;
+			width: 1.83rem;
+			height: 0.25rem;
+			background-color: #0096ff;
+			position: relative;
+			top: -0.25rem;
+			left: 0;
+		}
+	}
+	.info {
+		> p {
+			color: #fff;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			margin: 0;
+			&:last-child {
+				margin: 0 0 0.75rem 0;
+				height: 1.5rem;
+			}
+		}
+	}
+	.close-info {
+		width: 1.33rem;
+		height: 1.33rem;
+		position: absolute;
+		right: 1.25rem;
+		top: 1.58rem;
+		color: #0096ff;
+		font-size: 1.33rem;
+		cursor: pointer;
+	}
+	.to-detail-btn {
+		width: 5.58rem;
+		height: 1.92rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: #131a2d;
+		border: 1px solid #0096ff;
+		color: #0096ff;
+		font-size: 1rem;
+		cursor: pointer;
+	}
+}

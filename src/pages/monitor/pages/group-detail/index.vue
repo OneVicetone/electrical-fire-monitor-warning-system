@@ -253,6 +253,7 @@ export default {
 	.pages-container-no-child-layout();
 	padding-left: 1.5rem;
 	padding-right: 1.5rem;
+	padding-bottom: 43px;
 	> section {
 		// max-height: 100%;
 		display: flex;

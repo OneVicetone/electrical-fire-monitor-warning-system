@@ -4,8 +4,7 @@
 		<a-input-search placeholder="请输入分组关键字搜索" @change="search" />
 		<a-tree
 			:tree-data="computeTreeData"
-			:expanded-keys="searchValue ? expandedKeys : defaultExpandedKeys"
-			:defaultExpandedKeys="expandedKeys"
+			:expandedKeys.sync="nowExpandedKeys"
 			:key="treeElementKey"
 			:autoExpandParent="autoExpandParent"
 			multiple
@@ -75,9 +74,14 @@ export default {
 			autoExpandParent: true,
 			searchValue: "",
 			dataList: [],
+			removedefaultExpand: false
 		}
 	},
 	computed: {
+		nowExpandedKeys() {
+			const { searchValue, expandedKeys, defaultExpandedKeys, removedefaultExpand } = this
+			return searchValue || removedefaultExpand ? expandedKeys : defaultExpandedKeys
+		},
 		defaultExpandedKeys() {
 			return this.treeData.map(i => i.key)
 		},
@@ -110,6 +114,7 @@ export default {
 		onExpand(expandedKeys) {
 			this.expandedKeys = expandedKeys
 			this.autoExpandParent = false
+			this.removedefaultExpand = true
 		},
 		search({ target: { value } }) {
 			const expandedKeys = this.dataList

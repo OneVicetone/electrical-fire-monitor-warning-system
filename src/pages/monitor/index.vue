@@ -42,7 +42,7 @@
 				<BarChart :dataObj="alarmTypeCountData" />
 			</div>
 		</div>
-		<MarkerInfo v-model="showMarkerInfo" :markerInfoObj="markerInfo" :position="position" />
+		<!-- <MarkerInfo v-model="showMarkerInfo" :markerInfoObj="markerInfo" :position="position" /> -->
 	</div>
 </template>
 
@@ -51,11 +51,14 @@ import { cloneDeep } from "lodash"
 
 import Map from "components/Map.vue"
 import ContentTitle from "components/ContentTitle.vue"
-import MarkerInfo from "./components/MarkerInfo.vue"
+// import MarkerInfo from "./components/MarkerInfo.vue"
 import BarChart from "components/BarChart.vue"
 
 import apis from "apis"
 import { commonMixin } from "mixins"
+
+import mapMarkerIcon from "@/assets/icons/map-marker-icon.png"
+import closeIcon from "@/assets/icons/close-icon.png"
 
 const {
 	monitorCount,
@@ -69,7 +72,7 @@ const {
 export default {
 	name: "Monitor",
 	mixins: [commonMixin],
-	components: { Map, ContentTitle, MarkerInfo, BarChart },
+	components: { Map, ContentTitle, BarChart },
 	data() {
 		return {
 			mapInstance: null,
@@ -167,27 +170,78 @@ export default {
 				const { lon, lat, id } = i
 				if (!lat || !lon) return
 				const point = new BMapGL.Point(lon, lat)
-				const marker = new BMapGL.Marker(point)
-				marker.addEventListener("click", e => {
+				const makerIcon = new BMapGL.Icon(mapMarkerIcon, new BMapGL.Size(40, 40))
+				const marker = new BMapGL.Marker(point, { icon: makerIcon })
+
+				// marker.addEventListener("click", e => {
+				// 	const params = {
+				// 		type: this.filterTypeKey,
+				// 		id,
+				// 	}
+				// 	getMonitorDataDetail(params).then(({ data }) => {
+				// 		const { top, left } = e.target.domElement.getBoundingClientRect()
+				// 		const { clientHeight, clientWidth } = document.querySelector(".marker-info-container")
+				// 		this.position = {
+				// 			top: top - clientHeight - 10,
+				// 			left: left - clientWidth / 2 + 12,
+				// 		}
+				// 		this.markerInfo = data
+				// 		this.showMarkerInfo = true
+				// 	})
+				// })
+				// this.mapInstance.addEventListener("dragstart", () => {
+				// 	if (this.showMarkerInfo) this.showMarkerInfo = false
+				// })
+				// const groupInfoContainer = document.createElement("div")
+				// groupInfoContainer.classList.add("marker-info-container")
+
+				const getGroupInfoContainer = ({
+					name,
+					totalNum,
+					alarmNum,
+					offLineNum,
+					address,
+				}) => `<div class="marker-info-container">
+												<h2 class="title">
+												<!-- {{ markerInfoObj.name | filterNull }} -->
+												${name}
+											</h2>
+											<div class="info">
+												<p>入网设备: ${totalNum}</p>
+												<p>报警设备: ${alarmNum}</p>
+												<p>离线设备: ${offLineNum}</p>
+												<p>单位地址设备: ${address || "-"}</p>
+											</div>
+
+											<button class="to-detail-btn">详情</button>
+											<img class="close-info" src="${closeIcon}" />
+										</div>`
+
+				const getGroupDetailAndShowAtMap = params => {
+					getMonitorDataDetail(params).then(({ data }) => {
+						const groupInfoContainer = getGroupInfoContainer(data)
+						const groupInfoWindow = new BMapGL.InfoWindow(groupInfoContainer, {
+							offset: BMapGL.Size(100, 100)
+						})
+						this.mapInstance.openInfoWindow(groupInfoWindow, point)
+						const toDetailBtn = document.querySelector(".marker-info-container .to-detail-btn")
+						const closeBtn = document.querySelector(".marker-info-container .close-info")
+
+						toDetailBtn && toDetailBtn.addEventListener("click", () => this.toPath(`/monitor/group-detail/${data.id}`), false)
+						// closeBtn && closeBtn.addEventListener("click", () => this.mapInstance.clearInfoWindow(), false)
+						closeBtn && closeBtn.addEventListener("click", () => groupInfoWindow.close(), false)
+					})
+				}
+				marker.addEventListener("click", () => {
 					const params = {
 						type: this.filterTypeKey,
 						id,
 					}
-					getMonitorDataDetail(params).then(({ data }) => {
-						const { top, left } = e.target.domElement.getBoundingClientRect()
-						const { clientHeight, clientWidth } = document.querySelector(".marker-info-container")
-						this.position = {
-							top: top - clientHeight - 10,
-							left: left - clientWidth / 2 + 12,
-						}
-						this.markerInfo = data
-						this.showMarkerInfo = true
-					})
+					getGroupDetailAndShowAtMap(params)
 				})
+
 				this.mapInstance.addOverlay(marker)
-				this.mapInstance.addEventListener("dragstart", () => {
-					if (this.showMarkerInfo) this.showMarkerInfo = false
-				})
+
 				// TODO: 地图中心设置为最后一个点位？
 				if (idx === arr.length - 1) {
 					this.mapInstance.centerAndZoom(point, 19)
