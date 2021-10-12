@@ -89,7 +89,7 @@
 							{{ getListIdx(paginationData, index) }}
 						</div>
 
-						<div slot="alarmTypeName" slot-scope="text, record"></div>
+						<!-- <div slot="alarmTypeName" slot-scope="text, record"></div> -->
 						<div slot="alarmTime" slot-scope="text">
 							{{ text.alarmTime | filterTimeToYYYYMMDDHHmmss }}
 						</div>
@@ -214,7 +214,7 @@ export default {
 			],
 			columns: [
 				{ title: "序号", scopedSlots: { customRender: "idx" } },
-				{ title: "报警类型", scopedSlots: { customRender: "alarmTypeName" } },
+				{ title: "报警类型", dataIndex: "alarmTypeName" },
 				{ title: "报警级别", scopedSlots: { customRender: "alarmLevel" } },
 				{ title: "报警详情", dataIndex: "alarmValue" },
 				{ title: "报警时间", scopedSlots: { customRender: "alarmTime" } },
