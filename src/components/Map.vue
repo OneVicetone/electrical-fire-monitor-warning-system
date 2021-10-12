@@ -33,7 +33,6 @@ export default {
 	},
 	methods: {
 		setMap() {
-			if (window.BMapGL) return this.setMapToContainer(window.BMapGL)
 			const mapModule = "web"
 			getMapKey(mapModule).then(({ data: { ak, defaultStyleId } }) => {
 				addMapScript(ak).then(BMapGL => this.setMapToContainer(BMapGL, defaultStyleId))

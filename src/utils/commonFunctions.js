@@ -2,13 +2,14 @@ import getVueInstance from "./vueInstance"
 
 const addMapScript = (key, version = "1.0") => {
 	return new Promise(resolve => {
+		if (window.BMapGL) resolve(window.BMapGL)
 		const script = document.createElement("script")
 		script.setAttribute("type", "text/javascript")
 		script.setAttribute(
 			"src",
 			`http://api.map.baidu.com/api?type=webgl&v=${version}&ak=${key}&callback=mapLoadedCallback`
 		)
-		window.mapLoadedCallback = () => resolve(BMapGL)
+		window.mapLoadedCallback = () => resolve(window.BMapGL)
 		document.body.append(script)
 	})
 }
