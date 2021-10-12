@@ -40,7 +40,7 @@ module.exports = {
 				test: /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i,
 				threshold: 2048,
 				minRatio: 0.8,
-				deleteOriginalAssets: true
+				deleteOriginalAssets: false
 			}),
 		],
 	},
