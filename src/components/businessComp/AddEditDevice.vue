@@ -135,7 +135,7 @@ export default {
                 deviceNumber: '',
                 deviceName: '',
                 deviceType: '',
-                linkGroup: '',
+                linkGroup: [],
                 location: '',
                 lng: '',
                 lat: '',
@@ -226,11 +226,11 @@ export default {
                 if(res)return [item.key, ...res];
             }
         },
-        treeChange(value) {
-            console.log(value)
-            const [ firstNode ] = value;
-            this.unitForm.linkGroup = firstNode;
-        },
+        // treeChange(value) {
+        //     console.log(value)
+        //     const [ firstNode ] = value;
+        //     this.unitForm.linkGroup = firstNode;
+        // },
         alertMap() {
             this.showMap = true;
         },
@@ -261,6 +261,7 @@ export default {
                     }
                 } = this;
                 // 参数
+                console.log(linkGroup)
                 const params = {
                     sn: deviceNumber,
                     deviceTypeId: +deviceType,
@@ -277,6 +278,7 @@ export default {
                 const modify = {
                     id: Object.keys(this.formCell).length && this.formCell.id,
                     deviceTypeId: +deviceType,
+                    groupId: linkGroup[linkGroup.length-1],
                     installPosition: installLocation,
                     address: location,
                     addressLat: lat,
