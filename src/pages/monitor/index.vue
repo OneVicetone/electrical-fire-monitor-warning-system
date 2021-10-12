@@ -172,6 +172,9 @@ export default {
 				const point = new BMapGL.Point(lon, lat)
 				const makerIcon = new BMapGL.Icon(mapMarkerIcon, new BMapGL.Size(40, 40))
 				const marker = new BMapGL.Marker(point, { icon: makerIcon })
+				// marker.setOffset(BMapGL.Size(100, 100))
+				// console.log(marker.getOffset())
+				this.mapInstance.addOverlay(marker)
 
 				// marker.addEventListener("click", e => {
 				// 	const params = {
@@ -202,50 +205,47 @@ export default {
 					offLineNum,
 					address,
 				}) => `<div class="marker-info-container">
-												<h2 class="title">
-												<!-- {{ markerInfoObj.name | filterNull }} -->
-												${name}
-											</h2>
-											<div class="info">
-												<p>入网设备: ${totalNum}</p>
-												<p>报警设备: ${alarmNum}</p>
-												<p>离线设备: ${offLineNum}</p>
-												<p>单位地址设备: ${address || "-"}</p>
-											</div>
-
-											<button class="to-detail-btn">详情</button>
-											<img class="close-info" src="${closeIcon}" />
-										</div>`
+							<h2 class="title">${name}</h2>
+							<div class="info">
+								<p>入网设备: ${totalNum}</p>
+								<p>报警设备: ${alarmNum}</p>
+								<p>离线设备: ${offLineNum}</p>
+								<p>单位地址设备: ${address || "-"}</p>
+							</div>
+							<button class="to-detail-btn">详情</button>
+							<img class="close-info" src="${closeIcon}" />
+						</div>`
 
 				const getGroupDetailAndShowAtMap = params => {
 					getMonitorDataDetail(params).then(({ data }) => {
 						const groupInfoContainer = getGroupInfoContainer(data)
-						const groupInfoWindow = new BMapGL.InfoWindow(groupInfoContainer, {
-							offset: BMapGL.Size(100, 100)
-						})
+						const groupInfoWindow = new BMapGL.InfoWindow(groupInfoContainer)
 						this.mapInstance.openInfoWindow(groupInfoWindow, point)
 						const toDetailBtn = document.querySelector(".marker-info-container .to-detail-btn")
 						const closeBtn = document.querySelector(".marker-info-container .close-info")
 
-						toDetailBtn && toDetailBtn.addEventListener("click", () => this.toPath(`/monitor/group-detail/${data.id}`), false)
+						toDetailBtn &&
+							toDetailBtn.addEventListener("click", () => this.toPath(`/monitor/group-detail/${data.id}`), false)
 						// closeBtn && closeBtn.addEventListener("click", () => this.mapInstance.clearInfoWindow(), false)
 						closeBtn && closeBtn.addEventListener("click", () => groupInfoWindow.close(), false)
 					})
 				}
-				marker.addEventListener("click", () => {
+
+				const markerClickFunc = () => {
 					const params = {
 						type: this.filterTypeKey,
 						id,
 					}
 					getGroupDetailAndShowAtMap(params)
-				})
+				}
 
-				this.mapInstance.addOverlay(marker)
+				marker.addEventListener("click", () => markerClickFunc())
 
 				// TODO: 地图中心设置为最后一个点位？
 				if (idx === arr.length - 1) {
 					this.mapInstance.centerAndZoom(point, 19)
-					marker.domElement.click()
+					// marker.domElement.click()
+					markerClickFunc()
 				}
 			})
 		},
@@ -267,7 +267,7 @@ export default {
 			} else if (key === "alarmNum") {
 				this.toPath("/alarm-center")
 			} else if (key === "faultNum") {
-				this.toPath("/alarm-centerstatus=1&alarmType=8")
+				this.toPath("/alarm-center?status=1&alarmType=8")
 			} else if (key === "offLineNum") {
 				this.toPath("/alarm-center?status=1&alarmType=30")
 			}
