@@ -130,7 +130,7 @@ const setupDeviceApis = (http, BASE_URL) => ({
 
 	batchDeliverGoods: form => http.formPost(`${BASE_URL}/api-device/device/batchDeliverGoods`, form),
 
-	batchChangeGroup: form => http.formPost(`${BASE_URL}/api-device/device/batchChangeGroup`, form),
+	batchChangeDevice: form => http.formPost(`${BASE_URL}/api-device/device/batchChangeGroup`, form),
 
 	batchImportDevice: form => http.formPost(`${BASE_URL}/api-device/device/batchImport`, form),
 

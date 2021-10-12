@@ -14,7 +14,7 @@ const TRANSFER = 'transfer' // 转组
 const IMPORT = 'import' // 导入
 
 const templateTypeMap = {
-	[TRANSFER]: 'batchChangeGroup',
+	[TRANSFER]: 'batchChangeDevice',
 	[IMPORT]: 'batchImportDevice',
 	[SHIP]: 'batchDeliverGoods'
 }

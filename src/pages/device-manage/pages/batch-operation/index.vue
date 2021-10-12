@@ -51,7 +51,7 @@
 				</div>
 			</div>
 		</div>
-		<a-modal v-model="isShowUploadedResult" title="导入结果" :footer="null">
+		<Dialog v-model="isShowUploadedResult" title="导入结果" :width="40">
 			<div class="import-result-container">
 				<h3>共导入数据{{ importResult.total }}条</h3>
 				<div class="info">
@@ -63,7 +63,7 @@
 					<a-button type="primary" @click="downloadErrorXlsx">下载失败表格</a-button>
 				</div>
 			</div>
-		</a-modal>
+		</Dialog>
 	</div>
 </template>
 
@@ -71,6 +71,7 @@
 import { v4 as uuidv4 } from "uuid"
 import { message as msg } from "ant-design-vue"
 
+import Dialog from "components/Dialog.vue"
 import Breadcrumb from "components/Breadcrumb.vue"
 import NavTitles from "components/NavTitles.vue"
 
@@ -93,7 +94,7 @@ let timer = null
 export default {
 	name: "BatchOperation",
 	mixins: [tableListMixin],
-	components: { Breadcrumb, NavTitles },
+	components: { Breadcrumb, NavTitles, Dialog },
 	props: {
 		operation_type: String,
 	},
@@ -152,10 +153,14 @@ export default {
 			form.append("scheduleKey", uuid)
 			operation_type === IMPORT && form.append("deviceModelId", deviceId)
 
-			return apis[templateTypeMap[operation_type]](form).then(({ data }) => {
-				this.importResult = data
-				getProcess()
-			})
+			return apis[templateTypeMap[operation_type]](form)
+				.then(({ data }) => {
+					this.importResult = data
+					getProcess()
+				})
+				.catch(() => {
+					this.changeUploading()
+				})
 		},
 		cancel() {
 			this.$router.go(-1)
