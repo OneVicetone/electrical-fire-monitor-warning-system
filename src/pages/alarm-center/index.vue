@@ -15,7 +15,10 @@
 		</div>
 		<a-form-model class="table-search-form" layout="inline" :model="searchForm">
 			<a-form-model-item>
-				<a-select v-model="searchForm.unit" :options="groupTypeOptions" placeholder="请选择单位" />
+				<a-cascader :options="unitTree"
+					change-on-select v-model="searchForm.unit"
+					:fieldNames="{ label: 'title', value: 'key', children: 'children' }"
+					placeholder="请选择单位"/>
 			</a-form-model-item>
 			<a-form-model-item>
 				<a-input v-model="searchForm.deviceSnName" placeholder="请输入设备编码/名称"  />
@@ -33,7 +36,7 @@
 				<a-select v-model="searchForm.status" :options="handleStatusOptions"  />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-range-picker  format="YYYY-MM-DD" @change="getTimePickerDate" />
+				<a-range-picker  format="YYYY-MM-DD" @change="getTimePickerDate" style="width: 25rem"/>
 			</a-form-model-item>
 			<a-form-model-item>
 				<a-button type="primary"  @click="search">搜索</a-button>
@@ -59,6 +62,9 @@
 			</div>
 			<div slot="alarmLevel" slot-scope="text">
 				{{ text.alarmLevel | filterAlarmLevel }}
+			</div>
+			<div slot="alarmTypeName" slot-scope="text" :style="{color: computeColor(text.alarmLevel)}">
+				{{ text.alarmTypeName }}
 			</div>
 			<div slot="status" slot-scope="text">
 				{{ text.status | filterAlarmStatus }}
@@ -104,10 +110,10 @@ import { commonMixin, tableListMixin } from "mixins"
 import dangerIcon from '@/assets/icons/danger-icon.png'
 import warnIcon from '@/assets/icons/warn-icon.png'
 
-const { getAlarmCount, getAlarmList, getAlarmDetail, processAlarm, realTimeData, exportAlarmListData } = apis
+const { getGroupTree, getAlarmCount, getAlarmList, getAlarmDetail, processAlarm, realTimeData, exportAlarmListData } = apis
 const { alarmLevelOptions, handleStatusOptions } = allOptionsData
 const searchFromInitial = {
-	unit: "",
+	unit: [],
 	deviceSnName: "",
 	alarmType: "",
 	alarmLevel: "",
@@ -123,6 +129,7 @@ export default {
 	components: { Pagination, NumCount, DealWithDialog },
 	data() {
 		return {
+			unitTree: [],
 			alarmCountData: [
 				{ title: "全部预警", num: "-", key: "total" },
 				{ title: "高危", num: "-", icon: dangerIcon, key: "highRiskNum" },
@@ -147,7 +154,7 @@ export default {
 				{ title: "设备类型", dataIndex: "deviceTypeName" },
 				{ title: "设备型号", dataIndex: "deviceTypeModel" },
 				{ title: "报警级别", scopedSlots: { customRender: "alarmLevel" } },
-				{ title: "报警类型", dataIndex: "alarmTypeName" },
+				{ title: "报警类型", scopedSlots: { customRender: "alarmTypeName" } },
 				{ title: "报警详情", scopedSlots: { customRender: "alarmValue" } },
 				{ title: "报警时间", scopedSlots: { customRender: "alarmTime" } },
 				{ title: "报警恢复时间", scopedSlots: { customRender: "recoverTime" } },
@@ -180,23 +187,31 @@ export default {
 	mounted() {
 		this.setSearchFormByQuery()
 		const optionsTypes = ["alarmType", "groupType"]
-		const { getOptionsListPromiseArr, getTableData, getDeviceId } = this
+		const { getOptionsListPromiseArr, getTableData, getDeviceId, searchUnitTree } = this
 		Promise.allSettled([
 			getAlarmCount().then(({ data }) => {
 				this.alarmCountData.forEach(i => (i.num = data[i.key]))
 			}),
 			getTableData(),
 			getDeviceId(),
+			searchUnitTree(),
 			...getOptionsListPromiseArr(optionsTypes),
 		])
 	},
 	methods: {
+		searchUnitTree() {
+			getGroupTree().then(({data}) => {
+				this.unitTree = data;
+			})
+		},
 		getTableData(current = 1, size = 10) {
 			const params = {
 				current,
 				size,
 				...this.searchForm,
+				groupId: this.searchForm.unit[this.searchForm.unit.length - 1]
 			}
+			console.log(params)
 			return getAlarmList(params).then(({ data: { records, total, current, size } }) => {
 				this.tableData = records
 				this.paginationData = {
@@ -258,6 +273,10 @@ export default {
 			}
 			type && this.search()
 		},
+		computeColor(value) {
+			const color = { 1: '#FCBE0B', 2: '#FB5E4F' };
+			return color[value] || '#dcdcdc'
+		}
 	},
 }
 </script>
