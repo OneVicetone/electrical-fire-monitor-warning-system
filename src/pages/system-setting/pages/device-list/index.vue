@@ -148,7 +148,7 @@ export default {
 				{ title: "设备ID", dataIndex: "sn" },
 				{ title: "所属单位", dataIndex: "groupName" },
 				{ title: "设备类型", dataIndex: "deviceTypeModel" },
-				{ title: "设备型号", dataIndex: "id" },
+				{ title: "设备型号", dataIndex: "deviceTypeName" },
 				{ title: "ICCID", dataIndex: "iccid" },
 				{ title: "设备状态", dataIndex: "showStatus" },
 				{ title: "安装位置", dataIndex: "installPosition" },
@@ -156,7 +156,7 @@ export default {
 				{ title: "服务期起", scopedSlots: { customRender: "beginDate" } },
 				{ title: "服务期止", scopedSlots: { customRender: "endDate" } },
 				{ title: "修改时间", scopedSlots: { customRender: "updateTime" } },
-				{ title: "修改时间", dataIndex: "", key: "", scopedSlots: { customRender: "operate" } },
+				{ title: "操作", dataIndex: "", key: "", scopedSlots: { customRender: "operate" } },
 			],
 			tableData: [],
 			paginationData: {
