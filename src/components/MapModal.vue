@@ -109,7 +109,7 @@ export default {
             console.log('222',lat, lng, name)
             // 1、挂载地图
             this.map = new BMapGL.Map('map-container', { enableMapClick: false })
-            const point = new BMapGL.Point(lat, lng)
+            const point = new BMapGL.Point(lng, lat)
             this.map.centerAndZoom(point, 19)
             // 3、设置图像标注并绑定拖拽标注结束后事件
             this.mk = new BMapGL.Marker(point, { enableDragging: true })
@@ -122,7 +122,7 @@ export default {
             console.log(!this.sources && !this.form.address)
             // 6、浏览器定位(新增并且没有选择过位置才会开启定位)
             !this.sources && !this.form.address && this.geolocation()
-            this.sures()
+            // this.sures()
             // 7、绑定点击地图任意点事件
             this.map.addEventListener('click', function(e) {
                 console.log('点击', e)

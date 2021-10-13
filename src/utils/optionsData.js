@@ -24,9 +24,9 @@ const allOptionsData = {
 		{ label: "缺相报警", value: 8 },
 	],
 	alarmLevelOptions: [
-		{ label: "高危", value: 1 },
-		{ label: "预警", value: 2 },
-		{ label: "正常", value: 3 },
+		{ label: "预警", value: 1 },
+		{ label: "高危", value: 2 },
+		// { label: "正常", value: 3 },
 	],
 	phoneAlarmLevelOptions: [
 		{ label: "高危", value: 1 },

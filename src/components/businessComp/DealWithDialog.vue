@@ -5,13 +5,12 @@
                 <Nav-titles title="报警设备信息" class="equipment">
                     <div class="mb175 flex-yCenter">
                         <div class="display-ib t-center">
-                            <!-- <a-icon type="apple" /> -->
                             <img class="imgs" :src="mapValue(showList.alarmLevel, 'alarmIcons')" alt="">
                             <div class="yahei">{{ mapValue(showList.alarmLevel, 'alarmLevel') }}</div> 
                         </div>
                         <div class="ml225 display-ib">
                             <div class="yahei-bold size133 mb58">{{showList.alarmTypeName}}</div>
-                            <div class="yahei">{{ showList.alarmTime }}</div>
+                            <div class="yahei">{{ showList.alarmTime | filterTimeToYYYYMMDDHHmmss }}</div>
                         </div>
                     </div>
                     <div class="equipment-info flex-d-col yahei">
@@ -72,6 +71,7 @@ import warnIcon from "@/assets/icons/warn-icon.png"
 import dangerIcon from "@/assets/icons/danger-icon.png"
 
 import apis from "apis"
+import { commonMixin } from "mixins"
 
 const { getDeviceConfig } = apis;
 
@@ -87,6 +87,7 @@ const nameForKey = {
 export default {
     name:"DealWithDialog",
     components: { Dialog, NavTitles, SimpleTable, Upload, DeviceDetaiCommandl, BigImg },
+    mixins: [commonMixin],
     props: {
         dialogVisible: {
             type: Boolean,

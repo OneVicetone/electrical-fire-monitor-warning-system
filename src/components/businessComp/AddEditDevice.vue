@@ -94,7 +94,7 @@
         </section>
         <MapModal v-model="showMap"
             :sources="sourcesType"
-            :emitPoint="{ lat: unitForm.lat || 0, lng: unitForm.lng || 0, name: unitForm.location || '' }"
+            :emitPoint="{ lat: unitForm.lat || 22.604063, lng: unitForm.lng || 113.835419, name: unitForm.location || '' }"
             @save-select-point="showAddress"></MapModal>
     </Dialog>
 </template>
