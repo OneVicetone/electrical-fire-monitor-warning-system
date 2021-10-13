@@ -100,7 +100,7 @@
 								</div>
 							</div>
 							<div class="electricity-chart">
-								<LineChart chartKey="electricity" :seriesData="electricityChartData" showXAxisLabel :key="chartModel" />
+								<LineChart chartKey="electricity" :defaultXAxisData="electricityChartXAxisData" :seriesData="electricityChartData" showXAxisLabel :key="chartModel" />
 							</div>
 						</div>
 					</div>

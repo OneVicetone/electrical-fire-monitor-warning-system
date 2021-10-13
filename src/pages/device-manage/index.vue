@@ -218,7 +218,7 @@ export default {
 		},
 		changeDeviceWorkStatus() {},
 		getGroupTreeData() {
-			getGroupTree().then(({ data }) => {
+			getGroupTree(true).then(({ data }) => {
 				this.treeData = data
 			})
 		},

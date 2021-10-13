@@ -9,7 +9,7 @@ import * as echarts from "echarts"
 export default {
 	name: "LineChart",
 	props: {
-		xAxisData: Array,
+		defaultXAxisData: Array,
 		seriesData: Array,
 		showXAxisLabel: { type: Boolean, default: false },
 		showXAxisLine: { type: Boolean, default: false },
@@ -29,12 +29,13 @@ export default {
 	},
 	computed: {
 		chartOptions() {
-			const { seriesData, showXAxisLabel, showXAxisLine } = this
+			const { defaultXAxisData, seriesData, showXAxisLabel, showXAxisLine } = this
 			let xAxis = null
-			if (Array.isArray(seriesData[0])) {
-				xAxis = seriesData[0].map(i => moment(i.updateTime).format("YYYY-MM-DD HH:mm"))
+			const hasTimeData = seriesData.find(i => Array.isArray(i) && i.length > 0)
+			if (hasTimeData) {
+				xAxis = hasTimeData.map(i => moment(i.updateTime).format("YYYY-MM-DD HH:mm"))
 			} else {
-				xAxis = seriesData.map(i => i.statisticDate)
+				xAxis = seriesData.length > 0 ? seriesData.map(i => i.statisticDate) : defaultXAxisData
 			}
 			// channelName N相 A相 B相 C相
 			const lineNameAndColor = [
@@ -60,8 +61,14 @@ export default {
 				data,
 				type: "line",
 				smooth: true,
+				symbol: "circle",
 				lineStyle: {
 					color,
+				},
+				itemStyle: {
+					normal: {
+						color,
+					},
 				},
 				areaStyle: {
 					color: {
@@ -88,13 +95,13 @@ export default {
 			const series = []
 			const legendData = []
 			let xAxisLabelInterval = 0
-			if (seriesData && Array.isArray(seriesData[0])) {
+			if (seriesData && hasTimeData) {
 				seriesData.forEach((i, idx) => {
 					const { color, name } = lineNameAndColor[idx]
 					series.push(getSeriesItemByData(i, color, name))
 					legendData.push(name)
 				})
-				xAxisLabelInterval = 4
+				xAxisLabelInterval = parseInt(hasTimeData.length / 7)
 			} else {
 				series.push(getSeriesItemByData(seriesData.map(i => i.energyValue)))
 			}

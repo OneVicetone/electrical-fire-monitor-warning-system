@@ -37,7 +37,7 @@
 		<div class="device-status">
 			<ContentTitle title="设备状态统计" />
 			<div class="device-data-count">
-				<div v-for="device of devicesType" :key="device.key">
+				<div v-for="device of devicesType" :key="device.key" @click="jumpToOtherPageByKey(device.key)">
 					<a-progress
 						type="circle"
 						:percent="getDevicePercent(device.key)"
@@ -46,7 +46,6 @@
 						:strokeColor="device.color"
 						:format="formatProcess"
 						strokeLinecap="square"
-						@click="jumpToOtherPageByKey(device.key)"
 					/>
 					<span>{{ `${device.name}(${deviceStatus[device.key]})` }}</span>
 				</div>
@@ -164,7 +163,6 @@ export default {
 			return monitorAllAlarmType().then(({ data }) => (this.alarmTypeCountData = data))
 		},
 		getGroupOptions(val = "groupType") {
-			debugger
 			this.filterType = val
 			if (val === "deviceType") {
 				return getSelectOptions("deviceType").then(({ data }) => {
@@ -440,6 +438,7 @@ export default {
 			display: flex;
 			justify-content: space-around;
 			margin-top: 2.17rem;
+			cursor: pointer;
 			> div {
 				display: flex;
 				flex-direction: column;

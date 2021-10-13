@@ -64,7 +64,7 @@ const setupUnitApis = (http, BASE_URL) => ({
 	disableByUserId: userId => http.get(`${BASE_URL}/api-user/auth/disable`, { userId }),
 	enableByUserId: userId => http.get(`${BASE_URL}/api-user/auth/enable`, { userId }),
 	getUnitDetailById: id => http.get(`${BASE_URL}/api-user/group/detail/${id}`, {}),
-	getGroupTree: () => http.get(`${BASE_URL}/api-user/group/tree`, {}),
+	getGroupTree: deviceNumFlag => http.get(`${BASE_URL}/api-user/group/tree`, { deviceNumFlag }),
 	resetPassword: form => http.formPut(`${BASE_URL}/api-user/auth/resetPassword`, form),
 	deleteGroupById: id => http.delete(`${BASE_URL}/api-user/group/delete/${id}`),
 })

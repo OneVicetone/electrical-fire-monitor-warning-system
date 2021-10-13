@@ -142,7 +142,6 @@ export default {
 				msg.success(`${this.isAdd ? "添加" : "修改"}成功`)
 				this.cancel()
 			}
-			debugger
 			isAdd ? addDeviceType(params).then(func) : updateDeviceTypeById(params).then(func)
 		},
 		cancel() {

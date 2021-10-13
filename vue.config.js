@@ -27,6 +27,8 @@ const alias = {
 	store: storePath,
 }
 
+const projectTitle = "电放心"
+
 module.exports = {
 	productionSourceMap: false,
 	configureWebpack: {
@@ -40,7 +42,7 @@ module.exports = {
 				test: /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i,
 				threshold: 2048,
 				minRatio: 0.8,
-				deleteOriginalAssets: false
+				deleteOriginalAssets: false,
 			}),
 		],
 	},
