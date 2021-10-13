@@ -221,13 +221,23 @@ export default {
 						const groupInfoContainer = getGroupInfoContainer(data)
 						const groupInfoWindow = new BMapGL.InfoWindow(groupInfoContainer)
 						this.mapInstance.openInfoWindow(groupInfoWindow, point)
-						const toDetailBtn = document.querySelector(".marker-info-container .to-detail-btn")
-						const closeBtn = document.querySelector(".marker-info-container .close-info")
+						// const toDetailBtn = document.createElement('button')
+						// toDetailBtn.innerText = '详情'
+						// toDetailBtn.classList.add('to-detail-btn')
+						// const closeBtn = document.createElement('img')
+						// closeBtn.classList.add("close-info")
+						// closeBtn.setAttribute('src', closeIcon)
+						// groupInfoContainer.append(toDetailBtn)
+						// groupInfoContainer.append(closeBtn)
 
-						toDetailBtn &&
-							toDetailBtn.addEventListener("click", () => this.toPath(`/monitor/group-detail/${data.id}`), false)
-						// closeBtn && closeBtn.addEventListener("click", () => this.mapInstance.clearInfoWindow(), false)
-						closeBtn && closeBtn.addEventListener("click", () => groupInfoWindow.close(), false)
+						setTimeout(() => {
+							const toDetailBtn = document.querySelector(".marker-info-container .to-detail-btn")
+							const closeBtn = document.querySelector(".marker-info-container .close-info")
+							toDetailBtn &&
+								toDetailBtn.addEventListener("click", () => this.toPath(`/monitor/group-detail/${data.id}`))
+							// closeBtn && closeBtn.addEventListener("click", () => this.mapInstance.clearInfoWindow(), false)
+							closeBtn && closeBtn.addEventListener("click", () => groupInfoWindow.close())
+						}, 500)
 					})
 				}
 

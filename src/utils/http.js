@@ -84,6 +84,15 @@ class Http {
 		})
 	}
 
+	static delete(url, data) {
+		return axiosInstance({
+			url,
+			method: "delete",
+			data,
+			headers: getRequestHeader(),
+		})
+	}
+
 	static post(url, data) {
 		return axiosInstance({
 			url,

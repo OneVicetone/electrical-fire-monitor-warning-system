@@ -206,13 +206,16 @@ export default {
 
 .batch-operations-container {
 	.pages-container-no-child-layout();
+	height: 100vh;
 	padding-left: 20rem;
 	padding-right: 20rem;
 	padding-bottom: 43px;
+	overflow-y: hidden;
 	.batch-content {
 		width: 100%;
 		height: 70rem;
 		background-color: #131a2d;
+		overflow-y: auto;
 		/deep/ .little-nav__title {
 			padding: 2.42rem 3.58rem 3.33rem;
 			margin: 0;
@@ -229,6 +232,7 @@ export default {
 			border-color: red;
 		}
 		.content {
+			height: 100%;
 			padding: 0 9.17rem;
 		}
 		.progress {

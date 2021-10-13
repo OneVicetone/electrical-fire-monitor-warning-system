@@ -60,7 +60,7 @@
 					<a-divider type="vertical" />
 					<a @click="toPath(`/device-manage/device-info/${text.id}`)">监控</a>
 					<a-divider type="vertical" />
-					<a>更换</a>
+					<a @click="changeShowChangeDeviceModal(text)">更换</a>
 				</div>
 			</a-table>
 
@@ -80,16 +80,16 @@
 		></AddEditDevice>
 
 		<!-- 需要更改设备号吗 -->
-		<a-modal v-model="isShowChangeDeviceModal" title="更换设备" :footer="null">
+		<Dialog v-model="isShowChangeDeviceModal" title="更换设备" :width="40">
 			<div class="change-device-container">
-				<p>原设备号:</p>
-				<a-input placeholder="请输入新设备号" />
+				<p>原设备号:{{ nowEditDeviceInfo.sn }}</p>
+				<a-input v-model="newDeviceSn" placeholder="请输入新设备号" />
 				<div class="btn-group btn-group-for-modal">
 					<a-button @click="changeDevice">确定</a-button>
 					<a-button type="primary" @click="changeShowChangeDeviceModal">取消</a-button>
 				</div>
 			</div>
-		</a-modal>
+		</Dialog>
 	</div>
 </template>
 
@@ -97,15 +97,22 @@
 import { cloneDeep } from "lodash"
 import { message as msg } from "ant-design-vue"
 
-import OrganizationList from "components/OrganizationList.vue"
 import Pagination from "components/Pagination.vue"
+import Dialog from "components/Dialog.vue"
+import OrganizationList from "components/OrganizationList.vue"
 import AddEditDevice from "components/businessComp/AddEditDevice.vue"
 
 import apis from "apis"
 import { commonMixin, tableListMixin } from "mixins"
 import { TRANSFER, SHIP, IMPORT } from "utils/baseData"
 
-const { getDeviceListForSystemSettiing, getGroupTree, exportDataForDeviceList, getDeviceInfoDetail } = apis
+const {
+	getDeviceListForSystemSettiing,
+	getGroupTree,
+	exportDataForDeviceList,
+	getDeviceInfoDetail,
+	changeDeviceSnById,
+} = apis
 const searchFromInitial = {
 	deviceTypeId: "",
 	deviceModelId: "",
@@ -116,7 +123,7 @@ const searchFromInitial = {
 export default {
 	name: "DeviceList",
 	mixins: [commonMixin, tableListMixin],
-	components: { OrganizationList, Pagination, AddEditDevice },
+	components: { OrganizationList, Pagination, AddEditDevice, Dialog },
 	data() {
 		return {
 			parentId: null,
@@ -156,7 +163,7 @@ export default {
 				{ title: "服务期起", scopedSlots: { customRender: "beginDate" } },
 				{ title: "服务期止", scopedSlots: { customRender: "endDate" } },
 				{ title: "修改时间", scopedSlots: { customRender: "updateTime" } },
-				{ title: "修改时间", dataIndex: "", key: "", scopedSlots: { customRender: "operate" } },
+				{ title: "操作", dataIndex: "", key: "", scopedSlots: { customRender: "operate" } },
 			],
 			tableData: [],
 			paginationData: {
@@ -170,7 +177,7 @@ export default {
 			eventType: "",
 			isShowChangeDeviceModal: false,
 			newDeviceSn: "",
-			nowEditDevice: "",
+			nowEditDeviceInfo: "",
 		}
 	},
 	watch: {
@@ -214,7 +221,7 @@ export default {
 			this.formCell = {}
 			this.isShowDialog = true
 		},
-		delete(id) {},
+		// delete(id) {},
 		async editCell(text) {
 			this.eventType = "编辑设备"
 			const getPhone = await getDeviceInfoDetail(text.id)
@@ -249,10 +256,26 @@ export default {
 			this.searchForm = cloneDeep(searchFromInitial)
 			this.search()
 		},
-		changeShowChangeDeviceModal() {
+		changeShowChangeDeviceModal(info) {
+			info && (this.nowEditDeviceInfo = info)
 			this.isShowChangeDeviceModal = !this.isShowChangeDeviceModal
 		},
-		changeDevice() {},
+		changeDevice() {
+			const { newDeviceSn, search, changeShowChangeDeviceModal } = this
+			if (!newDeviceSn) return msg.success("请新的输入设备号")
+			const params = {
+				deviceId: this.nowEditDeviceInfo.id,
+				sn: newDeviceSn,
+			}
+			changeDeviceSnById(params).then(() => {
+				msg.success("更换设备号成功")
+				search()
+				changeShowChangeDeviceModal()
+			}).catch(err => {
+				console.log(err)
+				changeShowChangeDeviceModal()
+			})
+		},
 	},
 }
 </script>
@@ -281,6 +304,14 @@ export default {
 		padding: 2rem 1.58rem 0;
 		.table-search-form {
 			position: relative;
+		}
+	}
+}
+.change-device-container {
+	padding: 4rem 0 0;
+	.btn-group {
+		> button:first-child {
+			color: #81899c;
 		}
 	}
 }

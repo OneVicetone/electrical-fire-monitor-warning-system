@@ -100,6 +100,7 @@ export default {
 	height: 46.6px;
 	display: flex;
 	justify-content: right;
+	background-color: #131a2d;
 }
 .active {
 	color: #fff;

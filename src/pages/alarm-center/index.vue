@@ -215,7 +215,6 @@ export default {
 				...this.searchForm,
 				groupId: this.searchForm.unit[this.searchForm.unit.length - 1],
 			}
-			console.log(params)
 			return getAlarmList(params).then(({ data: { records, total, current, size } }) => {
 				this.tableData = records
 				this.paginationData = {
@@ -262,10 +261,13 @@ export default {
 			this.searchForm = cloneDeep(searchFromInitial)
 			if (type === "highRiskNum") {
 				this.searchForm.status = 1
+				this.searchForm.alarmLevel = 1
 			} else if (type === "warningNum") {
 				this.searchForm.status = 1
+				this.searchForm.alarmLevel = 2
 			} else if (type === "faultNum") {
 				this.searchForm.status = 1
+				this.searchForm.alarmType = 8
 			} else if (type === "unTreatedNum") {
 				this.searchForm.status = 1
 			} else if (type === "todayAddNum") {

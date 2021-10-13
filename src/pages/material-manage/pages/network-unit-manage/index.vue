@@ -74,7 +74,15 @@ import Pagination from "components/Pagination.vue"
 import { commonMixin, tableListMixin } from "mixins"
 import apis from "apis"
 
-const { getUnitList, disableByUserId, enableByUserId, getGroupTree, resetPassword, getUnitDetailById } = apis
+const {
+	getUnitList,
+	disableByUserId,
+	enableByUserId,
+	getGroupTree,
+	resetPassword,
+	getUnitDetailById,
+	deleteGroupById,
+} = apis
 
 export default {
 	name: "NetworkUnitManage",
@@ -178,6 +186,9 @@ export default {
 						)
 					)
 				},
+				onCancel() {
+					msg.info("已取消此操作！")
+				},
 			})
 		},
 		changeAccountStatus(status, id) {
@@ -215,7 +226,14 @@ export default {
 			this.add({ parentId: fatherKey })
 		},
 		deleteGroup(key) {
-			// TODO: 没有删除接口
+			this.$confirm({
+				content: "是否删除分组",
+				onOk() {
+					deleteGroupById(key).then(() => {
+						msg.success("删除成功")
+					})
+				},
+			})
 		},
 	},
 }

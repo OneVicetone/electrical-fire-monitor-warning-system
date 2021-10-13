@@ -150,6 +150,8 @@ const setupDeviceApis = (http, BASE_URL) => ({
 		http.get(`${BASE_URL}/api-device/electricEnergy/device/list`, { deviceId, startDate, endDate }),
 
 	deviceCondition: () => http.get(`${BASE_URL}/api-device/deviceMgr/statistics`),
+
+	changeDeviceSnById: ({ deviceId, sn }) => http.get(`${BASE_URL}/api-device/device/changeSn`, { deviceId, sn }),
 })
 
 export default setupDeviceApis

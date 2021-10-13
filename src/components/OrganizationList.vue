@@ -1,7 +1,7 @@
 <template>
 	<div class="organization-list-container">
 		<ContentTitle class="organization-title" title="组织架构列表" />
-		<a-input-search placeholder="请输入分组关键字搜索" @change="search" />
+		<a-input-search placeholder="请输入分组关键字搜索" @change="search" allowClear />
 		<a-tree
 			:tree-data="computeTreeData"
 			:expandedKeys.sync="nowExpandedKeys"

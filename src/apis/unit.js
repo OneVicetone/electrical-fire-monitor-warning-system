@@ -66,6 +66,7 @@ const setupUnitApis = (http, BASE_URL) => ({
 	getUnitDetailById: id => http.get(`${BASE_URL}/api-user/group/detail/${id}`, {}),
 	getGroupTree: () => http.get(`${BASE_URL}/api-user/group/tree`, {}),
 	resetPassword: form => http.formPut(`${BASE_URL}/api-user/auth/resetPassword`, form),
+	deleteGroupById: id => http.delete(`${BASE_URL}/api-user/group/delete/${id}`),
 })
 
 export default setupUnitApis
