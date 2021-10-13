@@ -155,7 +155,7 @@ export default {
 				{ title: "设备ID", dataIndex: "sn" },
 				{ title: "所属单位", dataIndex: "groupName" },
 				{ title: "设备类型", dataIndex: "deviceTypeModel" },
-				{ title: "设备型号", dataIndex: "id" },
+				{ title: "设备型号", dataIndex: "deviceTypeName" },
 				{ title: "ICCID", dataIndex: "iccid" },
 				{ title: "设备状态", dataIndex: "showStatus" },
 				{ title: "安装位置", dataIndex: "installPosition" },

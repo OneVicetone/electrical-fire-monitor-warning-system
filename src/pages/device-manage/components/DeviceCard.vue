@@ -36,9 +36,10 @@
 		</header>
 		<section>
 			<div class="device-info">
-				<div class="img"
+				<img class="img" :src="deviceInfoObj.deviceModelImgPath" alt="设备图片">
+				<!-- <div class="img"
 					:style="{background: `url(${deviceInfoObj.deviceModelImgPath}) no-repeat`}"
-					alt="设备图片" />
+					alt="设备图片" /> -->
 				<div class="info">
 					<p>设备ID：{{ deviceInfoObj.sn }}</p>
 					<p>设备类型：{{ deviceInfoObj.deviceTypeName }}</p>
@@ -60,6 +61,7 @@
 			v-model="isShowDialog"
 			:treeData="treeData"
 			eventType="编辑设备"
+			:deviceTypeOption="deviceIdOptions"
 			:formCell="formCell"
 			@on-fresh-data="$emit('re-request-list')"
 		></AddEditDevice>
@@ -107,7 +109,7 @@ import SimpleTable from "components/SimpleTable.vue"
 import AddEditDevice from "components/businessComp/AddEditDevice.vue"
 
 import apis from "apis"
-import { commonMixin } from "mixins"
+import { commonMixin, tableListMixin } from "mixins"
 import { nameForKey } from "utils/baseData"
 
 const { getDeviceInfoDetail, changeWorkStatus, getCmdSendStatus, getGroupTree, deviceChangeGroup } = apis
@@ -115,7 +117,7 @@ let timer = null
 
 export default {
 	name: "DeviceCard",
-	mixins: [commonMixin],
+	mixins: [commonMixin, tableListMixin],
 	components: { SimpleTable, AddEditDevice, Dialog },
 	props: {
 		deviceInfoObj: {
@@ -128,6 +130,7 @@ export default {
 	},
 	data() {
 		return {
+			deviceIdOptions: [],
 			isShowPopover: false,
 			dropdownOptions: [
 				{
@@ -199,6 +202,9 @@ export default {
 		deviceWorkStatus() {
 			return this.deviceInfoObj.workStatus === 1
 		},
+	},
+	mounted() {
+		this.getDeviceId();
 	},
 	methods: {
 		// changeDeviceWorkStatus() {
@@ -310,8 +316,8 @@ export default {
 				height: 6.5rem;
 				// background: url("~assets/images/device-default.png") no-repeat;
 				background-color: #122849;
-				background-size: 70%;
-				background-position: 50% 50%;
+				// background-size: 70%;
+				// background-position: 50% 50%;
 				border-radius: 50%;
 			}
 			.info {
