@@ -52,13 +52,19 @@ export default {
 	// min-height: 100vh;
 	.ant-layout.ant-layout-has-sider {
 		height: @layout-height;
+		/deep/ .ant-layout-sider-children {
+			background: #131A2D;
+			.menu-container {
+				background: #131A2D;
+			}
+		}
 	}
 	padding: @banner-no-include-logo-height 0 0;
 	background-color: #12172a;
 	.layout-content-container {
 		height: auto;
 		background-color: #12172a;
-		padding: 4rem 2.08rem;
+		padding: 4rem 2.08rem 4rem 0;
 	}
 	.ant-layout-content {
 		height: auto;
