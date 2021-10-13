@@ -178,6 +178,7 @@ export default {
 			isShowChangeDeviceModal: false,
 			newDeviceSn: "",
 			nowEditDeviceInfo: "",
+			groupId: "",
 		}
 	},
 	watch: {
@@ -198,7 +199,7 @@ export default {
 			const params = {
 				current,
 				size,
-				...(this.parentId && { parentId: this.parentId }),
+				...(this.groupId && { groupId: this.groupId }),
 				...this.searchForm,
 			}
 			getDeviceListForSystemSettiing(params).then(({ data: { records, total, current, size } }) => {
@@ -242,7 +243,7 @@ export default {
 			this.getTableData(current, size)
 		},
 		handleSelectTreeNode(key) {
-			this.parentId = key
+			this.groupId = key
 			this.search()
 		},
 		exportData() {

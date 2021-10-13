@@ -156,22 +156,22 @@ export default {
 			}
 		},
 		handleSelectFunc([nowSelctItemKey]) {
-			const findNowSelectItemParentKey = (arr, key) => {
-				for (let i = 0; i < arr.length; i++) {
-					const { key: nowKey, children, parentId } = arr[i]
-					const getObj = nowKey === key ? arr[i] : null
-					if (!getObj && Array.isArray(children) && children.length > 0) {
-						return findNowSelectItemParentKey(children, key)
-					}
-					if (getObj) {
-						return parentId
-					}
-				}
-			}
-			const parentKey = findNowSelectItemParentKey(this.treeData, nowSelctItemKey)
-			// console.log("key --> ", nowSelctItemKey)
-			// console.log("parentKey --> ", parentKey)
-			this.$emit("handleSelectFunc", parentKey)
+			// const findNowSelectItemParentKey = (arr, key) => {
+			// 	for (let i = 0; i < arr.length; i++) {
+			// 		const { key: nowKey, children, parentId } = arr[i]
+			// 		const getObj = nowKey === key ? arr[i] : null
+			// 		if (!getObj && Array.isArray(children) && children.length > 0) {
+			// 			return findNowSelectItemParentKey(children, key)
+			// 		}
+			// 		if (getObj) {
+			// 			return parentId
+			// 		}
+			// 	}
+			// }
+			// const parentKey = findNowSelectItemParentKey(this.treeData, nowSelctItemKey)
+			// // console.log("key --> ", nowSelctItemKey)
+			// // console.log("parentKey --> ", parentKey)
+			this.$emit("handleSelectFunc", nowSelctItemKey)
 		},
 		onContextMenuClick(treeKey, menuKey) {
 			this.$emit(`treeNode${menuKey}`, treeKey)

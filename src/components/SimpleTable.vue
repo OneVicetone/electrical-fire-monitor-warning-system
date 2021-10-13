@@ -38,9 +38,8 @@ export default {
 		> div {
 			width: 5.08rem;
 			height: 2rem;
-			display: flex;
-			justify-content: center;
-			align-items: center;
+			text-align: center;
+			line-height: 2rem;
 			border: 1px solid #1f2944;
 			border-collapse: collapse;
 			font-size: 1rem;
@@ -57,6 +56,8 @@ export default {
 		background-color: #0f1426;
 	}
 	.table-body > div {
+		overflow: hidden;
+		text-overflow: ellipsis;
 		background-color: #131a2d;
 	}
 }

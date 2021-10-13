@@ -149,6 +149,10 @@ export default {
 			Promise.allSettled([getMonitorCount(), getGroupOptions(), getDeviceStatus(), getAllAlarmType()])
 		})
 	},
+	destroyed() {
+		this.mapInstance.destroy()
+		this.mapInstance = null
+	},
 	methods: {
 		getMonitorCount() {
 			return monitorCount().then(({ data }) => {
@@ -251,15 +255,8 @@ export default {
 						const groupInfoContainer = getGroupInfoContainer(data)
 						const groupInfoWindow = new BMapGL.InfoWindow(groupInfoContainer)
 						this.mapInstance.openInfoWindow(groupInfoWindow, point)
-						// const toDetailBtn = document.createElement('button')
-						// toDetailBtn.innerText = '详情'
-						// toDetailBtn.classList.add('to-detail-btn')
-						// const closeBtn = document.createElement('img')
-						// closeBtn.classList.add("close-info")
-						// closeBtn.setAttribute('src', closeIcon)
-						// groupInfoContainer.append(toDetailBtn)
-						// groupInfoContainer.append(closeBtn)
 
+						// FIXME: openInfoWindow 并没有把视窗渲染到 dom 上 暂时延时处理
 						setTimeout(() => {
 							const toDetailBtn = document.querySelector(".marker-info-container .to-detail-btn")
 							const closeBtn = document.querySelector(".marker-info-container .close-info")
@@ -281,7 +278,6 @@ export default {
 
 				marker.addEventListener("click", () => markerClickFunc())
 
-				// TODO: 地图中心设置为最后一个点位？
 				if (idx === arr.length - 1) {
 					this.mapInstance.centerAndZoom(point, 19)
 					// marker.domElement.click()

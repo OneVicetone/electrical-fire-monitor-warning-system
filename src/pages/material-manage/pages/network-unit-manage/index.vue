@@ -3,12 +3,12 @@
 		<div class="organization">
 			<OrganizationList
 				:treeData="treeData"
-				@handleSelectFunc="handleSelectTreeNode"
 				showRightMenu
 				showChildLevel="2"
 				@treeNodeAdd="addChildGroup"
 				@treeNodeEdit="getGroupDetailAndEdit"
 				@treeNodeDelete="deleteGroup"
+				@handleSelectFunc="handleSelectTreeNode"
 			/>
 		</div>
 		<div class="network-unit-manage-content">

@@ -14,18 +14,10 @@
 					<a-input v-model="searchForm.sn" placeholder="请输入设备编码/名称" />
 				</a-form-model-item>
 				<a-form-model-item>
-					<a-select
-						v-model="searchForm.deviceTypeId"
-						:options="deviceTypeOptions"
-						placeholder="请选择设备类型"
-					/>
+					<a-select v-model="searchForm.deviceTypeId" :options="deviceTypeOptions" placeholder="请选择设备类型" />
 				</a-form-model-item>
 				<a-form-model-item>
-					<a-select
-						v-model="searchForm.deviceModelId"
-						:options="deviceIdOptions"
-						placeholder="请选择设备型号"
-					/>
+					<a-select v-model="searchForm.deviceModelId" :options="deviceIdOptions" placeholder="请选择设备型号" />
 				</a-form-model-item>
 				<a-form-model-item>
 					<a-input v-model="searchForm.iccid" placeholder="请输入ICCID号" />
@@ -95,11 +87,11 @@ export default {
 	data() {
 		return {
 			deviceStatusOptions: [
-				{ label: "全部设备", value: "0", Eg: 'total' },
-				{ label: "在线", value: "1", Eg: 'online' },
-				{ label: "离线", value: "2", Eg: 'offline' },
-				{ label: "报警", value: "3", Eg: 'alarm' },
-				{ label: "故障", value: "4", Eg: 'fault' },
+				{ label: "全部设备", value: "0", Eg: "total" },
+				{ label: "在线", value: "1", Eg: "online" },
+				{ label: "离线", value: "2", Eg: "offline" },
+				{ label: "报警", value: "3", Eg: "alarm" },
+				{ label: "故障", value: "4", Eg: "fault" },
 			],
 			deviceStatusRadio: deviceStatusRadioInitial,
 			searchForm: cloneDeep(searchFromInitial),
@@ -132,6 +124,7 @@ export default {
 			],
 			deviceListData: [],
 			treeData: [],
+			groupId: "",
 		}
 	},
 	watch: {
@@ -146,7 +139,7 @@ export default {
 		},
 	},
 	mounted() {
-		this.requestAll();
+		this.requestAll()
 	},
 	methods: {
 		requestAll() {
@@ -170,8 +163,8 @@ export default {
 		getDeviceCondition() {
 			deviceCondition().then(({ data }) => {
 				this.deviceStatusOptions.map(item => {
-					item.label = `${item.label}(${data[item.Eg]})`;
-					return item;
+					item.label = `${item.label}(${data[item.Eg]})`
+					return item
 				})
 			})
 		},
@@ -180,6 +173,7 @@ export default {
 				current,
 				size,
 				...this.searchForm,
+				...(this.groupId && { groupId: this.groupId }),
 				...(this.deviceStatusRadio !== "0" && { status: this.deviceStatusRadio }),
 			}
 			getDeviceList(params).then(({ data: { records, total, current, size } }) => {
@@ -223,7 +217,7 @@ export default {
 			})
 		},
 		handleSelectTreeNode(key) {
-			this.parentId = key
+			this.groupId = key
 			this.search()
 		},
 	},
