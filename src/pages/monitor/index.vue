@@ -1,6 +1,6 @@
 <template>
 	<div class="monitor-container">
-		<Map :centerPoint="mapCenterPoint" @setMapInstance="setMapInstance" />
+		<keep-alive><Map :centerPoint="mapCenterPoint" @setMapInstance="setMapInstance" /></keep-alive>
 		<div class="network-group">
 			<ContentTitle title="联网单位" />
 			<div class="group-count">
@@ -198,6 +198,7 @@ export default {
 			)
 		},
 		setMapPoint(arr) {
+			this.mapInstance.clearOverlays()
 			this.count = String(arr.length)
 			arr.forEach((i, idx) => {
 				if (!i) return
@@ -209,7 +210,6 @@ export default {
 				// marker.setOffset(BMapGL.Size(100, 100))
 				// console.log(marker.getOffset())
 				this.mapInstance.addOverlay(marker)
-
 				// marker.addEventListener("click", e => {
 				// 	const params = {
 				// 		type: this.filterTypeKey,
@@ -279,6 +279,9 @@ export default {
 				marker.addEventListener("click", () => markerClickFunc())
 
 				if (idx === arr.length - 1) {
+					// console.log("mapInstance ->", this.mapInstance)
+					// console.log(marker.getMap())
+
 					this.mapInstance.centerAndZoom(point, 19)
 					// marker.domElement.click()
 					markerClickFunc()
@@ -286,6 +289,7 @@ export default {
 			})
 		},
 		setMapInstance(instance) {
+			window.mapInstance = instance
 			this.mapInstance = instance
 		},
 		getDeviceStatus() {

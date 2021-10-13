@@ -39,8 +39,8 @@ export default {
 				},
 				barWidth: 20,
 			})
-			// const seriesData = Object.values(this.dataObj)
-			const seriesData = [5, 7, 10, 15, 2]
+			const seriesData = Object.values(this.dataObj)
+			// const seriesData = [5, 7, 10, 15, 2]
 
 			const xAxisData = Object.keys(this.dataObj).map(i => ({
 				value: i,
