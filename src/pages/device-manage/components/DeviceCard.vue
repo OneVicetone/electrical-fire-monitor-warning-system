@@ -60,6 +60,7 @@
 			v-model="isShowDialog"
 			:treeData="treeData"
 			eventType="编辑设备"
+			:deviceTypeOption="deviceIdOptions"
 			:formCell="formCell"
 			@on-fresh-data="$emit('re-request-list')"
 		></AddEditDevice>
@@ -107,7 +108,7 @@ import SimpleTable from "components/SimpleTable.vue"
 import AddEditDevice from "components/businessComp/AddEditDevice.vue"
 
 import apis from "apis"
-import { commonMixin } from "mixins"
+import { commonMixin, tableListMixin } from "mixins"
 import { nameForKey } from "utils/baseData"
 
 const { getDeviceInfoDetail, changeWorkStatus, getCmdSendStatus, getGroupTree, deviceChangeGroup } = apis
@@ -115,7 +116,7 @@ let timer = null
 
 export default {
 	name: "DeviceCard",
-	mixins: [commonMixin],
+	mixins: [commonMixin, tableListMixin],
 	components: { SimpleTable, AddEditDevice, Dialog },
 	props: {
 		deviceInfoObj: {
@@ -128,6 +129,7 @@ export default {
 	},
 	data() {
 		return {
+			deviceIdOptions: [],
 			isShowPopover: false,
 			dropdownOptions: [
 				{
@@ -199,6 +201,9 @@ export default {
 		deviceWorkStatus() {
 			return this.deviceInfoObj.workStatus === 1
 		},
+	},
+	mounted() {
+		this.getDeviceId();
 	},
 	methods: {
 		// changeDeviceWorkStatus() {
