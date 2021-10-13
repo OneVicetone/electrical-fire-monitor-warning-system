@@ -248,10 +248,12 @@ export default {
                 againDevice,
                 source
             } = this;
+            const copys = {...formData};
+            delete copys.control;
             const params = {
 				deviceId:  source === 'alarm' ? againDevice : id,
 				cmdType: tabModel,
-				content: {...formData}
+				content: {...copys}
 			}
             const result = await deviceCmd(params);
             console.log('指令结果', result)
