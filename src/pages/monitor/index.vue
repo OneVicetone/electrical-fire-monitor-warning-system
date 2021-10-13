@@ -11,7 +11,22 @@
 			</div>
 		</div>
 		<div class="data-count">
-			<a-select class="select-group" :value="filterVal" :options="filterOptions" @change="uploadMapPoint" />
+			<a-select
+				v-if="filterType === 'deviceType'"
+				class="select-group"
+				:value="filterVal"
+				:options="filterOptions"
+				@change="uploadMapPoint"
+			/>
+			<a-cascader
+				v-else-if="filterType === 'groupType'"
+				class="select-group"
+				:options="groupIdTree"
+				change-on-select
+				v-model="groupId"
+				:fieldNames="{ label: 'title', value: 'key', children: 'children' }"
+				placeholder="请选择单位"
+			/>
 			<div class="count-num">
 				<p v-for="str of count" :key="str">
 					{{ str }}
@@ -67,6 +82,7 @@ const {
 	monitorAllDeviceStatus,
 	getMonitorDataDetail,
 	monitorAllAlarmType,
+	getGroupTree,
 } = apis
 
 export default {
@@ -113,11 +129,19 @@ export default {
 				top: 0,
 			},
 			alarmTypeCountData: {},
+			groupIdTree: [],
+			// groupId: [this.$store.state.account.userInfo.groupId],
+			groupId: [],
 		}
 	},
 	computed: {
 		filterTypeKey() {
 			return this.filterTypesOptions.find(i => i.value === this.filterType).key
+		},
+	},
+	watch: {
+		groupId() {
+			this.getMapPointList()
 		},
 	},
 	mounted() {
@@ -140,24 +164,32 @@ export default {
 			return monitorAllAlarmType().then(({ data }) => (this.alarmTypeCountData = data))
 		},
 		getGroupOptions(val = "groupType") {
-			return getSelectOptions(val).then(({ data }) => {
-				this.filterOptions = data.map(({ code, name }) => ({
-					label: name,
-					value: code,
-				}))
-				this.filterType = val
-				this.filterVal = this.filterOptions[0].value
-				this.getMapPointList()
-			})
+			debugger
+			this.filterType = val
+			if (val === "deviceType") {
+				return getSelectOptions("deviceType").then(({ data }) => {
+					this.filterOptions = data.map(({ code, name }) => ({
+						label: name,
+						value: code,
+					}))
+					this.filterVal = this.filterOptions[0].value
+					this.getMapPointList()
+				})
+			} else if (val === "groupType") {
+				return getGroupTree().then(({ data }) => {
+					this.groupIdTree = data
+					this.groupId = this.getUserFormGroupArr(data)
+				})
+			}
 		},
 		uploadMapPoint(val) {
 			this.filterVal = val
 		},
 		getMapPointList() {
-			const { filterTypeKey, filterVal } = this
+			const { filterTypeKey, filterVal, groupId } = this
 			const params = {
 				type: filterTypeKey,
-				grooupId: filterVal,
+				groupId: filterTypeKey === 1 ? groupId[groupId.length - 1] : filterVal,
 			}
 			return getMonitorDataList(params).then(
 				({ data }) => new Promise(resolve => setTimeout(() => resolve(this.setMapPoint(data.filter(Boolean))), 1000))
@@ -282,6 +314,32 @@ export default {
 				this.toPath("/alarm-center?status=1&alarmType=30")
 			}
 		},
+		getUserFormGroupArr(treeData) {
+			const userGroupId = this.$store.state.account.userInfo.groupId
+			const baseArr = [userGroupId]
+
+			if (!treeData || treeData.length === 0) return baseArr
+			const allGroup = []
+			const func = data => {
+				data.forEach(i => {
+					allGroup.push(i)
+					if (Array.isArray(i.children) && i.children.length > 0) {
+						func(i.children)
+					}
+				})
+			}
+			func(treeData)
+
+			const findParentIds = findKey => {
+				const { parentId } = allGroup.find(i => i.key === findKey)
+				if (parentId !== 0) {
+					baseArr.unshift(parentId)
+					return findParentIds(parentId)
+				}
+			}
+			findParentIds(userGroupId)
+			return baseArr
+		},
 	},
 }
 </script>
@@ -366,7 +424,7 @@ export default {
 			width: 13.08rem;
 			height: 2.33rem;
 			position: absolute;
-			bottom: 0.67rem;
+			bottom: 1rem;
 		}
 		.select-group {
 			left: 2.17rem;

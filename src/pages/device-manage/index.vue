@@ -1,7 +1,7 @@
 <template>
 	<div class="device-manage-container">
 		<div class="organization">
-			<OrganizationList :treeData="treeData" @handleSelectFunc="handleSelectTreeNode" />
+			<OrganizationList :treeData="treeData" @handleSelectFunc="handleSelectTreeNode" showDeviceNum />
 		</div>
 		<div class="device-manage">
 			<a-radio-group v-model="deviceStatusRadio">

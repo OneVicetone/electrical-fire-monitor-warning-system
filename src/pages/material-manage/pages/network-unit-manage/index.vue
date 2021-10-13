@@ -5,6 +5,7 @@
 				:treeData="treeData"
 				@handleSelectFunc="handleSelectTreeNode"
 				showRightMenu
+				showChildLevel="2"
 				@treeNodeAdd="addChildGroup"
 				@treeNodeEdit="getGroupDetailAndEdit"
 				@treeNodeDelete="deleteGroup"
@@ -250,11 +251,13 @@ export default {
 	// overflow: hidden;
 	.organization {
 		width: 21.67rem;
+		height: calc(100vh - 43px);
 		padding: 0 1.5rem;
 		flex: 0 0 auto;
 		border-right: 1px solid #3f4a77;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		overflow-y: auto;
 		// position: relative;
 		// top: calc(20px);
 	}

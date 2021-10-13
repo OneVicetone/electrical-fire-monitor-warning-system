@@ -65,6 +65,8 @@ export default {
 			required: true,
 		},
 		showRightMenu: Boolean,
+		showDeviceNum: Boolean,
+		showChildLevel: { type: [Number, String], default: 1 },
 	},
 	data() {
 		return {
@@ -73,7 +75,7 @@ export default {
 			autoExpandParent: true,
 			searchValue: "",
 			dataList: [],
-			removedefaultExpand: false
+			removedefaultExpand: false,
 		}
 	},
 	computed: {
@@ -82,13 +84,26 @@ export default {
 			return searchValue || removedefaultExpand ? expandedKeys : defaultExpandedKeys
 		},
 		defaultExpandedKeys() {
-			return this.treeData.map(i => i.key)
+			if (this.showChildLevel == 1) {
+				return this.treeData.map(i => i.key)
+			} else if (this.showChildLevel == 2) {
+				const arr = []
+				this.treeData.forEach(({ key, children }) => {
+					arr.push(key)
+					if (Array.isArray(children) && children.length > 0) {
+						children.forEach(({ key: childKey }) => arr.push(childKey))
+					}
+				})
+				return arr
+			}
+			return []
 		},
 		computeTreeData() {
 			const setIconSlot = data => {
 				for (let i = 0; i < data.length; i++) {
 					const item = data[i]
 					item.slots = { icon: "fileIcon" }
+					if (this.showDeviceNum) item.title = `${item.title} (${item.deviceNum})`
 					if (item.children && Array.isArray(item.children) && item.children.length > 0) {
 						setIconSlot(item.children)
 					}
