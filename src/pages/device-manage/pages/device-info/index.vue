@@ -5,7 +5,9 @@
 			<div class="device-info-left">
 				<div class="device">
 					<div class="info">
-						<div class="device-img"></div>
+						<div class="device-img">
+							<img class="img" :src="deviceInfoObj.deviceTypeImg" alt="设备图片">
+						</div>
 						<div class="info-text">
 							<p class="device-type">{{ deviceInfoObj.alias | filterNull }}</p>
 							<p class="device-id">
@@ -576,6 +578,12 @@ export default {
 						height: 6.5rem;
 						border-radius: 50%;
 						background-color: #122849;
+						text-align: center;
+						line-height: 6.5rem;
+						.img {
+							width: 4.17rem;
+							height: 4.17rem;
+						}
 					}
 					.info-text {
 						color: #dcdcdc;

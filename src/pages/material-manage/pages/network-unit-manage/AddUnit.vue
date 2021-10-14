@@ -138,7 +138,7 @@
         </section>
         <MapModal v-model="showMap"
             :sources="sources"
-            :emitPoint="{ lat: unitForm.lat || 22.604063, lng: unitForm.lngs || 113.835419, name: unitForm.unitAddress }"
+            :emitPoint="{ lat: unitForm.lat || 22.608291, lng: unitForm.lngs || 113.851124, name: unitForm.unitAddress }"
             @save-select-point="showAddress">
         </MapModal>
     </Dialog>
@@ -240,8 +240,8 @@ export default {
                     upUnit: this.treeShow(this.groupOptions, parentId),
                     unitType: typeCode,
                     unitAddress: address,
-                    lngs: addressLon || 24.600386,
-                    lat: addressLat || 113.840743,
+                    lngs: addressLon || 113.851124,
+                    lat: addressLat || 22.608291,
                     unitCount: employeeNum,
                     area: floorSpace,
                 }

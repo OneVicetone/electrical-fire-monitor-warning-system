@@ -36,10 +36,9 @@
 		</header>
 		<section>
 			<div class="device-info">
-				<img class="img" :src="deviceInfoObj.deviceModelImgPath" alt="设备图片">
-				<!-- <div class="img"
-					:style="{background: `url(${deviceInfoObj.deviceModelImgPath}) no-repeat`}"
-					alt="设备图片" /> -->
+				<div class="imgs">
+					<img class="img" :src="deviceInfoObj.deviceModelImgPath" alt="设备图片">
+				</div>
 				<div class="info">
 					<p>设备ID：{{ deviceInfoObj.sn }}</p>
 					<p>设备类型：{{ deviceInfoObj.deviceTypeName }}</p>
@@ -211,7 +210,7 @@ export default {
 		// 	this.$emit("changeDeviceWorkStatus")
 		// },
 		changeShowChangeWorkStatusModal() {
-			if (this.deviceInfoObj.online === "离线") return msg.error("设备当前你不在线，无法远程发送开合闸指令")
+			if (this.deviceInfoObj.online === "离线") return msg.error("设备当前不在线，无法远程发送开合闸指令")
 			this.enterPassword = ""
 			this.switchLoading = !this.switchLoading
 			this.isShowChangeWorkStatusModal = !this.isShowChangeWorkStatusModal
@@ -311,7 +310,7 @@ export default {
 			padding: 1.75rem 0 1.42rem 0;
 			display: flex;
 			align-items: center;
-			.img {
+			.imgs {
 				width: 6.5rem;
 				height: 6.5rem;
 				// background: url("~assets/images/device-default.png") no-repeat;
@@ -319,6 +318,12 @@ export default {
 				// background-size: 70%;
 				// background-position: 50% 50%;
 				border-radius: 50%;
+				text-align: center;
+    			line-height: 6.5rem;
+				.img {
+					width: 4.17rem;
+					height: 4.17rem;
+				}
 			}
 			.info {
 				margin: 0 0 0 1.17rem;
