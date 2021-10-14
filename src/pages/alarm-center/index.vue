@@ -264,11 +264,11 @@ export default {
 			if (type === "highRiskNum") {
 				this.searchForm.status = 1
 				this.searchForm.alarmLevel = 1
-				this.searchForm.module = 1
+				this.searchForm.module = 2
 			} else if (type === "warningNum") {
 				this.searchForm.status = 1
 				this.searchForm.alarmLevel = 2
-				this.searchForm.module = 2
+				this.searchForm.module = 1
 			} else if (type === "faultNum") {
 				this.searchForm.status = 1
 				this.searchForm.alarmType = 8
@@ -277,9 +277,6 @@ export default {
 				this.searchForm.status = 1
 				this.searchForm.module = 4
 			} else if (type === "todayAddNum") {
-				// const today = moment().format("YYYY-MM-DD")
-				// this.searchForm.startDate = today
-				// this.searchForm.endDate = today
 				this.searchForm.module = 5
 			} else if (type === "addUpNum") {
 				this.searchForm.status = 3
