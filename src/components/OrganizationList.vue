@@ -130,10 +130,14 @@ export default {
 			this.autoExpandParent = false
 			this.removedefaultExpand = true
 		},
-		search({ target: { value } }) {
+		search(e) {
+			// 如果触发的是取消按钮的事件
+			if (!e.target.value && e.type !== 'change') {
+				this.$emit('handleSelectFunc', '');
+			}
 			const expandedKeys = this.dataList
 				.map(item => {
-					if (String(item.title).indexOf(value) > -1) {
+					if (String(item.title).indexOf(e.target.value) > -1) {
 						return getParentKey(item.key, this.treeData)
 					}
 					return null
@@ -141,7 +145,7 @@ export default {
 				.filter((item, i, self) => item && self.indexOf(item) === i)
 			Object.assign(this, {
 				expandedKeys,
-				searchValue: value,
+				searchValue: e.target.value,
 				autoExpandParent: true,
 			})
 		},
