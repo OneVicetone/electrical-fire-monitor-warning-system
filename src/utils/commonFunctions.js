@@ -2,7 +2,15 @@ import getVueInstance from "./vueInstance"
 
 const addMapScript = (key, version = "1.0") => {
 	return new Promise(resolve => {
-		if (window.BMapGL) resolve(window.BMapGL)
+		// if (window.BMapGL) resolve(window.BMapGL)
+		if (window.BMapGL) {
+			document.querySelectorAll("script").forEach(i => {
+				if (i.getAttribute("src").includes("api.map.baidu.com")) {
+					i.remove()
+				}
+			})
+		}
+
 		const script = document.createElement("script")
 		script.setAttribute("type", "text/javascript")
 		script.setAttribute(
