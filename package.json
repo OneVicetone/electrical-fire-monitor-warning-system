@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
+    "dev:vue-cli": "vue-cli-service serve",
     "build": "vite build",
     "build:webpack": "webpack --config ./build/webpack.prod.js --progress",
     "build:vue-cli": "vue-cli-service build",

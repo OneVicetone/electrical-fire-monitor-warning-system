@@ -29,13 +29,14 @@ export default {
 	},
 	computed: {
 		chartOptions() {
-			const { defaultXAxisData, seriesData, showXAxisLabel, showXAxisLine } = this
+			const { defaultXAxisData, seriesData, showXAxisLabel, showXAxisLine, chartKey } = this
 			let xAxis = null
 			const hasTimeData = seriesData.find(i => Array.isArray(i) && i.length > 0)
 			if (hasTimeData) {
 				xAxis = hasTimeData.map(i => moment(i.updateTime).format("YYYY-MM-DD HH:mm"))
 			} else {
-				xAxis = seriesData.length > 0 ? seriesData.map(i => i.statisticDate) : defaultXAxisData
+				const getXAxis = seriesData.map(i => i.statisticDate).filter(Boolean)
+				xAxis = getXAxis.length > 0 ? getXAxis : defaultXAxisData
 			}
 			// channelName N相 A相 B相 C相
 			const lineNameAndColor = [

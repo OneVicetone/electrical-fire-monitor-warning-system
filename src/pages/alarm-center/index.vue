@@ -39,7 +39,7 @@
 				<a-select v-model="searchForm.status" :options="handleStatusOptions" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-range-picker format="YYYY-MM-DD" @change="getTimePickerDate" style="width: 25rem" />
+				<a-range-picker :defaultValue="[searchForm.startDate, searchForm.endDate]" format="YYYY-MM-DD" @change="getTimePickerDate" style="width: 25rem" />
 			</a-form-model-item>
 			<a-form-model-item>
 				<a-button type="primary" @click="search">搜索</a-button>

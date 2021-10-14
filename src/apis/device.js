@@ -152,6 +152,9 @@ const setupDeviceApis = (http, BASE_URL) => ({
 	deviceCondition: () => http.get(`${BASE_URL}/api-device/deviceMgr/statistics`),
 
 	changeDeviceSnById: ({ deviceId, sn }) => http.get(`${BASE_URL}/api-device/device/changeSn`, { deviceId, sn }),
+
+	historyDataChartExport: ({ deviceId, startDate, endDate }) =>
+		http.get(`${BASE_URL}/api-device/reportData/exportByDate`, { deviceId, startDate, endDate }),
 })
 
 export default setupDeviceApis

@@ -40,7 +40,7 @@ export default {
 <style lang="less" scoped>
 .label-and-value-container {
 	display: flex;
-	font-size: 1.2rem;
+	font-size: 1rem;
 	padding: 0 1.83rem 2.25rem;
 	position: relative;
 	> div {
@@ -48,9 +48,13 @@ export default {
 	}
 	.label-list {
 		padding: 0 1rem 0 0;
+		white-space: nowrap;
 	}
 	.value-list {
 		> p {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
 			button {
 				position: absolute;
 				right: 0;

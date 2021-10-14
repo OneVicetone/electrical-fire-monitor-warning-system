@@ -10,7 +10,8 @@ import { createNamespacedHelpers } from "vuex"
 import zhCN from "ant-design-vue/lib/locale-provider/zh_CN"
 
 import { commonMixin } from "./mixins"
-import { GET_ROUTES_BY_MENU_LIST } from './store/account'
+import { phonePageRoutes } from "utils/baseData"
+import { GET_ROUTES_BY_MENU_LIST } from "./store/account"
 
 const { mapGetters } = createNamespacedHelpers("account")
 
@@ -28,15 +29,15 @@ export default {
 		}),
 	},
 	created() {
-		const { routes, $router, addRoutes } = this
+		const { routes, $router, $route, addRoutes } = this
 		if (routes && Array.isArray(routes) && routes.length > 0) {
 			addRoutes(this.routes)
 		} else {
-			$router.replace('/login')
+			!phonePageRoutes.includes($route.path) && $router.replace("/login")
 		}
 	},
 }
 </script>
 <style lang="less">
-	@import url("styles/public.less");
+@import url("styles/public.less");
 </style>

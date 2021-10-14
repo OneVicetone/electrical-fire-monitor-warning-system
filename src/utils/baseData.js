@@ -9,14 +9,15 @@ const batchKeytoName = {
 	import: "导入",
 }
 
-const SHIP = 'ship' // 发货
-const TRANSFER = 'transfer' // 转组
-const IMPORT = 'import' // 导入
+const SHIP = "ship" // 发货
+const TRANSFER = "transfer" // 转组
+const IMPORT = "import" // 导入
 
 const templateTypeMap = {
-	[TRANSFER]: 'batchChangeDevice',
-	[IMPORT]: 'batchImportDevice',
-	[SHIP]: 'batchDeliverGoods'
+	[TRANSFER]: "batchChangeDevice",
+	[IMPORT]: "batchImportDevice",
+	[SHIP]: "batchDeliverGoods",
+	
 }
 
 const simpleTableNameForKey = {
@@ -28,11 +29,6 @@ const simpleTableNameForKey = {
 	electricEnergy: "电量",
 }
 
-export {
-	batchKeytoName,
-	SHIP,
-	TRANSFER,
-	IMPORT,
-	templateTypeMap,
-	simpleTableNameForKey as nameForKey
-}
+const phonePageRoutes = ["phone-alarm-list", "phone-alarm-info", "phone-alarm-list"]
+
+export { batchKeytoName, SHIP, TRANSFER, IMPORT, templateTypeMap, simpleTableNameForKey as nameForKey, phonePageRoutes }

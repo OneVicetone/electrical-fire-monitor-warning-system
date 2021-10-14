@@ -5,5 +5,8 @@ module.exports = {
 		// target: "http://gs.hitotem.com:22980", // 测试
 		changeOrigin: true,
 		rewrite: path => path.replace(/^\/api/, ""),
+		pathRewrite: {
+			"^/api/": "",
+		},
 	},
 }

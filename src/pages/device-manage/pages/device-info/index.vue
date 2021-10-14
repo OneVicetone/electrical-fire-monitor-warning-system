@@ -6,7 +6,7 @@
 				<div class="device">
 					<div class="info">
 						<div class="device-img">
-							<img class="img" :src="deviceInfoObj.deviceTypeImg" alt="设备图片">
+							<img class="img" :src="deviceInfoObj.deviceTypeImg" alt="设备图片" />
 						</div>
 						<div class="info-text">
 							<p class="device-type">{{ deviceInfoObj.alias | filterNull }}</p>
@@ -66,17 +66,27 @@
 									</a-radio-group>
 								</a-form-model-item>
 								<a-form-model-item>
-									<a-range-picker format="YYYY-MM-DD" @change="getTimePickerDate" />
+									<a-range-picker
+										:defaultValue="[filterForm.startDate, filterForm.endDate]"
+										format="YYYY-MM-DD"
+										@change="getTimePickerDate"
+									/>
 								</a-form-model-item>
 								<a-form-model-item>
 									<a-button type="primary" @click="getChartData">查询</a-button>
 								</a-form-model-item>
 								<a-form-model-item>
-									<a-button type="primary" ghost>导出</a-button>
+									<a-button type="primary" ghost @click="exportHistoryData">导出</a-button>
 								</a-form-model-item>
 							</a-form-model>
 						</div>
-						<LineChart :seriesData="nowChartData" showXAxisLabel :key="chartModel" />
+						<LineChart
+							chartKey="historyData"
+							:defaultXAxisData="chartXAxisData"
+							:seriesData="nowChartData"
+							showXAxisLabel
+							:key="chartModel"
+						/>
 					</div>
 					<div v-show="chartModel === 'electricity'">
 						<div class="electricity-filter-chart">
@@ -102,7 +112,13 @@
 								</div>
 							</div>
 							<div class="electricity-chart">
-								<LineChart chartKey="electricity" :defaultXAxisData="electricityChartXAxisData" :seriesData="electricityChartData" showXAxisLabel :key="chartModel" />
+								<LineChart
+									chartKey="electricity"
+									:defaultXAxisData="electricityChartXAxisData"
+									:seriesData="electricityChartData"
+									showXAxisLabel
+									:key="chartModel"
+								/>
 							</div>
 						</div>
 					</div>
@@ -167,6 +183,7 @@
 <script>
 import moment from "moment"
 import { cloneDeep } from "lodash"
+import { message as msg } from "ant-design-vue"
 
 import Breadcrumb from "components/Breadcrumb.vue"
 import NumCount from "components/NumCount.vue"
@@ -196,6 +213,7 @@ const {
 	getDeviceConfig,
 	getHistoryElectricityCountData,
 	getHistoryElectricityList,
+	historyDataChartExport,
 } = apis
 
 export default {
@@ -279,14 +297,14 @@ export default {
 			deviceInfoObj: {},
 			deviceDetailedLabel: [
 				{ label: "安装位置", key: "installPosition" },
-				{ label: "SIM 卡号", key: "simPhoneNumber" },
+				{ label: "SIM 卡号", key: "simId" },
 				{ label: "ICCID 号", key: "iccid" },
 				{ label: "版本号", key: "version" },
-				{ label: "服务到期", key: "" },
+				{ label: "服务到期", key: "endDate" },
 				{ label: "报警类型", key: "alarmName" },
 				{ label: "信号时间", key: "reportTime" },
-				{ label: "信号强度", key: "reportTime" },
-				{ label: "上报地址", key: "" },
+				{ label: "信号强度", key: "signal" },
+				{ label: "上报地址", key: "address" },
 				{ label: "安全负责人", key: "safetyDirector" },
 				{ label: "联系方式", key: "safetyDirectorMobile" },
 			],
@@ -387,8 +405,25 @@ export default {
 					...data.deviceStatusBO,
 					...data.deviceConfigEntity,
 					reportTime: data.deviceStatusBO ? moment(data.deviceStatusBO).format("YYYY-MM-DD HH:mm") : "",
+					signal: this.filterSignal(data.filterSignal),
+					endDate: data.endDate ? moment(data.endDate).format("YYYY-MM-DD HH:mm") : "",
 				}
 			})
+		},
+		filterSignal(val) {
+			if (val >= 0 && val <= 10) {
+				return "差"
+			}
+			if (val >= 10 && val <= 20) {
+				return "正常"
+			}
+			if (val >= 20) {
+				return "较好"
+			}
+			if (val === 99) {
+				return "通讯故障"
+			}
+			return "-"
 		},
 		getDeviceCount() {
 			return getDeviceDetailCount(this.id).then(({ data }) => {
@@ -514,7 +549,6 @@ export default {
 				endDate: endDate.format("YYYY-MM-DD"),
 			}
 			return getHistoryElectricityList(params).then(({ data }) => {
-				console.log(data)
 				this.electricityChartData = data
 			})
 		},
@@ -541,6 +575,18 @@ export default {
 		computeColor(value) {
 			const color = { 1: "#FCBE0B", 2: "#FB5E4F" }
 			return color[value] || "#dcdcdc"
+		},
+		exportHistoryData() {
+			const {
+				filterForm: { startDate, endDate },
+				id: deviceId,
+			} = this
+			const params = {
+				deviceId,
+				startDate: startDate.format("YYYY-MM-DD"),
+				endDate: endDate.format("YYYY-MM-DD"),
+			}
+			historyDataChartExport(params).then(() => msg.success("正在导出...可在右上角-个人中心-下载中心页面查看"))
 		},
 	},
 }

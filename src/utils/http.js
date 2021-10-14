@@ -1,8 +1,9 @@
 import axios from "axios"
 import { message } from "ant-design-vue"
 
-import { showTokenInvalidationModal } from "utils/commonFunctions"
 import { TOKEN } from "utils/storageConstant"
+import { phonePageRoutes } from "utils/baseData"
+import { showTokenInvalidationModal } from "utils/commonFunctions"
 
 const getRequestHeader = (type = "json") => {
 	const headersObj = {
@@ -44,8 +45,12 @@ const responseInterceptFunc = res => {
 		throw new Error(data.message)
 	}
 	if (data.code - 20000 > 0) {
-		showTokenInvalidationModal()
-		throw new ReferenceError("token error")
+		if (phonePageRoutes.includes(window.location.pathname)) {
+			window.href = "/phone-login"
+		} else {
+			showTokenInvalidationModal()
+			throw new ReferenceError("token error")
+		}
 	}
 	if (data.code !== successCode) {
 		message.error({ content: data.message, duration: 1 })

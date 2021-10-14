@@ -2,6 +2,7 @@ const path = require("path")
 const compressionPlugin = require("compression-webpack-plugin")
 
 const theme = require(path.resolve(__dirname, "config/theme.js"))
+const proxy = require(path.resolve(__dirname, "config/proxy.js"))
 
 const srcPath = path.resolve(__dirname, "src")
 const layoutsPath = path.resolve(__dirname, "src/layouts")
@@ -26,8 +27,6 @@ const alias = {
 	assets: assetsPath,
 	store: storePath,
 }
-
-const projectTitle = "电放心"
 
 module.exports = {
 	productionSourceMap: false,
@@ -56,4 +55,8 @@ module.exports = {
 			},
 		},
 	},
+	devServer: {
+		proxy
+	},
+	lintOnSave: false
 }
