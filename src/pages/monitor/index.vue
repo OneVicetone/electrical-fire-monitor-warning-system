@@ -278,12 +278,24 @@ export default {
 
 				marker.addEventListener("click", () => markerClickFunc())
 
-				if (idx === arr.length - 1) {
-					// console.log("mapInstance ->", this.mapInstance)
-					// console.log(marker.getMap())
+				// 显示最后一个点位的 infowindow
+				// if (idx === arr.length - 1) {
+				// 	// console.log("mapInstance ->", this.mapInstance)
+				// 	// console.log(marker.getMap())
+				// 	// marker.domElement.click()
 
+				// 	this.mapInstance.centerAndZoom(point, 19)
+				// 	markerClickFunc()
+				// }
+
+				// 显示第一个点位的 infowindow
+				// if (idx === 1) {
+				// 	this.mapInstance.centerAndZoom(point, 19)
+				// 	markerClickFunc()
+				// }
+
+				if (id === this.groupId[this.groupId.length - 1]) {
 					this.mapInstance.centerAndZoom(point, 19)
-					// marker.domElement.click()
 					markerClickFunc()
 				}
 			})
