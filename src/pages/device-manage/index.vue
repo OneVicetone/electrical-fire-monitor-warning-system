@@ -235,6 +235,7 @@ export default {
 		height: 100%;
 		flex: 0 0 auto;
 		padding: 0 1.5rem;
+		overflow: auto;
 		// border-right: 1px solid #3f4a77;
 	}
 	.device-manage {

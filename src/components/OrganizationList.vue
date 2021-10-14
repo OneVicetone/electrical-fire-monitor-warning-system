@@ -11,14 +11,6 @@
 			@select="handleSelectFunc"
 			@expand="onExpand"
 		>
-			<template slot="title" slot-scope="{ title }">
-				<span v-if="title.indexOf(searchValue) > -1">
-					{{ title.substr(0, title.indexOf(searchValue)) }}
-					<span style="color: #f50">{{ searchValue }}</span>
-					{{ title.substr(title.indexOf(searchValue) + searchValue.length) }}
-				</span>
-				<span v-else>{{ title }}</span>
-			</template>
 			<template v-if="showRightMenu" #title="{ key: treeKey, title }">
 				<a-dropdown :trigger="['contextmenu']">
 					<span>{{ title }}</span>
@@ -32,6 +24,15 @@
 				</a-dropdown>
 			</template>
 			<a-icon slot="fileIcon" type="folder" />
+
+			<template slot="title" slot-scope="{ title }">
+				<span v-if="title.indexOf(searchValue) > -1">
+					{{ title.substr(0, title.indexOf(searchValue)) }}
+					<span style="color: #0096ff; margin-left: -4px">{{ searchValue }}</span>
+					{{ title.substr(title.indexOf(searchValue) + searchValue.length) }}
+				</span>
+				<span v-else>{{ title }}</span>
+			</template>
 		</a-tree>
 	</div>
 </template>
@@ -132,8 +133,8 @@ export default {
 		},
 		search(e) {
 			// 如果触发的是取消按钮的事件
-			if (!e.target.value && e.type !== 'change') {
-				this.$emit('handleSelectFunc', '');
+			if (!e.target.value && e.type !== "change") {
+				this.$emit("handleSelectFunc", "")
 			}
 			const expandedKeys = this.dataList
 				.map(item => {
