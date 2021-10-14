@@ -124,6 +124,7 @@ export default {
 	align-items: center;
 	background: url("~assets/images/login-bg.png") no-repeat;
 	background-size: 100% 100%;
+	background-color: #0b0832;
 	.login-form-container {
 		width: 45.17rem;
 		height: 41.5rem;
