@@ -39,7 +39,12 @@
 				<a-select v-model="searchForm.status" :options="handleStatusOptions" />
 			</a-form-model-item>
 			<a-form-model-item>
-				<a-range-picker :defaultValue="[searchForm.startDate, searchForm.endDate]" format="YYYY-MM-DD" @change="getTimePickerDate" style="width: 25rem" />
+				<a-range-picker
+					:defaultValue="[searchForm.startDate, searchForm.endDate]"
+					format="YYYY-MM-DD"
+					@change="getTimePickerDate"
+					style="width: 25rem"
+				/>
 			</a-form-model-item>
 			<a-form-model-item>
 				<a-button type="primary" @click="search">搜索</a-button>
@@ -125,8 +130,7 @@ const searchFromInitial = {
 	status: "",
 	startDate: "",
 	endDate: "",
-	module: ""
-
+	module: "",
 }
 
 export default {
@@ -263,11 +267,11 @@ export default {
 			this.searchForm = cloneDeep(searchFromInitial)
 			if (type === "highRiskNum") {
 				this.searchForm.status = 1
-				this.searchForm.alarmLevel = 1
+				this.searchForm.alarmLevel = 2
 				this.searchForm.module = 2
 			} else if (type === "warningNum") {
 				this.searchForm.status = 1
-				this.searchForm.alarmLevel = 2
+				this.searchForm.alarmLevel = 1
 				this.searchForm.module = 1
 			} else if (type === "faultNum") {
 				this.searchForm.status = 1
@@ -299,6 +303,7 @@ export default {
 	.pages-container-no-child-layout();
 	padding-right: 1.83rem;
 	padding-left: 1.83rem;
+	overflow-y: auto;
 	.alarm-count {
 		display: flex;
 		align-items: center;

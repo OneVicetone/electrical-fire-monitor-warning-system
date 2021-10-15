@@ -40,10 +40,7 @@ export default {
 			}
 			// channelName N相 A相 B相 C相
 			const lineNameAndColor = [
-				{
-					name: "N相",
-					color: "#FB5E4F",
-				},
+				{},
 				{
 					name: "A相",
 					color: "#0096FF",
@@ -55,6 +52,10 @@ export default {
 				{
 					name: "C相",
 					color: "#3F4A77",
+				},
+				{
+					name: "N相",
+					color: "#FB5E4F",
 				},
 			]
 			const getSeriesItemByData = (data, color = "#0087FF", name) => ({
@@ -98,7 +99,7 @@ export default {
 			let xAxisLabelInterval = 0
 			if (seriesData && hasTimeData) {
 				seriesData.forEach((i, idx) => {
-					const { color, name } = lineNameAndColor[idx]
+					const { color, name } = lineNameAndColor[idx + 1]
 					series.push(getSeriesItemByData(i, color, name))
 					legendData.push(name)
 				})

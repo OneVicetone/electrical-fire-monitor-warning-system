@@ -207,8 +207,6 @@ export default {
 				const point = new BMapGL.Point(lon, lat)
 				const makerIcon = new BMapGL.Icon(mapMarkerIcon, new BMapGL.Size(40, 40))
 				const marker = new BMapGL.Marker(point, { icon: makerIcon })
-				// marker.setOffset(BMapGL.Size(100, 100))
-				// console.log(marker.getOffset())
 				this.mapInstance.addOverlay(marker)
 				// marker.addEventListener("click", e => {
 				// 	const params = {
@@ -341,6 +339,7 @@ export default {
 			func(treeData)
 
 			const findParentIds = findKey => {
+				if (allGroup.length === 1 && findKey === allGroup[0].key) return baseArr
 				const { parentId } = allGroup.find(i => i.key === findKey)
 				if (parentId !== 0) {
 					baseArr.unshift(parentId)

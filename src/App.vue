@@ -33,6 +33,10 @@ export default {
 		if (routes && Array.isArray(routes) && routes.length > 0) {
 			addRoutes(this.routes)
 		} else {
+			console.log(phonePageRoutes)
+
+			console.log($route)
+			console.log(phonePageRoutes.includes($route.path))
 			!phonePageRoutes.includes($route.path) && $router.replace("/login")
 		}
 	},

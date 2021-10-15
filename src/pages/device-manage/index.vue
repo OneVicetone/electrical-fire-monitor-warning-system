@@ -80,20 +80,22 @@ const searchFromInitial = {
 }
 const deviceStatusRadioInitial = "0"
 
+const deviceStatusOptionsInitial = [
+	{ label: "全部设备", value: "0", Eg: "total" },
+	{ label: "在线", value: "1", Eg: "online" },
+	{ label: "离线", value: "2", Eg: "offline" },
+	{ label: "报警", value: "3", Eg: "alarm" },
+	{ label: "故障", value: "4", Eg: "fault" },
+]
+
 export default {
 	name: "DeviceManage",
 	mixins: [commonMixin, tableListMixin],
 	components: { OrganizationList, DeviceCard, Pagination },
 	data() {
 		return {
-			deviceStatusOptions: [
-				{ label: "全部设备", value: "0", Eg: "total" },
-				{ label: "在线", value: "1", Eg: "online" },
-				{ label: "离线", value: "2", Eg: "offline" },
-				{ label: "报警", value: "3", Eg: "alarm" },
-				{ label: "故障", value: "4", Eg: "fault" },
-			],
-			deviceStatusRadio: deviceStatusRadioInitial,
+			deviceStatusOptions: cloneDeep(deviceStatusOptionsInitial),
+			deviceStatusRadio: this.$route.query.deviceStatusRadio || deviceStatusRadioInitial,
 			searchForm: cloneDeep(searchFromInitial),
 			deviceTypeOptions: [],
 			deviceIdOptions: [],
@@ -162,10 +164,11 @@ export default {
 		},
 		getDeviceCondition() {
 			deviceCondition().then(({ data }) => {
-				this.deviceStatusOptions.map(item => {
+				const radioGroup = deviceStatusOptionsInitial.map(item => {
 					item.label = `${item.label}(${data[item.Eg]})`
 					return item
 				})
+				this.deviceStatusOptions = radioGroup
 			})
 		},
 		getDeviceListData(current = 1, size = 10) {

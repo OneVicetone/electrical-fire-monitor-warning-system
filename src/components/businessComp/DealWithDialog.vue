@@ -176,10 +176,9 @@ export default {
             if (!Object.keys(this.handAlarmList).length) return this.defaultTableData; 
             return this.defaultTableData.map(i => {
 				Object.keys(i).forEach((j, idx) => {
-					const num = idx - 1
-					if (num >= 0) {
+					if (idx >= 0) {
 						const key = Object.keys(nameForKey)[Object.values(nameForKey).findIndex(k => i.name.includes(k))]
-						i[j] = this.handAlarmList[num] && this.handAlarmList[num][key] || '-'
+						i[j] = this.handAlarmList[idx] && this.handAlarmList[idx][key] || '-'
 					}
 				})
 				return i

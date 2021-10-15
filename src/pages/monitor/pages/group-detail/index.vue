@@ -4,7 +4,7 @@
 		<section>
 			<div class="left-content">
 				<div class="fraction">
-					<ContentTitle title="电气消防安全21年8月评估分" />
+					<ContentTitle :title="`电气消防安全${titleDateStr}评估分`" />
 					<div class="fraction-text">
 						<p>{{ groupDetailObj.score }}</p>
 						<p>{{ groupDetailObj.scoreLevel }}</p>
@@ -30,7 +30,7 @@
 				<div class="group-count" :style="`background: url(${groupDetailObj.effectPicPath}) no-repeat`">
 					<div class="group-title">{{ groupDetailObj.name }}</div>
 					<div class="group-detail-count-list">
-						<div :class="item.key" v-for="item of groupDetailCount" :key="item.name">
+						<div :class="item.key" v-for="item of groupDetailCount" :key="item.name" @click="jumpToPage(item.key)">
 							<p>{{ item.num }}</p>
 							<p>{{ item.name }}</p>
 						</div>
@@ -64,6 +64,7 @@
 <script>
 import { cloneDeep } from "lodash"
 import * as echarts from "echarts"
+import moment from "moment"
 
 import Breadcrumb from "components/Breadcrumb.vue"
 import ContentTitle from "components/ContentTitle.vue"
@@ -72,6 +73,8 @@ import BarChart from "components/BarChart.vue"
 import BigImg from "components/businessComp/BigImg.vue"
 
 import apis from "apis"
+import { commonMixin } from "mixins"
+
 const {
 	getUnitDetailById,
 	getGroupDetailDeviceTypeCount,
@@ -86,6 +89,7 @@ const {
 
 export default {
 	name: "GroupDetail",
+	mixins: [commonMixin],
 	components: { Breadcrumb, ContentTitle, LineChart, BarChart, BigImg },
 	props: {
 		id: String,
@@ -124,6 +128,7 @@ export default {
 				{ name: "离线设备", num: 0, key: "offLineNum" },
 			],
 			seePicLog: false,
+			titleDateStr: moment().format("YYYY年MM月"),
 		}
 	},
 	mounted() {
@@ -247,6 +252,12 @@ export default {
 		changeTitleContent(key) {
 			this.getChartData(key)
 		},
+		jumpToPage(type) {
+			type === "normalNum" && this.toPath("/device-manage/?deviceStatusRadio=1")
+			type === "alarmNum" && this.toPath("/device-manage/?deviceStatusRadio=3")
+			type === "faultNum" && this.toPath("/device-manage/?deviceStatusRadio=4")
+			type === "offLineNum" && this.toPath("/device-manage/?deviceStatusRadio=2")
+		},
 	},
 }
 </script>
@@ -263,8 +274,9 @@ export default {
 	padding-right: 1.5rem;
 	padding-bottom: 43px;
 	> section {
-		// max-height: 100%;
+		height: 100%;
 		display: flex;
+		overflow-y: auto;
 		.left-content,
 		.right-content {
 			flex: 0 0 auto;
@@ -417,6 +429,7 @@ export default {
 						align-items: center;
 						background-size: 100% !important;
 						background-position: 100% !important;
+						cursor: pointer;
 						> p {
 							margin: 0;
 							position: absolute;

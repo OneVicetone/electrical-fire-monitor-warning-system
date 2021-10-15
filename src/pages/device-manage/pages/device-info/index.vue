@@ -404,9 +404,9 @@ export default {
 					...data,
 					...data.deviceStatusBO,
 					...data.deviceConfigEntity,
-					reportTime: data.deviceStatusBO ? moment(data.deviceStatusBO).format("YYYY-MM-DD HH:mm") : "",
-					signal: this.filterSignal(data.filterSignal),
-					endDate: data.endDate ? moment(data.endDate).format("YYYY-MM-DD HH:mm") : "",
+					reportTime: data.deviceStatusBO ? moment(data.deviceStatusBO).format("YYYY-MM-DD HH:mm:ss") : "",
+					signal: this.filterSignal(data.deviceStatusBO.signal),
+					endDate: data.endDate ? moment(data.endDate).format("YYYY-MM-DD HH:mm:ss") : "",
 				}
 			})
 		},
@@ -491,10 +491,9 @@ export default {
 			return realTimeData({ deviceId: this.id }).then(({ data }) => {
 				const simpleTableDataResult = this.simpleTableData.map(i => {
 					Object.keys(i).forEach((j, idx) => {
-						const num = idx - 1
-						if (num >= 0) {
+						if (idx >= 0) {
 							const key = Object.keys(nameForKey)[Object.values(nameForKey).findIndex(k => i.name.includes(k))]
-							if (data[num]) i[j] = data[num][key]
+							if (data[idx]) i[j] = data[idx][key]
 						}
 					})
 					return i

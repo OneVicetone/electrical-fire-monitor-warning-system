@@ -87,7 +87,7 @@
 			</div>
 		</Dialog>
 
-		<Dialog v-model="isShowChangeWorkStatusModal" title="输入登录密码确认" :width="40">
+		<Dialog v-model="isShowChangeWorkStatusModal" title="输入登录密码确认" :width="40" @changeShow="switchLoading = false">
 			<div class="change-work-status-container">
 				<a-input v-model="enterPassword" type="password" placeholder="请输入登录密码确认" />
 				<div class="btn-group btn-group-for-modal">
@@ -186,13 +186,13 @@ export default {
 	},
 	computed: {
 		tableData() {
-			return this.defaultTableData.map(i => {
+			return this.defaultTableData.map((i, index) => {
 				Object.keys(i).forEach((j, idx) => {
-					const num = idx - 1
-					if (num >= 0) {
+					if (idx >= 0) {
+						if (index === 4) debugger
 						const key = Object.keys(nameForKey)[Object.values(nameForKey).findIndex(k => i.name.includes(k))]
-						if (this.deviceInfoObj.channelDataMap && this.deviceInfoObj.channelDataMap[num])
-							i[j] = this.deviceInfoObj.channelDataMap[num][key]
+						if (this.deviceInfoObj.channelDataMap && this.deviceInfoObj.channelDataMap[idx])
+							i[j] = this.deviceInfoObj.channelDataMap[idx][key]
 					}
 				})
 				return i
