@@ -22,10 +22,6 @@
 						</a-menu>
 					</template>
 				</a-dropdown>
-			</template>
-			<a-icon slot="fileIcon" type="folder" />
-
-			<template slot="title" slot-scope="{ title }">
 				<span v-if="title.indexOf(searchValue) > -1">
 					{{ title.substr(0, title.indexOf(searchValue)) }}
 					<span style="color: #0096ff; margin-left: -4px">{{ searchValue }}</span>
@@ -33,6 +29,7 @@
 				</span>
 				<span v-else>{{ title }}</span>
 			</template>
+			<a-icon slot="fileIcon" type="folder" />
 		</a-tree>
 	</div>
 </template>
