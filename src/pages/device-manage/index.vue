@@ -111,18 +111,6 @@ export default {
 						this.push(`/device-manage/batch-operation/${TRANSFER}`)
 					},
 				},
-				// {
-				// 	name: "批量导入",
-				// 	operate() {
-				// 		this.push(`/device-manage/batch-operation/${IMPORT}`)
-				// 	},
-				// },
-				// {
-				// 	name: "批量发货",
-				// 	operate() {
-				// 		this.push(`/device-manage/batch-operation/${SHIP}`)
-				// 	},
-				// },
 			],
 			deviceListData: [],
 			treeData: [],

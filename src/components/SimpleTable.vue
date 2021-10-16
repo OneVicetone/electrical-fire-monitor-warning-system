@@ -7,8 +7,22 @@
 		</div>
 		<div class="table-data">
 			<div class="table-body" v-for="item of tableData" :key="item.name">
-				<div :class="`${column.wider ? 'wdier' : ''}`" v-for="column of columns" :key="column.key">
-					{{ item[column.key] || "-" }}
+				<div
+					:class="`${column.wider ? 'wdier ' : ''}${valueIsStrOrNum(item[column.key]) ? 'alarm' : ''}`"
+					v-for="column of columns"
+					:key="column.key"
+				>
+					<a-popover v-if="valueIsStrOrNum(item[column.key])" placement="bottomLeft">
+						<template slot="content">
+							<p class="popover-info">
+								报警时间: {{ item[column.key].alarmDate ? moment(item[column.key].alarmDate) : "-" }}
+							</p>
+							<p class="popover-info">{{item.name.split('(').shift()}}报警: {{ item[column.key].alarmValue || "-" }}</p>
+						</template>
+						<span class="popover-label">{{ item[column.key].alarmValue || "-" }}</span>
+					</a-popover>
+					<span v-else>{{ item[column.key] || "-" }}</span>
+					<!-- {{ valueIsStrOrNum(item[column.key]) ? item[column.key].alarmValue : item[column.key] || "-" }} -->
 				</div>
 			</div>
 		</div>
@@ -16,6 +30,8 @@
 </template>
 
 <script>
+import moment from "moment"
+
 export default {
 	name: "SimpleTable",
 	props: {
@@ -23,8 +39,15 @@ export default {
 			type: Array,
 			required: true,
 		},
-		tableData: {
-			type: Array,
+		tableData: Array,
+	},
+	mounted() {
+		console.log(this.tableData)
+	},
+	methods: {
+		moment,
+		valueIsStrOrNum(val) {
+			return val && typeof val !== "string" && typeof val !== "number"
 		},
 	},
 }
@@ -51,6 +74,16 @@ export default {
 		.wdier {
 			width: 6.75rem;
 		}
+		.alarm {
+			background-color: #fb5e4f;
+			color: #fff;
+			cursor: pointer;
+			.popover-label {
+				display: block;
+				width: 100%;
+				height: 100%;
+			}
+		}
 	}
 	.table-header > div {
 		background-color: #0f1426;
@@ -60,5 +93,10 @@ export default {
 		text-overflow: ellipsis;
 		background-color: #131a2d;
 	}
+}
+p.popover-info {
+	margin: 0;
+	color: #dcdcdc;
+	font-size: 1rem;
 }
 </style>

@@ -151,7 +151,6 @@ export default {
 			],
 			showAlert: false,
 			searchForm: cloneDeep(searchFromInitial),
-			groupTypeOptions: [],
 			alarmTypeOptions: [],
 			alarmLevelOptions,
 			deviceIdOptions: [],
@@ -196,7 +195,7 @@ export default {
 	},
 	mounted() {
 		this.setSearchFormByQuery()
-		const optionsTypes = ["alarmType", "groupType"]
+		const optionsTypes = ["alarmType"]
 		const { getOptionsListPromiseArr, getTableData, getDeviceId, searchUnitTree } = this
 		Promise.allSettled([
 			getAlarmCount().then(({ data }) => {

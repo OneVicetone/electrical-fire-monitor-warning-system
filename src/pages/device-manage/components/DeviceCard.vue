@@ -37,7 +37,7 @@
 		<section>
 			<div class="device-info">
 				<div class="imgs">
-					<img class="img" :src="deviceInfoObj.deviceModelImgPath" alt="设备图片">
+					<img class="img" :src="deviceInfoObj.deviceModelImgPath" alt="设备图片" />
 				</div>
 				<div class="info">
 					<p>设备ID：{{ deviceInfoObj.sn }}</p>
@@ -53,7 +53,7 @@
 				</div>
 			</div>
 			<div>
-				<SimpleTable :columns="columns" :tableData="tableData" />
+				<SimpleTable :columns="columns" :tableData="tableData" :alarmObj="deviceInfoObj.alarm" />
 			</div>
 		</section>
 		<AddEditDevice
@@ -87,7 +87,12 @@
 			</div>
 		</Dialog>
 
-		<Dialog v-model="isShowChangeWorkStatusModal" title="输入登录密码确认" :width="40" @changeShow="switchLoading = false">
+		<Dialog
+			v-model="isShowChangeWorkStatusModal"
+			title="输入登录密码确认"
+			:width="40"
+			@changeShow="switchLoading = false"
+		>
 			<div class="change-work-status-container">
 				<a-input v-model="enterPassword" type="password" placeholder="请输入登录密码确认" />
 				<div class="btn-group btn-group-for-modal">
@@ -109,7 +114,7 @@ import AddEditDevice from "components/businessComp/AddEditDevice.vue"
 
 import apis from "apis"
 import { commonMixin, tableListMixin } from "mixins"
-import { nameForKey } from "utils/baseData"
+import { nameForKey, simpleAlarmMap } from "utils/baseData"
 
 const { getDeviceInfoDetail, changeWorkStatus, getCmdSendStatus, getGroupTree, deviceChangeGroup } = apis
 let timer = null
@@ -156,8 +161,6 @@ export default {
 						})
 					},
 				},
-				// { name: "删除", operate: () => {} },
-				// { name: "更换", operate: () => {} },
 			],
 			columns: [
 				{ title: "名称", key: "name" },
@@ -186,13 +189,24 @@ export default {
 	},
 	computed: {
 		tableData() {
-			return this.defaultTableData.map((i, index) => {
+			return this.defaultTableData.map(i => {
 				Object.keys(i).forEach((j, idx) => {
 					if (idx >= 0) {
-						if (index === 4) debugger
 						const key = Object.keys(nameForKey)[Object.values(nameForKey).findIndex(k => i.name.includes(k))]
-						if (this.deviceInfoObj.channelDataMap && this.deviceInfoObj.channelDataMap[idx])
-							i[j] = this.deviceInfoObj.channelDataMap[idx][key]
+						if (this.deviceInfoObj.channelDataMap && this.deviceInfoObj.channelDataMap[idx]) {
+							if (
+								this.deviceInfoObj.alarm &&
+								this.deviceInfoObj.alarm.alarmChannel === idx &&
+								simpleAlarmMap[this.deviceInfoObj.alarm.alarmType] === i.name
+							) {
+								i[j] = {
+									...this.deviceInfoObj.alarm,
+									...this.deviceInfoObj.channelDataMap[idx][key],
+								}
+							} else {
+								i[j] = this.deviceInfoObj.channelDataMap[idx][key]
+							}
+						}
 					}
 				})
 				return i
@@ -203,7 +217,7 @@ export default {
 		},
 	},
 	mounted() {
-		this.getDeviceId();
+		this.getDeviceId()
 	},
 	methods: {
 		// changeDeviceWorkStatus() {
@@ -319,7 +333,7 @@ export default {
 				// background-position: 50% 50%;
 				border-radius: 50%;
 				text-align: center;
-    			line-height: 6.5rem;
+				line-height: 6.5rem;
 				.img {
 					width: 4.17rem;
 					height: 4.17rem;

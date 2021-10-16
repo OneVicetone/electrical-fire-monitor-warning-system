@@ -1,5 +1,5 @@
 <template>
-	<div class="group-detail-cintainer">
+	<div class="group-detail-container">
 		<Breadcrumb :historyList="historyList" />
 		<section>
 			<div class="left-content">
@@ -15,7 +15,9 @@
 					<div class="group-info-table">
 						<div class="table-item" v-for="item of groupInfoList" :key="item.label">
 							<div class="label">{{ item.label }}</div>
-							<div class="value">{{ item.value }}</div>
+							<div class="value">
+								{{ getGroupDetailInfo(item.key, item.value) }}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -27,7 +29,10 @@
 			</div>
 
 			<div class="center-content">
-				<div class="group-count" :style="`background: url(${groupDetailObj.effectPicPath}) no-repeat`">
+				<div
+					class="group-count"
+					:style="`background: url(${groupDetailObj.effectPicPath || '@/assets/images/grouo-detail-bg.png'}) no-repeat`"
+				>
 					<div class="group-title">{{ groupDetailObj.name }}</div>
 					<div class="group-detail-count-list">
 						<div :class="item.key" v-for="item of groupDetailCount" :key="item.name" @click="jumpToPage(item.key)">
@@ -73,7 +78,7 @@ import BarChart from "components/BarChart.vue"
 import BigImg from "components/businessComp/BigImg.vue"
 
 import apis from "apis"
-import { commonMixin } from "mixins"
+import { commonMixin, tableListMixin } from "mixins"
 
 const {
 	getUnitDetailById,
@@ -89,7 +94,7 @@ const {
 
 export default {
 	name: "GroupDetail",
-	mixins: [commonMixin],
+	mixins: [commonMixin, tableListMixin],
 	components: { Breadcrumb, ContentTitle, LineChart, BarChart, BigImg },
 	props: {
 		id: String,
@@ -129,17 +134,26 @@ export default {
 			],
 			seePicLog: false,
 			titleDateStr: moment().format("YYYY年MM月"),
+			groupTypeOptions: [],
 		}
 	},
 	mounted() {
-		const { getGroupDetailData, getDevicePeriodData, getAlarmTypeCountData, getChartData, getGroupDeviceCountData } =
-			this
+		const optionsTypes = ["groupType"]
+		const {
+			getGroupDetailData,
+			getDevicePeriodData,
+			getAlarmTypeCountData,
+			getChartData,
+			getGroupDeviceCountData,
+			getOptionsListPromiseArr,
+		} = this
 		Promise.allSettled([
 			getGroupDetailData(),
 			getDevicePeriodData(),
 			getAlarmTypeCountData(),
 			getChartData(),
 			getGroupDeviceCountData(),
+			...getOptionsListPromiseArr(optionsTypes),
 		])
 		// this.setChart()
 	},
@@ -258,6 +272,17 @@ export default {
 			type === "faultNum" && this.toPath("/device-manage/?deviceStatusRadio=4")
 			type === "offLineNum" && this.toPath("/device-manage/?deviceStatusRadio=2")
 		},
+		getGroupDetailInfo(key, value) {
+			if (key === "floorSpace") {
+				return value !== "-" ? `${value}㎡` : "-"
+			}
+			if (key === "typeCode") {
+				console.log(this.groupTypeOptions)
+				const obj = this.groupTypeOptions.find(({ value: optionVal }) => optionVal === value)
+				if (obj && obj.label) return obj.label
+			}
+			return value
+		},
 	},
 }
 </script>
@@ -268,7 +293,7 @@ export default {
 @chunk-bg-color: #131a2d;
 @content-default-padding: 1.67rem 0 0 1.17rem;
 
-.group-detail-cintainer {
+.group-detail-container {
 	.pages-container-no-child-layout();
 	padding-left: 1.5rem;
 	padding-right: 1.5rem;
@@ -368,7 +393,7 @@ export default {
 				}
 				.drawings-img {
 					width: 100%;
-					height: 20rem;
+					height: 17rem;
 					margin-top: 1.5rem;
 				}
 			}

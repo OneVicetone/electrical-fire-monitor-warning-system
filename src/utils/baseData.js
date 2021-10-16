@@ -29,6 +29,15 @@ const simpleTableNameForKey = {
 	electricEnergy: "电量",
 }
 
+const simpleAlarmMap = {
+	6: "漏电(mA)",
+	3: "温度(℃)",
+	4: "电压(V)",
+	1: "电流(A)",
+	9: "功率(W)",
+	10: '电量(度)'
+}
+
 const phonePageRoutes = ["phone-alarm-list", "phone-alarm-info", "phone-alarm-list"]
 
-export { batchKeytoName, SHIP, TRANSFER, IMPORT, templateTypeMap, simpleTableNameForKey as nameForKey, phonePageRoutes }
+export { batchKeytoName, SHIP, TRANSFER, IMPORT, templateTypeMap, simpleTableNameForKey as nameForKey, phonePageRoutes, simpleAlarmMap }

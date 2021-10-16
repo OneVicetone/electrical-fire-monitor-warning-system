@@ -19,13 +19,13 @@ const setupMonitorApis = (http, BASE_URL) => ({
 		http.get(`${BASE_URL}/api-device/electricEnergy/group/pageList`, { current, size, groupId, statisticYear }),
 
 	getGroupDetailHistoryAlarmList: ({ current, size, groupId }) =>
-		http.get(`${BASE_URL}/api-device/electricEnergy/group/pageList`, { current, size, groupId }),
+		http.get(`${BASE_URL}/api-alarm/statistics/monitor/alarmTypeByGroup`, { current, size, groupId }),
 
 	getGroupDetailDeviceList: ({ current, size, groupId }) =>
 		http.get(`${BASE_URL}/api-device/history/pageList`, { current, size, groupId }),
 
 	groupDetailUpdateImg: ({ current, imgPath, type }) =>
-		http.put(`${BASE_URL}/api-device/history/pageList`, { current, imgPath, type }),
+		http.formPut(`${BASE_URL}/api-user/group/updateImg`, { current, imgPath, type }),
 
 	groupDetailDevicePeriod: groupId => http.get(`${BASE_URL}/api-device/monitor/group/statisticsDevicePeriod`, { groupId }),
 })
