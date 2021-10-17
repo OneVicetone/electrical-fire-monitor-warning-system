@@ -1,6 +1,8 @@
 <template>
 	<header>
-		<div class="string-title" v-if="typeof title === 'string'">{{ title }}</div>
+		<div class="string-title" v-if="typeof title === 'string'">{{ title }}
+			<slot name="title"></slot>
+		</div>
 		<div class="array-title" v-else-if="title instanceof Array">
 			<div :class="`title-item ${selectIdx === index ? 'active' : ''}`" v-for="(item, index) of title" :key="item.name">
 				<span @click="changeSelectIdx(index)">{{ item.name }}</span>

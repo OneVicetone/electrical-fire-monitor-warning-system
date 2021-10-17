@@ -41,9 +41,6 @@ export default {
 		},
 		tableData: Array,
 	},
-	mounted() {
-		console.log(this.tableData)
-	},
 	methods: {
 		moment,
 		valueIsStrOrNum(val) {

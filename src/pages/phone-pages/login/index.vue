@@ -35,10 +35,10 @@ export default {
 	name: "PhoneLogin",
 	data() {
 		return {
-			username: "ww",
-			password: "BYkj8080",
-			// username: "",
-			// password: "",
+			// username: "ww",
+			// password: "BYkj8080",
+			username: "",
+			password: "",
 			source: 3,
 			isLogining: false,
 		}
