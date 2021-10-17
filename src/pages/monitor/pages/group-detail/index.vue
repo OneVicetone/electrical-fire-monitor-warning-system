@@ -62,7 +62,10 @@
 				</div>
 			</div>
 		</section>
-		<BigImg v-model="seePicLog" title="电气火灾系统设计图纸" :url="designPicPath"></BigImg>
+		<DefaultUpload v-model="seePicLog"
+			title="电气火灾系统设计图纸"
+			:url="designPicPath"
+			@upload-done="doneUpload"></DefaultUpload>
 	</div>
 </template>
 
@@ -75,7 +78,7 @@ import Breadcrumb from "components/Breadcrumb.vue"
 import ContentTitle from "components/ContentTitle.vue"
 import LineChart from "components/LineChart.vue"
 import BarChart from "components/BarChart.vue"
-import BigImg from "components/businessComp/BigImg.vue"
+import DefaultUpload from "components/DefaultUpload.vue"
 
 import apis from "apis"
 import { commonMixin, tableListMixin } from "mixins"
@@ -95,7 +98,7 @@ const {
 export default {
 	name: "GroupDetail",
 	mixins: [commonMixin, tableListMixin],
-	components: { Breadcrumb, ContentTitle, LineChart, BarChart, BigImg },
+	components: { Breadcrumb, ContentTitle, LineChart, BarChart, DefaultUpload },
 	props: {
 		id: String,
 	},
@@ -283,6 +286,15 @@ export default {
 			}
 			return value
 		},
+		doneUpload(url) {
+			const dataForm = new FormData();
+			dataForm.append("groupId", this.id)
+			dataForm.append("imgPath", url)
+			dataForm.append("type", 2)
+			groupDetailUpdateImg(dataForm).then(res => {
+				this.getGroupDetailData();
+			})
+		}
 	},
 }
 </script>

@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div v-else-if="tabModel === '3'" class="openClose">
-                    <div>
+                    <!-- <div>
                         <span class="yahei tx-r">操作分合闸：</span>
                         <a-radio-group v-model="B9SForm.workMode">
                             <a-radio value="1">自动</a-radio>
@@ -47,7 +47,7 @@
                         <ul class="desc yahei">
                             <li>(1、手动模式下，不能远程进行开关控制，默认自动模式)</li>
                         </ul>
-                    </div>
+                    </div> -->
                     <div>
                         <span class="yahei tx-r">开关控制：</span>
                         <a-radio-group v-model="B9SForm.workStatus">
@@ -76,7 +76,7 @@
             <NavTitles class="vs-custom" title="指令记录">
                 <div slot="header" class="header">
                     <a-select class="ml375" style="width: 9.67rem" v-model="drevNotes" @change="notesChange">
-                        <a-select-option v-for="item in selectOpt" :key="item.value" :value="item.value">
+                        <a-select-option v-for="item in tabArr" :key="item.key" :value="item.key">
                             {{item.name}}
                         </a-select-option>
                     </a-select>
@@ -161,10 +161,10 @@ export default {
                 {label: '额定电流', model: 'rc', desc: '（0-2000A）'},
             ],
             drevNotes: '1',
-            selectOpt: [
-                { name: '数据阈值', value: '1' },
-                { name: '消音&复位', value: '2' },
-            ],
+            // selectOpt: [
+            //     { name: '数据阈值', value: '1' },
+            //     { name: '消音&复位', value: '2' },
+            // ],
             records: [],
             total: 0,
             radioGroup: 'quiet',
@@ -210,7 +210,7 @@ export default {
         },
         showComp() {
             return this.tabModel === '1';
-        }
+        },
     },
     methods: {
         getList({ current = 1, size = 5 } = {}) {
@@ -280,7 +280,7 @@ export default {
             }
             const dataB9S = {
                 3: {
-                    workMode: B9SForm.workMode,
+                    // workMode: B9SForm.workMode,
                     workStatus: B9SForm.workStatus
                 },
                 4: {
