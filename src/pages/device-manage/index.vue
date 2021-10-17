@@ -152,7 +152,7 @@ export default {
 		},
 		getDeviceCondition() {
 			deviceCondition().then(({ data }) => {
-				const radioGroup = deviceStatusOptionsInitial.map(item => {
+				const radioGroup = cloneDeep(deviceStatusOptionsInitial).map(item => {
 					item.label = `${item.label}(${data[item.Eg]})`
 					return item
 				})

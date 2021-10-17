@@ -115,7 +115,11 @@ const getCookieByKey = key => {
 
 const setTokenByCookie = () => {
 	const token = getCookieByKey("Authorization")
-	if (!token) throw new Error(`未能获取正确的Authorization，Authorization值为${token}`)
+	if (!token) {
+		const vueInstance = getVueInstance()
+		vueInstance.$router.replace("/phone-login")
+		throw new Error(`未能获取正确的Authorization，Authorization值为${token} 请重新登录`)
+	}
 	localStorage.setItem("token", token)
 }
 

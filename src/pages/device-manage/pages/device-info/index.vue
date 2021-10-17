@@ -33,7 +33,11 @@
 					</div>
 				</div>
 				<div class="device-status">
-					<ContentTitle title="设备实时状态" />
+					<ContentTitle title="设备实时状态">
+						<template #title>
+							<span class="title-time">{{ `(${deviceStatusTitleTime})` }}</span>
+						</template>
+					</ContentTitle>
 					<SimpleTable :columns="simpleTableColumns" :tableData="simpleTableData" />
 				</div>
 				<div class="device-detailed-info">
@@ -355,6 +359,9 @@ export default {
 		remarks() {
 			const str = this.alarmHandleData.processBOList && this.alarmHandleData.processBOList[0]
 			return str && str.remark
+		},
+		deviceStatusTitleTime() {
+			return moment(this.deviceInfoObj.updateDate).format("YYYY-MM-DD HH:mm:ss")
 		},
 	},
 	watch: {
@@ -725,6 +732,10 @@ export default {
 			}
 			.device-status {
 				height: 24rem;
+				.title-time {
+					color: #aaddff;
+					font-size: 1.17rem;
+				}
 			}
 			.device-detailed-info {
 				height: 30.5rem;
