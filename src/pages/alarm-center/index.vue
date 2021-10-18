@@ -241,7 +241,7 @@ export default {
 			this.isAble = type === "process"
 			const { data: alarmDetail } = await getAlarmDetail(id)
 			this.alarmHandleData = alarmDetail
-			const { data: tableList } = await realTimeData({ deviceId })
+			const { data: { channelDataMap: tableList } } = await realTimeData({ deviceId })
 			this.handAlarm = tableList || {}
 			this.showAlert = true
 		},

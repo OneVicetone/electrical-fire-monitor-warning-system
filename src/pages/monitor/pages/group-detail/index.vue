@@ -190,20 +190,36 @@ export default {
 		},
 		getDevicePeriodData() {
 			return groupDetailDevicePeriod(this.id).then(({ data }) => {
-				const nameMap = {
-					totalNum: "总数量",
-					normalNum: "正常设备数量",
-					expiredNum: "已到期设备数量",
-					dueNum: "即将到期设备数量",
+				const formatTooltipText = ({ name, value, percent }) => {
+					// return `<span>${name}:${value} / <span style="color: #5D42F3">${percent}%</span></span>`
+					return 'hha'
 				}
-				const seriesData = Object.keys(data).map(i => ({
-					value: data[i],
-					name: nameMap[i],
-				}))
+				const nameMap = {
+					totalNum: { label: "总数量", color: "#fff" },
+					normalNum: { label: "正常", color: "#1F74E2" },
+					expiredNum: { label: "已到期", color: "#32BCD2" },
+					dueNum: { label: "即将到期", color: "#5D42F3" },
+				}
+				const seriesData = Object.keys(data)
+					.map(i => {
+						if (i === "totalNum") return false
+						return {
+							value: data[i],
+							name: nameMap[i].label,
+							itemStyle: {
+								color: nameMap[i].color,
+							},
+							tooltip: {
+								formatter: `{b}: {c} / {d} hhhh`
+								// formatter: formatTooltipText,
+							},
+						}
+					})
+					.filter(Boolean)
 				const option = {
 					tooltip: {
 						trigger: "item",
-						position: [10, 80],
+						position: [20, 20],
 					},
 					legend: {
 						right: 40,
@@ -277,7 +293,6 @@ export default {
 				return value !== "-" ? `${value}㎡` : "-"
 			}
 			if (key === "typeCode") {
-				console.log(this.groupTypeOptions)
 				const obj = this.groupTypeOptions.find(({ value: optionVal }) => optionVal === value)
 				if (obj && obj.label) return obj.label
 			}

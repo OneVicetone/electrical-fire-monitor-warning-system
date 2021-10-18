@@ -334,6 +334,11 @@ export default {
 			picLog: false,
 			deviceDetaiCommandlValue: {},
 			chartModel: "historyData",
+			realDataObj: {
+				reportTime: "",
+				deviceId: "",
+				signal: "",
+			},
 		}
 	},
 	computed: {
@@ -361,7 +366,7 @@ export default {
 			return str && str.remark
 		},
 		deviceStatusTitleTime() {
-			return moment(this.deviceInfoObj.updateDate).format("YYYY-MM-DD HH:mm:ss")
+			return this.realDataObj.reportTime ? moment(this.realDataObj.reportTime).format("YYYY-MM-DD HH:mm:ss") : ""
 		},
 	},
 	watch: {
@@ -411,7 +416,7 @@ export default {
 					...data,
 					...data.deviceStatusBO,
 					...data.deviceConfigEntity,
-					reportTime: data.deviceStatusBO ? moment(data.deviceStatusBO).format("YYYY-MM-DD HH:mm:ss") : "",
+					reportTime: data.deviceStatusBO ? moment(data.deviceStatusBO.reportTime).format("YYYY-MM-DD HH:mm:ss") : "",
 					signal: this.filterSignal(data.deviceStatusBO.signal),
 					endDate: data.endDate ? moment(data.endDate).format("YYYY-MM-DD HH:mm:ss") : "",
 				}
@@ -496,11 +501,17 @@ export default {
 		},
 		getDeviceStatusTableData() {
 			return realTimeData({ deviceId: this.id }).then(({ data }) => {
+				const { reportTime, channelDataMap, deviceId, signal } = data
+				this.realDataObj = {
+					reportTime,
+					deviceId,
+					signal,
+				}
 				const simpleTableDataResult = this.simpleTableData.map(i => {
 					Object.keys(i).forEach((j, idx) => {
 						if (idx >= 0) {
 							const key = Object.keys(nameForKey)[Object.values(nameForKey).findIndex(k => i.name.includes(k))]
-							if (data[idx]) i[j] = data[idx][key]
+							if (channelDataMap[idx]) i[j] = channelDataMap[idx][key]
 						}
 					})
 					return i

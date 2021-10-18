@@ -13,7 +13,6 @@
 		>
 			<template v-if="showRightMenu" #title="{ key: treeKey, title }">
 				<a-dropdown :trigger="['contextmenu']">
-					<span>{{ title }}</span>
 					<template #overlay>
 						<a-menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, menuKey)">
 							<a-menu-item key="Add">添加子级别</a-menu-item>
