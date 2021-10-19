@@ -85,7 +85,10 @@ const searchFromInitial = {
 
 export default {
 	name: "AlarmList",
-	mixins: [tableListMixin, phonePageMixin],
+	mixins: [
+		tableListMixin,
+		// phonePageMixin
+	],
 	components: { Header, AlarmCard, Radio },
 	data() {
 		return {
@@ -148,7 +151,6 @@ export default {
 			this.isShowTimePicker = !this.isShowTimePicker
 		},
 		getPickTime(val) {
-			console.log(val)
 			this.searchForm[this.pickerType] = moment(val).format("YYYY-MM-DD")
 			this.changeShowTimePicker()
 		},

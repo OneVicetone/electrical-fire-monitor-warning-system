@@ -24,6 +24,7 @@
 <script>
 import md5 from "md5"
 import { createNamespacedHelpers } from "vuex"
+import { message as msg } from "ant-design-vue"
 
 import { initHtmlBasePx } from "utils/initial"
 import { getCookieByKey } from "utils/commonFunctions"
@@ -63,6 +64,7 @@ export default {
 				await login(formData)
 				// setRoutes(this.routes)
 				// addRoutes(this.routes)
+				msg.success("登录成功!")
 				$router.replace("/phone-alarm-list")
 			} catch (err) {
 				this.isLogining = false

@@ -101,7 +101,11 @@ const { getAlarmDetail, processAlarm } = apis
 
 export default {
 	name: "AlarmInfo",
-	mixins: [commonMixin, uploadFileMixin, phonePageMixin],
+	mixins: [
+		commonMixin,
+		uploadFileMixin,
+		// phonePageMixin
+	],
 	components: { Header, Title, Radio },
 	props: {
 		id: String,
