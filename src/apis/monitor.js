@@ -24,8 +24,8 @@ const setupMonitorApis = (http, BASE_URL) => ({
 	getGroupDetailDeviceList: ({ current, size, groupId }) =>
 		http.get(`${BASE_URL}/api-device/history/pageList`, { current, size, groupId }),
 
-	groupDetailUpdateImg: ({ current, imgPath, type }) =>
-		http.formPut(`${BASE_URL}/api-user/group/updateImg`, { current, imgPath, type }),
+	groupDetailUpdateImg: form =>
+		http.formPut(`${BASE_URL}/api-user/group/updateImg`, form),
 
 	groupDetailDevicePeriod: groupId => http.get(`${BASE_URL}/api-device/monitor/group/statisticsDevicePeriod`, { groupId }),
 })

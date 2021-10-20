@@ -6,11 +6,11 @@
                 <img slot="dot" :src="status.icon" class="icons" alt="">
                 <div class="flex-yCenter">
                     <div class="mr317">
-                        <div class="wd1633 yahei t-ellipsis">指令状态：{{status.sendStatus}}</div>
-                        <div class="wd1633 yahei t-ellipsis">指令内容：{{status.sendContent}}</div>
-                        <div class="wd1633 yahei t-ellipsis">发  送 人：{{status.sendUser}}</div>
-                        <div class="wd1633 yahei t-ellipsis">发送时间：{{status.sendTime}}</div>
-                        <div class="wd1633 yahei t-ellipsis">应答时间：{{status.responseTime}}</div>
+                        <div class="wd1633 yahei t-ellipsis">指令状态：{{ status.sendStatus }}</div>
+                        <div class="wd1633 yahei t-ellipsis">指令内容：{{ status.sendContent }}</div>
+                        <div class="wd1633 yahei t-ellipsis">发  送 人：{{ status.sendUser }}</div>
+                        <div class="wd1633 yahei t-ellipsis">发送时间：{{ status.sendTime | filterTimeToYYYYMMDDHHmmss }}</div>
+                        <div class="wd1633 yahei t-ellipsis">应答时间：{{ status.responseTime | filterTimeToYYYYMMDDHHmmss }}</div>
                     </div>
                     <a-popover trigger="hover" placement="bottomRight">
                         <template slot="content">
@@ -42,8 +42,11 @@ import bingo from "@/assets/icons/bingo.png"
 import errors from "@/assets/icons/error.png"
 import cancel from "@/assets/icons/cancel.png"
 
+import { commonMixin } from "mixins"
+
 export default {
     name:"CommandRecord",
+    mixins: [commonMixin],
     props: {
         details: {
             type: Array,
